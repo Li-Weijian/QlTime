@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>图库</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!-- 引入 Bootstrap -->
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="/assets/css/toastr.min.css" rel="stylesheet" type="text/css"/>
+
+    <!-- HTML5 Shiv 和 Respond.js 用于让 IE8 支持 HTML5元素和媒体查询 -->
+    <!-- 注意： 如果通过 file://  引入 Respond.js 文件，则该文件无法起效果 -->
+    <!--[if lt IE 9]>
+
+    <!--瀑布流-->
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,500,700" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="/css/demo.css" />
+    <script>document.documentElement.className = 'js';</script>
+</head>
+<body>
+
+<form action="/galleryController/postImages" method="post" enctype="multipart/form-data">
+    <div class="form-group" style="margin-top: 10px">
+        <div class="col-sm-6">
+            <div class="input-group">
+                <input id='location' class="form-control" onclick="$('#i-file').click();">
+                <label class="input-group-btn">
+                    <input type="button" id="i-check" value="浏览文件" class="btn btn-primary"
+                           onclick="$('#i-file').click();">
+                    <input type="submit"  class="btn btn-success" value="上传"></input>
+                </label>
+            </div>
+        </div>
+        <input type="file" name="fileupload" id='i-file' accept=".jpg, .png , .jpeg, .bmp"
+               onchange="$('#location').val($('#i-file').val());" style="display: none">
+    </div>
+</form>
+
+    <main>
+        <header class="codrops-header">
+            <h1 class="codrops-header__title">我寻了半生的春天，你一笑便是了。</h1>
+        </header>
+        <div class="content content--side content--right">
+            <div class="control control--effects">
+                <button class="control__btn" data-fx="Hapi">相识</button>
+                <button class="control__btn" data-fx="Amun">相知</button>
+                <button class="control__btn" data-fx="Kek">相恋</button>
+                <button class="control__btn" data-fx="Isis">相思</button>
+                <button class="control__btn" data-fx="Montu">携手</button>
+                <button class="control__btn" data-fx="Seker">包容</button>
+                <button class="control__btn" data-fx="Sobek">魂牵</button>
+                <button class="control__btn" data-fx="Ptah">梦萦</button><br/>
+                <button class="control__btn" data-fx="Osiris">姻缘</button>
+                <button class="control__btn" data-fx="Satet">风月</button>
+                <button class="control__btn" data-fx="Atum">柴米</button>
+                <button class="control__btn" data-fx="Ra">油盐</button>
+                <button class="control__btn" data-fx="Nut">守护</button>
+                <button class="control__btn" data-fx="Bes">陪伴</button>
+                <button class="control__btn" data-fx="Sobek">至爱</button>
+                <button class="control__btn" data-fx="Shu">如愿</button>
+            </div>
+        </div>
+        <div class="content content--center">
+            <div class="grid grid--type-a">
+                <div class="grid__sizer"></div>
+                <div class="grid__item" th:each="gallery : ${galleryList}" >
+                    <a class="grid__link" href="#"><img class="grid__img" th:src="${gallery.url}+'?x-oss-process=image/auto-orient,1'" alt="Some image" /></a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+<!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+<script src="https://code.jquery.com/jquery.js"></script>
+<!-- 包括所有已编译的插件 -->
+<script src="/js/bootstrap.min.js"></script>
+
+<script src="/js/imagesloaded.pkgd.min.js"></script>
+<script src="/js/masonry.pkgd.min.js"></script>
+<script src="/js/anime.min.js"></script>
+<script src="/js/main.js"></script>
+<!--<script src="/assets/js/toastr.min.js"></script>-->
+<!--<script src="/assets/js/bootbox.locales.min.js"></script>-->
+<!--<script src="/assets/js/bootbox.min.js"></script>-->
+<!--<script src="/assets/js/bootbox.all.min.js"></script>-->
+
+</body>
+
+
+<script type="text/javascript" th:inline="javascript">
+    $(document).ready(function () {
+        toastr.options.positionClass = 'toast-bottom-center';
+
+        $("#saveContent").click(function () {
+            var content = $("#content").val();
+
+            htmlobj = $.ajax(
+                {
+                    type: "GET",
+                    contentType: "application/json;charset=UTF-8",
+                    url: "/noteController/savaContent",
+                    data: "context=" + content,
+                    dataType: "json",
+                    //请求成功
+                    success: function (result) {
+                        toastr.success('添加成功');
+                        setTimeout(function () {
+                            window.location.reload()
+                        }, 2000);
+                    },
+                    async: false
+                }
+            );
+        });
+    });
+</script>
+</html>

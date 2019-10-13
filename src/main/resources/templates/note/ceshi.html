@@ -18,10 +18,6 @@
     <![endif]-->
 
     <style>
-        /*    .jumbotron{
-                background:url(assets/images/backgroud/jumu.jpg);
-            }*/
-
         .pc_imgBox {
             display: block;
             height: 400px;
@@ -39,6 +35,13 @@
         .carousel-indicators {
             background: #ccc;
         }
+
+        .time {
+            color: #887f78;
+            font-size: 14px;
+            float: left;
+        }
+
     </style>
 </head>
 <body>
@@ -89,15 +92,15 @@
     </a>
 </div>
 <div class="row">
-    <div class="col-lg-6" style="margin-top: 10px; margin-bottom: 10px">
+    <div class="col-lg-6" style="margin: 10px 10px;">
         <div class="input-group">
             <input id="content" type="text" class="form-control" placeholder="亲爱哒，请输入你要记录的事情~">
             <span class="input-group-btn">
         <button id="saveContent" class="btn btn-success" type="button">保存</button>
       </span>
-        </div><!-- /input-group -->
-    </div><!-- /.col-lg-6 -->
-</div><!-- /.row -->
+        </div>
+    </div>
+</div>
 
 <div class="modal-dialog" role="document" id="myModal"></div>
 
@@ -109,14 +112,17 @@
                 <del>
                     <p th:text="${content.context}" style="display: inline"></p>
                 </del>
-                <div  class="btn-group-xs" role="group" aria-label="..." style="float: right;">
+                <div  class="btn-group-xs" role="group" aria-label="..." >
+                    <p class="time" th:text="${#dates.format(content.date, 'yyyy-MM-dd')}"></p>&nbsp;&nbsp;
                     <button th:onclick="completeNote([[${content.id}]],0);" type="button" class="btn btn-success">未完成</button>
                     <button th:onclick="deleteNote([[${content.id}]]);" type="button" class="btn btn-danger">删除</button>
                 </div>
             </div>
             <div th:case="0">
                 <p th:text="${content.context}" style="display: inline"></p>
-                <div  class="btn-group-xs" role="group" aria-label="..." style="float: right;">
+
+                <div  class="btn-group-xs" role="group" aria-label="...">
+                    <p class="time" th:text="${#dates.format(content.date, 'yyyy-MM-dd')}"></p>&nbsp;&nbsp;
                     <button th:onclick="editNote([[${content.id}]]);" type="button" class="btn btn-info">修改</button>
                     <button th:onclick="completeNote([[${content.id}]],1);" type="button" class="btn btn-success">完成</button>
                     <button th:onclick="deleteNote([[${content.id}]]);" type="button" class="btn btn-danger">删除</button>
@@ -125,10 +131,14 @@
             <input type="hidden" id="id" th:value="${content.id}"/>
 
         </div>
-
-
     </li>
 </ul>
+
+<!--<form action="../upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept="image/*">
+    <br>
+    <input type="submit" value="上传" class="btn btn-success">
+</form>-->
 
 <!--<nav aria-label="Page navigation" style="text-align: center">
     <ul class="pagination">
@@ -158,7 +168,7 @@
 </body>
 
 
-<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript">
     $(document).ready(function () {
         toastr.options.positionClass = 'toast-bottom-center';
 

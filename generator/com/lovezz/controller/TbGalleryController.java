@@ -14,8 +14,8 @@ import org.springframework.stereotype.Controller;
  * @since 2019-10-12
  */
 @Controller
-@RequestMapping("/test")
-public class TestController {
+@RequestMapping("/tbGallery")
+public class TbGalleryController {
 
 }
 

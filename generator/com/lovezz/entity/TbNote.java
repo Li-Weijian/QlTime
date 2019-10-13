@@ -12,7 +12,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author liweijian123
- * @since 2019-10-09
+ * @since 2019-10-12
  */
 public class TbNote implements Serializable {
 

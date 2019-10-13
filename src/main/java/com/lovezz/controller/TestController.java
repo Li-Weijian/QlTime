@@ -4,6 +4,7 @@ package com.lovezz.controller;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.lovezz.entity.Test;
 import com.lovezz.service.TestService;
+import com.lovezz.utils.OssUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -23,6 +24,8 @@ public class TestController {
 
     @Autowired
     private TestService testService;
+    @Autowired
+    private OssUtil ossUtil;
 
 
     @RequestMapping("/test")
@@ -42,6 +45,12 @@ public class TestController {
     public Test getTestData(){
         Test test = testService.getTest();
         return test;
+    }
+
+    @RequestMapping("/testImage")
+    @ResponseBody
+    public void testImage(){
+        ossUtil.getImageInfo("https://lovezz-app.oss-cn-shenzhen.aliyuncs.com/userImg/1570896976941.png");
     }
 
 }

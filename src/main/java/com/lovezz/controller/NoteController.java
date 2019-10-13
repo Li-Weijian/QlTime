@@ -47,10 +47,12 @@ public class NoteController {
         //更新
         if (note != null && note.getId() != null){
             return noteService.updateById(note);
+
         }else{
             note.setDate(new Date());
             return noteService.insert(note);
         }
     }
+
 }
 
