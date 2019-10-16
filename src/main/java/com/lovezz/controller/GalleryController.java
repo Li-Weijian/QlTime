@@ -4,10 +4,7 @@ import com.lovezz.entity.TbGallery;
 import com.lovezz.service.TbGalleryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -27,12 +24,17 @@ public class GalleryController {
     @Autowired
     private TbGalleryService galleryService;
 
-
-
     @RequestMapping("/toGallery")
-    public ModelAndView toGallery(ModelAndView modelAndView){
-        List<TbGallery> galleryList = galleryService.selectGalleryList();
+    public ModelAndView toGallery(ModelAndView modelAndView,Integer action,@RequestParam(defaultValue = "1") Integer page){
+        if (page < 1){
+            page = 1;
+        }
+        List<TbGallery> galleryList = galleryService.selectGalleryList(action,page);
+        int count = galleryService.selectCount(null);
         modelAndView.addObject("galleryList",galleryList);
+        modelAndView.addObject("action",action);
+        modelAndView.addObject("page",page);
+        modelAndView.addObject("count",count);
         modelAndView.setViewName("gallery/index");
         return modelAndView;
     }

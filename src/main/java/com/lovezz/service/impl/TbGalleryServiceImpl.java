@@ -1,5 +1,6 @@
 package com.lovezz.service.impl;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.lovezz.dto.ImageInfoDTO;
 import com.lovezz.entity.TbGallery;
 import com.lovezz.mapper.TbGalleryMapper;
@@ -7,12 +8,12 @@ import com.lovezz.service.TbGalleryService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.lovezz.utils.OssUtil;
 import com.lovezz.utils.URLUtils;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -60,9 +61,11 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
     }
 
     @Override
-    public List<TbGallery> selectGalleryList() {
-       return galleryMapper.selectList(null);
+    public List<TbGallery> selectGalleryList(Integer action, Integer page) {
+        Integer limit = 20;
+        if (page < 1){
+            page = 1;
+        }
+        return galleryMapper.selectPage(new RowBounds((page-1)*20,limit),new EntityWrapper<TbGallery>().orderBy("uploadDate",false));
     }
-
-
 }

@@ -19,6 +19,6 @@ public interface TbGalleryService extends IService<TbGallery> {
 
     String fileUpload(MultipartFile file) throws MalformedURLException;
 
-    List<TbGallery> selectGalleryList();
+    List<TbGallery> selectGalleryList(Integer action, Integer page);
 
 }
