@@ -1,6 +1,9 @@
 package com.lovezz.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.qcloudsms.SmsSingleSender;
+import com.github.qcloudsms.SmsSingleSenderResult;
+import com.github.qcloudsms.httpclient.HTTPException;
 import com.lovezz.service.SendMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Auther: liweijian
@@ -22,6 +27,8 @@ public class SendMessageServiceImpl implements SendMessageService {
 
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    private TbLovetextServiceImpl lovetextService;
 
     @Value("${sms.sid}")
     private String SID;
@@ -31,6 +38,13 @@ public class SendMessageServiceImpl implements SendMessageService {
     private String APPID;
     @Value("${sms.url}")
     private String URL;
+
+    @Value("${tx.appid}")
+    private Integer APPID_TX;
+    @Value("${tx.appkey}")
+    private String APPKEY;
+    //    @Value("${tx.smsSign}")
+    private String SMSSIGN = "峥峥宝贝专属";
 
 
     /**
@@ -67,6 +81,29 @@ public class SendMessageServiceImpl implements SendMessageService {
         return result;
     }
 
+
+    /**
+     * 功能描述: 发送短信
+     * @param:
+     * @return:
+     * @auther: liweijian
+     * @date: 2019/10/21 20:11
+     */
+    @Override
+    public String sendMessaage(String mobile, Integer templateid, ArrayList<String> params) throws IOException, HTTPException {
+
+        String text = lovetextService.getOneTextRandom();
+
+        SmsSingleSender ssender = new SmsSingleSender(APPID_TX, APPKEY);
+        String one = text.substring(0, text.length() / 2);
+        String two = text.substring(text.length() / 2 + 1, text.length());
+        params.add(one);
+        params.add(two);
+        SmsSingleSenderResult result = ssender.sendWithParam("86", "13078229267",
+                templateid, params, SMSSIGN, "", "");
+
+        return result.toString();
+    }
 
 
 }

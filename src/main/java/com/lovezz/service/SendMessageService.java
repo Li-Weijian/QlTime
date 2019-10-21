@@ -1,6 +1,10 @@
 package com.lovezz.service;
 
+import com.github.qcloudsms.httpclient.HTTPException;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Auther: liweijian
@@ -10,6 +14,8 @@ import java.io.IOException;
 public interface SendMessageService {
 
     String sendMessaage(String mobile, String templateid,String content) throws IOException;
+
+    String sendMessaage(String mobile, Integer templateid,ArrayList<String> params) throws IOException, HTTPException;
 
 
 }
