@@ -27,7 +27,15 @@ public class TbLovetext implements Serializable {
      * 发送次数
      */
     private Integer count;
+    private Integer length;
 
+    public Integer getLength() {
+        return length;
+    }
+
+    public void setLength(Integer length) {
+        this.length = length;
+    }
 
     public Integer getId() {
         return id;
@@ -64,10 +72,11 @@ public class TbLovetext implements Serializable {
     @Override
     public String toString() {
         return "TbLovetext{" +
-        ", id=" + id +
-        ", text=" + text +
-        ", date=" + date +
-        ", count=" + count +
-        "}";
+                "id=" + id +
+                ", text='" + text + '\'' +
+                ", date=" + date +
+                ", count=" + count +
+                ", length=" + length +
+                '}';
     }
 }
