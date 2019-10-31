@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>登录页</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link href="/static/assets/css/toastr.min.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+<main>
+  <form class="form" >
+    <div class="form__cover"></div>
+    <div class="form__loader">
+      <div class="spinner active">
+        <svg class="spinner__circular" viewBox="25 25 50 50">
+          <circle class="spinner__path" cx="50" cy="50" r="20" fill="none" stroke-width="4" stroke-miterlimit="10"></circle>
+        </svg>
+      </div>
+    </div>
+    <div class="form__content">
+      <h1>欢迎登录</h1>
+      <div class="styled-input">
+        <input type="text" class="styled-input__input" name="username" id="username">
+        <div class="styled-input__placeholder"> <span class="styled-input__placeholder-text">Username</span> </div>
+        <div class="styled-input__circle"></div>
+      </div>
+      <div class="styled-input">
+        <input type="text" class="styled-input__input" name="password" id="password">
+        <div class="styled-input__placeholder"> <span class="styled-input__placeholder-text">Password</span> </div>
+        <div class="styled-input__circle"></div>
+      </div>
+      <button type="button" class="styled-button" id="submit"> <span class="styled-button__real-text-holder"> <span class="styled-button__real-text">登录</span> <span class="styled-button__moving-block face"> <span class="styled-button__text-holder"> <span class="styled-button__text">登录</span> </span> </span><span class="styled-button__moving-block back"> <span class="styled-button__text-holder"> <span class="styled-button__text">登录</span> </span> </span> </span> </button>
+    </div>
+  </form>
+</main>
+<script  src="/static/js/index.js"></script>
+<!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+<script src="https://code.jquery.com/jquery.js"></script>
+<script src="/static/assets/js/toastr.min.js"></script>
+<script src="/static/assets/js/bootbox.locales.min.js"></script>
+<script src="/static/assets/js/bootbox.min.js"></script>
+<script src="/static/assets/js/bootbox.all.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        toastr.options.positionClass = 'toast-top-center';
+
+        //提交
+        $("#submit").click(function () {
+            var username = $("#username").val();
+            var password = $("#password").val();
+
+            if (username == null || username == undefined || username == ''
+                || password == null || password == undefined || password == ''){
+                toastr.warning('用户名或者密码不能为空哦');
+                return;
+            }
+            user = {
+                username: username,
+                password: password
+            },
+
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/user/login",
+                    contentType: "application/json",
+                    data: JSON.stringify(user),
+                    dataType: "json",
+                    //请求成功
+                    success: function (result) {
+                        if (result.status == 200) {
+                          toastr.success(result.message+",欢迎你呀 - "+ result.data.username);
+                          setTimeout(function () {
+                              window.location.href = "/ticController/time"
+                          }, 2000);
+                        }else {
+                            toastr.error(result.message);
+                        }
+                    },
+                    async: false
+                }
+            );
+
+        })
+    })
+
+
+
+</script>
+</body>
+</html>

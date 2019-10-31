@@ -94,12 +94,12 @@ public class SendMessageServiceImpl implements SendMessageService {
 
         String text = lovetextService.getOneTextRandom();
 
-        SmsSingleSender ssender = new SmsSingleSender(APPID_TX, APPKEY);
+        SmsSingleSender sender = new SmsSingleSender(APPID_TX, APPKEY);
         String one = text.substring(0, text.length() / 2);
         String two = text.substring(text.length() / 2 + 1, text.length());
         params.add(one);
         params.add(two);
-        SmsSingleSenderResult result = ssender.sendWithParam("86", "13078229267",
+        SmsSingleSenderResult result =sender.sendWithParam("86", "13078229267",
                 templateid, params, SMSSIGN, "", "");
 
         return result.toString();

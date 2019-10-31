@@ -8,6 +8,7 @@ package com.lovezz.job;
 
 import com.github.qcloudsms.httpclient.HTTPException;
 import com.lovezz.service.SendMessageService;
+import com.lovezz.service.TbLovetextService;
 import com.lovezz.utils.FileUtils;
 import com.lovezz.utils.TimeUtils;
 import org.slf4j.Logger;
@@ -33,6 +34,8 @@ public class SendSmsJob {
 
     @Autowired
     private SendMessageService sendMessageService;
+    @Autowired
+    private TbLovetextService lovetextService;
 
     @Value("${sms.templateid}")
     private String TEMPLATEID;
@@ -52,14 +55,16 @@ public class SendSmsJob {
     public void sendSms() {
         try {
 
+
             logger.info("定时任务开始执行：发送短信时间" + LocalDateTime.now());
+            String text = lovetextService.getOneTextRandom();
 
             String result = null;
             long day = TimeUtils.daysBetween(new Date(Integer.parseInt(YEAR) - 1900, Integer.parseInt(MONTH) - 1, Integer.parseInt(DAY)), new Date());
             List loveList = null;
-            loveList = FileUtils.getTextForLove("/static/love.txt");
-            int lineNum = new Random().nextInt(loveList.size()+1);
-            String param = day+","+loveList.get(lineNum);
+//            loveList = FileUtils.getTextForLove("/static/love.txt");
+//            int lineNum = new Random().nextInt(loveList.size()+1);
+            String param = day+","+text;
             result = sendMessageService.sendMessaage(MOBILE, TEMPLATEID, param);
 
 //

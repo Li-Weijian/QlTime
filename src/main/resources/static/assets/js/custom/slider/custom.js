@@ -13,9 +13,9 @@
             if ($boyCounter.length) {
 
                 $.backstretch([
-                             '../assets/images/slider/1.jpg'
-                             , '../assets/images/slider/2.jpg'
-                             , '../assets/images/slider/3.jpg'
+                             '../static/assets/images/slider/1.jpg'
+                             , '../static/assets/images/slider/2.jpg'
+                             , '../static/assets/images/slider/3.jpg'
                 ],
                          { duration: 4000, fade: 1000 })
                 ;
