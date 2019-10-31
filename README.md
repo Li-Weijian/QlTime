@@ -8,7 +8,7 @@
 Springboot 2.1.6.RELEASE + Spring + Mybatis-plus 2.1.8 + 
 Mysql 5.7 + 阿里云OSS对象存储 + Thymeleaf模版引擎 + 腾讯短信
 
-##各个功能访问路径
+## 各个功能访问路径
 ### 1.访问时间纪念路径
 http://localhost:8091/ticController/time
 
