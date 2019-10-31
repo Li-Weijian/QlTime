@@ -27,6 +27,10 @@ public class TbUser implements Serializable {
      */
     private String username;
     /**
+     * 昵称
+     */
+    private String realname;
+    /**
      * 密码
      */
     private String password;
@@ -57,6 +61,13 @@ public class TbUser implements Serializable {
     @TableField("isDelete")
     private Integer isDelete;
 
+    public String getRealname() {
+        return realname;
+    }
+
+    public void setRealname(String realname) {
+        this.realname = realname;
+    }
 
     public Long getId() {
         return id;

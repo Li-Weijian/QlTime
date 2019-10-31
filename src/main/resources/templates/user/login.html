@@ -71,7 +71,7 @@
                     //请求成功
                     success: function (result) {
                         if (result.status == 200) {
-                          toastr.success(result.message+",欢迎你呀 - "+ result.data.username);
+                          toastr.success(result.message+",欢迎你呀 - "+ result.data.realname);
                           setTimeout(function () {
                               window.location.href = "/ticController/time"
                           }, 2000);
