@@ -1,2 +1,29 @@
 # Lovezz
-和峥峥相处过程中 发现的需求哈哈哈
+### 项目说明
+和峥峥相处过程中 发现的需求, 一直在迭代。
+目前开发的功能有： 定时发送短信、纪念日、情侣待办、图库、登录功能。
+每个页面都是单独展示，通过Fusion App进行内嵌，生成App。
+
+## 技术栈 
+Springboot 2.1.6.RELEASE + Spring + Mybatis-plus 2.1.8 + 
+Mysql 5.7 + 阿里云OSS对象存储 + Thymeleaf模版引擎 + 腾讯短信
+
+##各个功能访问路径
+### 1.访问时间纪念路径
+http://localhost:8091/ticController/time
+
+### 2.访问待办事项路径
+http://localhost:8091/noteController/toNote
+
+### 3. 发送短信路径
+http://localhost:8091/sms/sendSms
+
+### 4. 图库
+http://localhost:8091/galleryController/toGallery
+
+### 5.登录
+http://localhost:8091/user/toLogin
+
+## 运行说明
+问： 如何运行
+答： 配置好Mysql，运行即可。
