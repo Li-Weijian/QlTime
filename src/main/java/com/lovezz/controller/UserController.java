@@ -24,12 +24,32 @@ public class UserController {
     private TbUserService userService;
 
 
+    /**
+     * 登录页
+     * @auther: liweijian
+     * @date: 2019/11/1 22:31
+     */
     @RequestMapping("/toLogin")
     public String toLogin(){
         return "user/login";
     }
 
+    /**
+     * 注销
+     * @auther: liweijian
+     * @date: 2019/11/1 22:31
+     */
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest request){
+        request.getSession().setAttribute(SystemConstants.SESSION_USER_KEY,null);
+        return "user/login";
+    }
 
+    /**
+     * 登录
+     * @auther: liweijian
+     * @date: 2019/11/1 22:31
+     */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public BaseResult login(@RequestBody TbUser user, HttpServletRequest request){
