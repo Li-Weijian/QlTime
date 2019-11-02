@@ -34,6 +34,17 @@ public class TbGallery implements Serializable {
     private Date uploadDate;
     private String fileName;
 
+    @TableField("userId")
+    private Integer userId;
+
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public String getFileName() {
         return fileName;

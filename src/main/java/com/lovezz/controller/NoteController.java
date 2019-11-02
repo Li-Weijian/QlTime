@@ -3,6 +3,7 @@ package com.lovezz.controller;
 
 import com.lovezz.entity.TbNote;
 import com.lovezz.service.TbNoteService;
+import com.lovezz.utils.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +44,7 @@ public class NoteController {
     @RequestMapping("/savaContent")
     @ResponseBody
     public Boolean savaOrUpdateContent(TbNote note){
+        note.setUserId(new RequestUtils().getLoginUserId());
 
         //更新
         if (note != null && note.getId() != null){

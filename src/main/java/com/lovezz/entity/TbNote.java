@@ -42,6 +42,27 @@ public class TbNote implements Serializable {
     @TableField("isComplete")
     private String isComplete;
 
+    @TableField("userId")
+    private Integer userId;
+
+    @TableField(exist = false)
+    private String realname;
+
+    public String getRealname() {
+        return realname;
+    }
+
+    public void setRealname(String realname) {
+        this.realname = realname;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public Integer getId() {
         return id;

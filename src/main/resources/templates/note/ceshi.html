@@ -38,8 +38,16 @@
 
         .time {
             color: #887f78;
-            font-size: 14px;
+            font-size: 10px;
             float: left;
+            margin-right: 2px;
+        }
+
+        .nameClass {
+            color: #887f78;
+            font-size: 12px;
+            float: left;
+            margin-right: 4px;
         }
 
     </style>
@@ -113,7 +121,8 @@
                     <p th:text="${content.context}" style="display: inline"></p>
                 </del>
                 <div  class="btn-group-xs" role="group" aria-label="..." >
-                    <p class="time" th:text="${#dates.format(content.date, 'yyyy-MM-dd')}"></p>&nbsp;&nbsp;
+                    <p class="nameClass" th:text="${content.realname}"></p>&nbsp;&nbsp;
+                    <p class="time" th:text="${#dates.format(content.date, 'yyyy-MM-dd')}"></p>
                     <button th:onclick="completeNote([[${content.id}]],0);" type="button" class="btn btn-success">未完成</button>
                     <button th:onclick="deleteNote([[${content.id}]]);" type="button" class="btn btn-danger">删除</button>
                 </div>
@@ -122,6 +131,7 @@
                 <p th:text="${content.context}" style="display: inline"></p>
 
                 <div  class="btn-group-xs" role="group" aria-label="...">
+                    <p class="nameClass" th:text="${content.realname}"></p>&nbsp;&nbsp;
                     <p class="time" th:text="${#dates.format(content.date, 'yyyy-MM-dd')}"></p>&nbsp;&nbsp;
                     <button th:onclick="editNote([[${content.id}]]);" type="button" class="btn btn-info">修改</button>
                     <button th:onclick="completeNote([[${content.id}]],1);" type="button" class="btn btn-success">完成</button>
@@ -133,28 +143,6 @@
         </div>
     </li>
 </ul>
-
-<!--<form action="../upload" method="post" enctype="multipart/form-data">
-    <input type="file" name="file" accept="image/*">
-    <br>
-    <input type="submit" value="上传" class="btn btn-success">
-</form>-->
-
-<!--<nav aria-label="Page navigation" style="text-align: center">
-    <ul class="pagination">
-        <li>
-            <a href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
-        <li><a href="#">1</a></li>
-        <li>
-            <a href="" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
-    </ul>
-</nav>-->
 
 <!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
 <script src="https://code.jquery.com/jquery.js"></script>

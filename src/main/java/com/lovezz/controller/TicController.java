@@ -21,7 +21,7 @@ public class TicController {
     @RequestMapping("/time")
     public ModelAndView TimeRecording(ModelAndView modelAndView) throws IOException {
         List loveList = FileUtils.getTextForLove("/static/love.txt");
-        int lineNum = new Random().nextInt(loveList.size()+1);
+        int lineNum = new Random().nextInt(loveList.size());
 
         modelAndView.addObject("loveMsg",loveList.get(lineNum));
         modelAndView.setViewName("tic/index");

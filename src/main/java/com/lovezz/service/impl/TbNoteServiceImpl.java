@@ -27,8 +27,7 @@ public class TbNoteServiceImpl extends ServiceImpl<TbNoteMapper, TbNote> impleme
 
     @Override
     public List<TbNote> getNoteList(int offset, int limit) {
-//        return noteMapper.selectPage(new RowBounds(offset,limit),null);
-        return noteMapper.selectList(new EntityWrapper<TbNote>().eq("isDelete","0").orderBy("isComplete",true));
+        return noteMapper.selectNoteListAndUser();
     }
 
 

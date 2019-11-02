@@ -43,7 +43,6 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
         List<TbUser> userList = userMapper.selectList(new EntityWrapper<TbUser>().eq("password", pwMd5).eq("isDelete", 0)
                 .andNew().eq("phone",username).or().eq("email",username).or().eq("username", username));
 
-//                .andNew("phone",username).or("email",username).or("username", username));
 
         if (userList != null && userList.size() > 0){
             TbUser user = userList.get(0);

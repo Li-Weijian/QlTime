@@ -7,6 +7,7 @@ import com.lovezz.mapper.TbGalleryMapper;
 import com.lovezz.service.TbGalleryService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.lovezz.utils.OssUtil;
+import com.lovezz.utils.RequestUtils;
 import com.lovezz.utils.URLUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,7 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
         gallery.setImageWidth(imageInfo.getImageWidth().getValue());
         gallery.setFilesize(imageInfo.getFileSize().getValue());
         gallery.setFileName(file.getOriginalFilename());
+        gallery.setUserId(new RequestUtils().getLoginUserId());
 
         galleryMapper.insert(gallery);
         return url;
