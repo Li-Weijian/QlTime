@@ -41,12 +41,13 @@ public class MybatisPlusGenerator {
                 .setCapitalMode(true)
                 .setEntityLombokModel(false)
                 .setDbColumnUnderline(true)
-                .setNaming(NamingStrategy.underline_to_camel);
+                .setNaming(NamingStrategy.underline_to_camel)
+                .setInclude("tb_tops","tb_comments");
         config.setActiveRecord(false)
                 .setEnableCache(false)
                 .setAuthor("liweijian")
                 //指定输出文件夹位置
-                .setOutputDir("F:\\Code\\lovezz\\generator")
+                .setOutputDir("F:\\Code\\generator")
                 .setFileOverride(true)
                 .setServiceName("%sService");
         new AutoGenerator().setGlobalConfig(config)

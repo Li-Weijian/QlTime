@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>记录日常</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.9/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand glyphicon glyphicon-triangle-right" href="#">XXX</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">首页</a></li>
+                <li><a href="#about">发表</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container" th:fragment="fileupload">
+    <input id="uploadfile" type="file" class="file" multiple="multiple" name="file"/>
+
+</div>
+
+
+<script>
+    $("#uploadfile").fileinput({
+
+        language: 'zh', //设置语言
+
+        //uploadUrl: "http://127.0.0.1/testDemo/fileupload/upload.do", //上传的地址
+        uploadUrl: "/upload/UpLoadImage", //上传的地址
+
+        allowedFileExtensions: ['jpg', 'gif', 'png', 'docx', 'zip', 'txt'], //接收的文件后缀
+
+        //uploadExtraData:{"id": 1, "fileName":'123.mp3'},
+        showClose: false,//是否显示关闭按钮
+
+        uploadAsync: true, //默认异步上传
+
+        showUpload: true, //是否显示上传按钮
+
+        //showBrowse: true, //是否显示浏览按钮
+
+        showRemove: true, //显示移除按钮
+
+        showPreview: true, //是否显示预览
+
+        showCaption: false, //是否显示标题
+
+        browseClass: "btn btn-primary", //按钮样式
+
+        dropZoneEnabled: true, //是否显示拖拽区域
+
+        //previewFileType: ['docx'], //预览文件类型
+        //minImageWidth: 50, //图片的最小宽度
+
+        //minImageHeight: 50,//图片的最小高度
+
+        //maxImageWidth: 1000,//图片的最大宽度
+
+        //maxImageHeight: 1000,//图片的最大高度
+
+        maxFileSize:0,//单位为kb，如果为0表示不限制文件大小
+
+        //minFileCount: 0,
+
+        maxFileCount: 10, //表示允许同时上传的最大文件个数
+
+        enctype: 'multipart/form-data',
+
+        validateInitialCount: true,
+
+        previewFileIcon: "<iclass='glyphicon glyphicon-king'></i>",
+
+        msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+
+    }).on("fileuploaded", function (event, data, previewId, index) {
+
+
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>
