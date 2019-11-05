@@ -37,6 +37,27 @@ public class TbGallery implements Serializable {
     @TableField("userId")
     private Integer userId;
 
+    //用途：0 - 图库 ， 1- 留言板
+    private String flag;
+
+    //留言板id
+    private String topId;
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+
+    public String getTopId() {
+        return topId;
+    }
+
+    public void setTopId(String topId) {
+        this.topId = topId;
+    }
 
     public Integer getUserId() {
         return userId;

@@ -66,7 +66,7 @@ public class OssUtil {
      * @param file
      * @return
      */
-    public String uploadImg2Oss(MultipartFile file) {
+    public String uploadImg2Oss(MultipartFile file,String fileDir) {
         if (file.getSize() > 1024 * 1024 *20) {
             return "图片太大";//RestResultGenerator.createErrorResult(ResponseEnum.PHOTO_TOO_MAX);
         }
@@ -76,7 +76,7 @@ public class OssUtil {
         String name = random.nextInt(10000) + System.currentTimeMillis() + substring;
         try {
             InputStream inputStream = file.getInputStream();
-            this.uploadFile2OSS(inputStream, name);
+            this.uploadFile2OSS(inputStream, name,fileDir);
             return name;//RestResultGenerator.createSuccessResult(name);
         } catch (Exception e) {
             return "上传失败";//RestResultGenerator.createErrorResult(ResponseEnum.PHOTO_UPLOAD);
@@ -87,9 +87,10 @@ public class OssUtil {
      * 上传图片获取fileUrl
      * @param instream
      * @param fileName
+     * @param fileDir
      * @return
      */
-    private String uploadFile2OSS(InputStream instream, String fileName) {
+    private String uploadFile2OSS(InputStream instream, String fileName, String fileDir) {
         String ret = "";
         try {
             //创建上传Object的Metadata
@@ -160,9 +161,13 @@ public class OssUtil {
      * @return
      */
     public String getImgUrl(String fileUrl) {
+      return getImgUrl(fileUrl,this.fileDir);
+    }
+
+    public String getImgUrl(String fileUrl,String fileDir) {
         if (!StringUtils.isEmpty(fileUrl)) {
             String[] split = fileUrl.split("/");
-            String url =  this.getUrl(this.fileDir + split[split.length - 1]);
+            String url =  this.getUrl(fileDir + split[split.length - 1]);
             return url;
         }
         return null;
@@ -194,11 +199,16 @@ public class OssUtil {
      * @return
      */
     public String checkList(List<MultipartFile> fileList) {
+        return checkList(fileList,this.fileDir);
+
+    }
+
+    public String checkList(List<MultipartFile> fileList,String fileDir) {
         String  fileUrl = "";
         String  str = "";
         String  photoUrl = "";
         for(int i = 0;i< fileList.size();i++){
-            fileUrl = uploadImg2Oss(fileList.get(i));
+            fileUrl = uploadImg2Oss(fileList.get(i),fileDir);
             str = getImgUrl(fileUrl);
             if(i == 0){
                 photoUrl = str;
@@ -215,8 +225,12 @@ public class OssUtil {
      * @return
      */
     public String checkImage(MultipartFile file){
-        String fileUrl = uploadImg2Oss(file);
-        String str = getImgUrl(fileUrl);
+        return checkImage(file,this.fileDir);
+    }
+
+    public String checkImage(MultipartFile file, String fileDir){
+        String fileUrl = uploadImg2Oss(file,fileDir);
+        String str = getImgUrl(fileUrl,fileDir);
         return str.trim();
     }
     

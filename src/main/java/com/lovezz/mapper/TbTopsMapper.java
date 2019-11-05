@@ -3,6 +3,8 @@ package com.lovezz.mapper;
 import com.lovezz.entity.TbTops;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface TbTopsMapper extends BaseMapper<TbTops> {
 
+    List<TbTops> selectTopList();
 }

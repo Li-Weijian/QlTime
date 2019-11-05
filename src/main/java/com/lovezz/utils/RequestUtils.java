@@ -3,6 +3,9 @@ package com.lovezz.utils;
 import com.lovezz.constant.SystemConstants;
 import com.lovezz.entity.TbUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,8 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class RequestUtils {
 
-    @Autowired
-    private HttpServletRequest request;
+    private HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
 
 
     /**

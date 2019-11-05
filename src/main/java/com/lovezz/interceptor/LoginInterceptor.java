@@ -21,8 +21,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         TbUser tbUser = (TbUser) httpServletRequest.getSession().getAttribute(SystemConstants.SESSION_USER_KEY);
 
-        return true;
-/*
+//        return true;
         // 未登录状态
         if (tbUser == null) {
             httpServletRequest.getRequestDispatcher("/user/toLogin").forward(httpServletRequest, httpServletResponse);
@@ -32,7 +31,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         // 已登录状态
         else {
             return true;
-        }*/
+        }
     }
 
     @Override

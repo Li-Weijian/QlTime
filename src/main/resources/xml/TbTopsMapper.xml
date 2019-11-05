@@ -2,4 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lovezz.mapper.TbTopsMapper">
 
+    <select id="selectTopList" resultType="com.lovezz.entity.TbTops">
+        SELECT a.*,b.realname FROM tb_tops a
+        INNER JOIN tb_user b ON b.id = a.userId
+        where a.isDelete = '0'
+        ORDER BY a.createTime DESC
+    </select>
 </mapper>

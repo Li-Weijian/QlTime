@@ -1,10 +1,13 @@
 package com.lovezz.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * <p>
@@ -26,10 +29,31 @@ public class TbTops implements Serializable {
     /**
      * 赞数
      */
-    private Integer zan;
+    private Integer zan = 0;
     @TableField("userId")
     private Integer userId;
 
+    @TableField("isDelete")
+    private String isDelete;
+
+    @TableField(exist = false)
+    private String realname;
+
+    public String getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(String isDelete) {
+        this.isDelete = isDelete;
+    }
+
+    public String getRealname() {
+        return realname;
+    }
+
+    public void setRealname(String realname) {
+        this.realname = realname;
+    }
 
     public String getId() {
         return id;

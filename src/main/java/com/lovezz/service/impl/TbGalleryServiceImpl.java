@@ -69,6 +69,6 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
         if (page < 1){
             page = 1;
         }
-        return galleryMapper.selectPage(new RowBounds((page-1)*20,limit),new EntityWrapper<TbGallery>().orderBy("uploadDate",false));
+        return galleryMapper.selectPage(new RowBounds((page-1)*20,limit),new EntityWrapper<TbGallery>().eq("flag","0").orderBy("uploadDate",false));
     }
 }

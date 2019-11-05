@@ -36,6 +36,16 @@ public class TbComments implements Serializable {
     @TableField("topId")
     private String topId;
 
+    @TableField("isDelete")
+    private String isDelete;
+
+    public String getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(String isDelete) {
+        this.isDelete = isDelete;
+    }
 
     public String getId() {
         return id;
