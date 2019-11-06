@@ -1,6 +1,7 @@
 package com.lovezz.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.lovezz.dto.BaseResult;
 import com.lovezz.dto.ImageInfoDTO;
 import com.lovezz.dto.TopsDTO;
 import com.lovezz.entity.TbComments;
@@ -129,5 +130,37 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
 
 
         return dtoList;
+    }
+
+    @Override
+    public BaseResult deleteTops(String topsId) {
+
+        TbTops tops = topsMapper.selectById(topsId);
+        if (tops == null){
+            return BaseResult.fail("删除的话题不存在哦");
+        }else {
+            //设置标记
+            tops.setIsDelete("1");
+            topsMapper.updateById(tops);
+
+            //删除图库记录
+            List<TbGallery> galleryList = galleryMapper.selectList(new EntityWrapper<TbGallery>().eq("topId", topsId));
+            List<String> keyList = new ArrayList<>();
+            for (TbGallery gallery : galleryList) {
+                keyList.add(ossUtil.getUrlPath(gallery.getUrl()));
+            }
+            galleryMapper.delete(new EntityWrapper<TbGallery>().eq("topId", topsId));
+            ossUtil.deleteBatchFile(keyList);
+
+
+            //删除评论
+            List<TbComments> commentsList = commentsMapper.selectList(new EntityWrapper<TbComments>().eq("topId", topsId));
+            for (TbComments comments : commentsList) {
+                comments.setIsDelete("1");
+                commentsMapper.updateById(comments);
+            }
+
+            return BaseResult.success();
+        }
     }
 }

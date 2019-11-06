@@ -1,5 +1,6 @@
 package com.lovezz.service;
 
+import com.lovezz.dto.BaseResult;
 import com.lovezz.dto.TopsDTO;
 import com.lovezz.entity.TbTops;
 import com.baomidou.mybatisplus.service.IService;
@@ -32,5 +33,12 @@ public interface TbTopsService extends IService<TbTops> {
      * @date: 2019/11/5 17:41
      */
     List<TopsDTO> getTopsList();
+
+    /**
+     * 删除留言
+     * @auther: liweijian
+     * @date: 2019/11/6 20:34
+     */
+    BaseResult deleteTops(String topsId);
 
 }

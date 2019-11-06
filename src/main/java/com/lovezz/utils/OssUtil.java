@@ -6,10 +6,7 @@ import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.common.comm.ResponseMessage;
-import com.aliyun.oss.model.GetObjectRequest;
-import com.aliyun.oss.model.OSSObject;
-import com.aliyun.oss.model.ObjectMetadata;
-import com.aliyun.oss.model.PutObjectResult;
+import com.aliyun.oss.model.*;
 import com.lovezz.dto.ImageInfoDTO;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.slf4j.Logger;
@@ -28,7 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -255,5 +254,51 @@ public class OssUtil {
         return infoDTO;
     }
 
+/**
+ * 批量删除文件
+ * key等同于ObjectName，表示删除OSS文件时需要指定包含文件后缀在内的完整路径，例如abc/efg/123.jpg。
+ * @param: keyList  key等同于ObjectName，表示删除OSS文件时需要指定包含文件后缀在内的完整路径，例如abc/efg/123.jpg。
+ * @return: 删除的文件对象
+ * @auther: liweijian
+ * @date: 2019/11/6 20:50
+ */
+    public List<String> deleteBatchFile(List<String> keyList){
+        List<String> deletedObjects = null;
+
+        // 创建OSSClient实例。
+        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+        if (keyList != null && keyList.size() > 0){
+            DeleteObjectsResult deleteObjectsResult = ossClient.deleteObjects(new DeleteObjectsRequest(bucketName).withKeys(keyList));
+            deletedObjects = deleteObjectsResult.getDeletedObjects();
+        }
+
+        ossClient.shutdown();
+        return deletedObjects;
+    }
+
+    /**
+     * 获取Url路径
+     * @param: url ps: http://lovezz-app.oss-cn-shenzhen.aliyuncs.com/userImg/1570960002838.jpg
+     * @return: url路径 ps：/userImg/1570960002838.jpg
+     * @auther: liweijian
+     * @date: 2019/11/6 20:55
+     */
+    public String getUrlPath(String url){
+        String path = null;
+        try {
+            URL u = new URL(url);
+            path = u.getPath().substring(1,u.getPath().length());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return path;
+    }
+
+   /* public static void main(String[] args) {
+        OssUtil ossUtil = new OssUtil();
+        ossUtil.getUrlPath("http://lovezz-app.oss-cn-shenzhen.aliyuncs.com/userImg/1570960002838.jpg?asjdkja=12312");
+
+    }*/
 
 }

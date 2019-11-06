@@ -66,6 +66,13 @@ public class TopsController {
         return resultMap;
     }
 
+    @RequestMapping("/deleteTops")
+    @ResponseBody
+    public BaseResult deleteTops(String topsId){
+        return topsService.deleteTops(topsId);
+
+    }
+
 
 
 
