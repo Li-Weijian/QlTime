@@ -34,11 +34,7 @@ public class SendSmsJob {
 
     @Autowired
     private SendMessageService sendMessageService;
-    @Autowired
-    private TbLovetextService lovetextService;
 
-    @Value("${sms.templateid}")
-    private String TEMPLATEID;
     @Value("${sms.mobile}")
     private String MOBILE;
     @Value("${love.year}")
@@ -57,22 +53,14 @@ public class SendSmsJob {
 
 
             logger.info("定时任务开始执行：发送短信时间" + LocalDateTime.now());
-            String text = lovetextService.getOneTextRandom();
-
             String result = null;
-            long day = TimeUtils.daysBetween(new Date(Integer.parseInt(YEAR) - 1900, Integer.parseInt(MONTH) - 1, Integer.parseInt(DAY)), new Date());
-            List loveList = null;
-//            loveList = FileUtils.getTextForLove("/static/love.txt");
-//            int lineNum = new Random().nextInt(loveList.size()+1);
-            String param = day+","+text;
-            result = sendMessageService.sendMessaage(MOBILE, TEMPLATEID, param);
 
-//
-//            long day = TimeUtils.daysBetween(new Date(Integer.parseInt(YEAR) - 1900, Integer.parseInt(MONTH) - 1, Integer.parseInt(DAY)), new Date());
-//
-//            ArrayList<String> params = new ArrayList<>();
-//            params.add(String.valueOf(day));
-//            result = sendMessageService.sendMessaage(MOBILE, TEMPLATEID2, params);
+            //==============腾讯云短信==============
+            long day = TimeUtils.daysBetween(new Date(Integer.parseInt(YEAR) - 1900, Integer.parseInt(MONTH) - 1, Integer.parseInt(DAY)), new Date());
+
+            ArrayList<String> params = new ArrayList<>();
+            params.add(String.valueOf(day));
+            result = sendMessageService.sendMessaage(MOBILE, TEMPLATEID2, params);
 
             logger.info("定时任执行结束：发送短信结果" + result);
         } catch (Exception e) {

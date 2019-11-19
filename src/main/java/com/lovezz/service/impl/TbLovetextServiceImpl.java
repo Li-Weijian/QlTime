@@ -28,7 +28,7 @@ public class TbLovetextServiceImpl extends ServiceImpl<TbLovetextMapper, TbLovet
     @Override
     public String getOneTextRandom(){
         List<TbLovetext> lovetextList = lovetextMapper.selectList(null);
-        int lineNum = new Random().nextInt(lovetextList.size()+1);
+        int lineNum = new Random().nextInt(lovetextList.size());
         TbLovetext lovetext = lovetextList.get(lineNum);
 
         //增加读取次数

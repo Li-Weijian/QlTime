@@ -59,6 +59,12 @@ public class SendMessageController {
 
     }
 
+    /**
+     *
+     * 腾讯云 短信
+     * @auther: liweijian
+     * @date: 2019/11/19 17:50
+     */
     @RequestMapping(value = "/sendSmsByTX",method = RequestMethod.GET)
     @ResponseBody
     public String sendSmsByTX(@RequestParam(defaultValue = "13078229267") String mobile) {

@@ -83,7 +83,7 @@ public class SendMessageServiceImpl implements SendMessageService {
 
 
     /**
-     * 功能描述: 发送短信
+     * 功能描述: 腾讯云 发送短信
      * @param:
      * @return:
      * @auther: liweijian
@@ -96,10 +96,10 @@ public class SendMessageServiceImpl implements SendMessageService {
 
         SmsSingleSender sender = new SmsSingleSender(APPID_TX, APPKEY);
         String one = text.substring(0, text.length() / 2);
-        String two = text.substring(text.length() / 2 + 1, text.length());
+        String two = text.substring(text.length() / 2, text.length());
         params.add(one);
         params.add(two);
-        SmsSingleSenderResult result =sender.sendWithParam("86", "13078229267",
+        SmsSingleSenderResult result =sender.sendWithParam("86", mobile,
                 templateid, params, SMSSIGN, "", "");
 
         return result.toString();

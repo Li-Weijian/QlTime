@@ -46,12 +46,18 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
 
         if (userList != null && userList.size() > 0){
             TbUser user = userList.get(0);
-            user.setOnlieTime(new Date());
-            userMapper.updateById(user);
+            this.setUserOnline(user.getId());
             logger.info("用户:"+user.getUsername() + " 登录成功，登录时间:"+ new Date());
             return user;
         }
 
         return null;
+    }
+
+    @Override
+    public void setUserOnline(Integer userid) {
+        TbUser user = userMapper.selectById(userid);
+        user.setOnlieTime(new Date());
+        userMapper.updateById(user);
     }
 }
