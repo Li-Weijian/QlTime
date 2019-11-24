@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.qcloudsms.SmsSingleSender;
 import com.github.qcloudsms.SmsSingleSenderResult;
 import com.github.qcloudsms.httpclient.HTTPException;
+import com.lovezz.dto.SmsResult;
 import com.lovezz.service.SendMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +16,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @Auther: liweijian
@@ -90,7 +90,7 @@ public class SendMessageServiceImpl implements SendMessageService {
      * @date: 2019/10/21 20:11
      */
     @Override
-    public String sendMessaage(String mobile, Integer templateid, ArrayList<String> params) throws IOException, HTTPException {
+    public SmsResult sendMessaage(String mobile, Integer templateid, ArrayList<String> params) throws IOException, HTTPException {
 
         String text = lovetextService.getOneTextRandom();
 
@@ -102,7 +102,7 @@ public class SendMessageServiceImpl implements SendMessageService {
         SmsSingleSenderResult result =sender.sendWithParam("86", mobile,
                 templateid, params, SMSSIGN, "", "");
 
-        return result.toString();
+        return JSONObject.parseObject(result.toString(),SmsResult.class);
     }
 
 

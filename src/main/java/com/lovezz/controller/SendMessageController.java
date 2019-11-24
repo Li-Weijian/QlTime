@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONException;
 import com.github.qcloudsms.SmsSingleSender;
 import com.github.qcloudsms.SmsSingleSenderResult;
 import com.github.qcloudsms.httpclient.HTTPException;
+import com.lovezz.dto.SmsResult;
 import com.lovezz.service.SendMessageService;
 import com.lovezz.utils.FileUtils;
 import com.lovezz.utils.TimeUtils;
@@ -67,9 +68,9 @@ public class SendMessageController {
      */
     @RequestMapping(value = "/sendSmsByTX",method = RequestMethod.GET)
     @ResponseBody
-    public String sendSmsByTX(@RequestParam(defaultValue = "13078229267") String mobile) {
+    public SmsResult sendSmsByTX(@RequestParam(defaultValue = "13078229267") String mobile) {
 
-        String result = null;
+        SmsResult result = null;
         try {
             long day = TimeUtils.daysBetween(new Date(Integer.parseInt(YEAR) - 1900, Integer.parseInt(MONTH) - 1, Integer.parseInt(DAY)), new Date());
 
