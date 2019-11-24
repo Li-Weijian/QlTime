@@ -16,7 +16,7 @@ http://localhost:8091/ticController/time
 http://localhost:8091/noteController/toNote
 
 ### 3. 发送短信路径
-http://localhost:8091/sms/sendSms
+http://localhost:8091/sms/sendSmsByTX
 
 ### 4. 图库
 http://localhost:8091/galleryController/toGallery
@@ -24,9 +24,15 @@ http://localhost:8091/galleryController/toGallery
 ### 5.登录
 http://localhost:8091/user/toLogin
 
+### 6.朋友圈
+http://localhost:8091/tops//toTops
+
 ## 运行说明
 问： 如何运行
 答： 配置好Mysql，运行即可。
+
+## 打包
+mvn clean package -Dmaven.test.skip=true
 
 
 ### 各位需要的话可以联系我呀，最后麻烦点赞~嘻嘻
