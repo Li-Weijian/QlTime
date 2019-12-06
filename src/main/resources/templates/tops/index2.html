@@ -137,7 +137,6 @@
 <script>
 
     $(document).ready(function () {
-        // toastr.options.positionClass = 'toast-bottom-center';
 
         //初始化
         var wxScale = new WxScale({
@@ -153,10 +152,11 @@
     });
 
     // 渲染弹出层并设置id
+    //有个比较坑的问题是，Mui的弹出层不能在循环中渲染，因此必须要手动将对应数据的id传递给它。
+    //还有一个需要注意的是，要在做处理的时候手动隐藏弹出层
     function render(topsId) {
         document.getElementById("commont").setAttribute("value",topsId);
         document.getElementById("delete").setAttribute("value",topsId);
-        // mui('#more').popover('toggle');
         mui('.mui-popover').popover('toggle',document.getElementById("openMore"+topsId));
     }
 
@@ -189,7 +189,7 @@
                             }
                             setTimeout(function () {
                                 window.location.reload()
-                            }, 2000);
+                            }, 1500);
 
                         },
                         async: false

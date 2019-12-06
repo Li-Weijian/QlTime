@@ -44,7 +44,7 @@ public class TopsController {
     @RequestMapping("/toPublish")
     public String toPublish(){
 
-        return "tops/publish";
+        return "tops/publish2";
     }
 
     @RequestMapping("/publishTops")
