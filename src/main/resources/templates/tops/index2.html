@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>记录日常</title>
+    <script src="/static/js/mui.min.js"></script>
+    <link href="/static/css/mui.min.css" rel="stylesheet"/>
+    <script type="text/javascript" charset="utf-8">
+        mui.init();
+    </script>
+
+    <style type="text/css">
+        pre {
+            margin-top: 10px;
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+            margin-top: 8px;
+            font-family: 微软雅黑;
+            color: #8f8f94;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .remark {
+            font-size: 26px;
+            color: red;
+            font-weight: bold;
+            display: none;
+        }
+
+        #imgBox img {
+            display: inline;
+            width: 30%;
+            height: 30%;
+            margin: 5px auto;
+            margin-right: 5px;
+        }
+
+        #fullPage {
+            display: none;
+            background: black;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 19930428;
+        }
+
+        #fullPage img {
+            display: block;
+            width: 100%;
+        }
+
+        #canvas {
+            width: 100%;
+            height: 100%;
+            background: none;
+            display: block;
+        }
+
+        #doDelete, #doCommont {
+            height: 30px;
+            font-size: 12px;
+            margin-left: 2px;
+        }
+
+        .time {
+            margin-left: 54px;
+            margin-top: 2px;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- 图片预览 -->
+<div id="fullPage">
+    <canvas id="canvas"></canvas>
+</div>
+<div class="remark">提示：该效果仅支持移动端</div>
+
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span style="font-size: 18px">首页</span></a>
+    <h1 class="mui-title">小日常</h1>
+    <a class="mui-icon mui-icon-bars mui-pull-right" href="#popover" id="openPopover"></a>
+</header>
+
+<div id="popover" class="mui-popover">
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell"><a href="/tops/toTops">小日常首页</a></li>
+        <li class="mui-table-view-cell"><a href="/tops/toPublish">发表新想法</a></li>
+    </ul>
+</div>
+
+<div id="more" class="mui-popover">
+    <ul class="mui-table-view">
+        <li class="mui-table-view-cell"><a id="commont" onclick="doCommont($(this).attr('value'))">评论</a></li>
+        <li class="mui-table-view-cell"><a id="delete" onclick="doDelete($(this).attr('value'))">删除</a></li>
+    </ul>
+</div>
+
+<ul class="mui-table-view" style="margin-top: 44px">
+    <li class="mui-table-view-cell mui-media" th:each="top: ${topsList}" th:id="${top.tops.id}">
+        <a href="javascript:;">
+            <img th:if="${top.tops.userId == 1}" class="mui-media-object mui-pull-left"
+                 src="/static/img/boy.jpg" style="max-width:44px; min-height: 44px; ">
+            <img th:if="${top.tops.userId == 2}" class="mui-media-object mui-pull-left"
+                 src="/static/img/girl.jpg" style="max-width:44px; min-height: 44px; ">
+            <div class="mui-media-body">
+                <span th:text="${top.tops.realname}"></span>
+                <pre th:text="${top.tops.content}"></pre>
+                <div class="mui-card-content mui-row" id="imgBox">
+                    <img th:each="img :${top.galleryList}" th:src="${img.url}+'?x-oss-process=image/auto-orient,1'", th:alt="${img.fileName}" class="mui-col-xs-3"/>
+                </div>
+            </div>
+            <div class="time">
+                <h6 style="float: left;" th:text="${#dates.format(top.tops.createTime, 'yyyy-MM-dd hh:mm:ss')}"></h6>
+                <a class="mui-icon mui-icon-more mui-pull-right openMore" th:id="openMore+${top.tops.id}" th:onclick="render([[${top.tops.id}]])"></a>
+<!--                <button type="button" class="mui-btn mui-btn-danger mui-btn-outlined mui-pull-right" id="doDelete" th:onclick="doDelete([[${top.tops.id}]])">删除</button>-->
+<!--                <button type="button" class="mui-btn mui-btn-primary mui-btn-outlined mui-pull-right" id="doCommont"  th:onclick="doCommont([[${top.tops.id}]])">评论</button>-->
+            </div>
+        </a>
+    </li>
+</ul>
+</body>
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script src="/static/js/wxScale.js" type="text/javascript"></script>
+
+<script>
+
+    $(document).ready(function () {
+        // toastr.options.positionClass = 'toast-bottom-center';
+
+        //初始化
+        var wxScale = new WxScale({
+            fullPage: document.querySelector("#fullPage"),
+            canvas: document.querySelector("#canvas")
+        });
+        var imgBox = document.querySelectorAll("#imgBox img"); //为需要的图片添加放大功能
+        for (var i = 0; i < imgBox.length; i++) {
+            imgBox[i].onclick = function (e) {
+                wxScale.start(this); //这里的this指向需要放大的这张图片
+            }
+        }
+    });
+
+    // 渲染弹出层并设置id
+    function render(topsId) {
+        document.getElementById("commont").setAttribute("value",topsId);
+        document.getElementById("delete").setAttribute("value",topsId);
+        // mui('#more').popover('toggle');
+        mui('.mui-popover').popover('toggle',document.getElementById("openMore"+topsId));
+    }
+
+
+    //删除
+    function doDelete(topsId) {
+
+        var data = {
+            "topsId": topsId
+        };
+        //关闭弹出层
+        mui('.mui-popover').popover('hide',document.getElementById("openMore"+topsId));
+
+
+        mui.confirm('确认要删除这条日常吗', '亲爱哒',['确定','取消'], function(e) {
+            if (e.index == 0) {
+                $.ajax(
+                    {
+                        type: "GET",
+                        contentType: "application/json;charset=UTF-8",
+                        url: "/tops/deleteTops",
+                        data: data,
+                        dataType: "json",
+                        //请求成功
+                        success: function (result) {
+                            if (result != null && result != '' && result.status == 200) {
+                                mui.toast('删除成功啦',{ duration:'long', type:'div'})
+                            } else {
+                                mui.toast('删除失败了哦',{ duration:'long', type:'div'})
+                            }
+                            setTimeout(function () {
+                                window.location.reload()
+                            }, 2000);
+
+                        },
+                        async: false
+                    });
+            } else {
+
+            }
+        })
+    }
+
+    function doCommont(topsId) {
+        //关闭弹出层
+        mui('.mui-popover').popover('hide',document.getElementById("openMore"+topsId));
+
+        mui.toast('评论功能还没做啦哈哈哈',{ duration:'long', type:'div'})
+    }
+
+
+</script>
+
+
+</body>
+</html>

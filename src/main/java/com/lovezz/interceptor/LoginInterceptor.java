@@ -3,6 +3,8 @@ package com.lovezz.interceptor;
 import com.lovezz.constant.SystemConstants;
 import com.lovezz.entity.TbUser;
 import com.lovezz.service.TbUserService;
+import com.lovezz.utils.SpringContextUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -27,6 +29,15 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         TbUser tbUser = (TbUser) httpServletRequest.getSession().getAttribute(SystemConstants.SESSION_USER_KEY);
+
+        String activeProfile = SpringContextUtil.getActiveProfile();
+        if (tbUser == null && StringUtils.equalsIgnoreCase(activeProfile,SystemConstants.ACTIVE_PROFILE_DEV)){
+            //开发环境
+            TbUser user = userService.selectById(1);
+            tbUser = user;
+            //存入session
+            httpServletRequest.getSession().setAttribute(SystemConstants.SESSION_USER_KEY,user);
+        }
 
 //        return true;
         // 未登录状态

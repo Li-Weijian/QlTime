@@ -8,4 +8,9 @@ package com.lovezz.constant;
  */
 public class SystemConstants {
     public static final String SESSION_USER_KEY = "tbUser";
+
+    /* 当前开发环境 */
+    public static final String ACTIVE_PROFILE_DEV = "dev";
+    public static final String ACTIVE_PROFILE_TEST = "test";
+    public static final String ACTIVE_PROFILE_prod = "prod";
 }

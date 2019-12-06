@@ -19,7 +19,7 @@ import java.util.Map;
 
 /**
  *
- * @Auther: liweijian
+ * @author liweijian
  * @Date: 2019/11/3 17:22
  * @Description: 留言板控制器
  */
@@ -33,11 +33,10 @@ public class TopsController {
 
     @RequestMapping("/toTops")
     public ModelAndView toTops(ModelAndView modelAndView){
-//        Integer userId = new RequestUtils().getLoginUserId();
         List<TopsDTO> topsList = topsService.getTopsList();
 
         modelAndView.addObject("topsList", topsList);
-        modelAndView.setViewName("tops/index");
+        modelAndView.setViewName("tops/index2");
 
         return modelAndView;
     }
