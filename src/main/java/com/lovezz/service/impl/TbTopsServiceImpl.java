@@ -1,6 +1,7 @@
 package com.lovezz.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.lovezz.constant.SystemConstants;
 import com.lovezz.dto.BaseResult;
 import com.lovezz.dto.ImageInfoDTO;
 import com.lovezz.dto.TopsDTO;
@@ -37,8 +38,6 @@ import java.util.UUID;
 @Transactional
 public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> implements TbTopsService {
 
-    //文件上传路径文件夹
-    private static final String TOPS_DIR = "topsImg/";
 
     @Autowired
     private OssUtil ossUtil;
@@ -66,7 +65,7 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
             topsMapper.insert(tops);
 
             for (MultipartFile file : fileList) {
-                String url = ossUtil.checkImage(file, TOPS_DIR);
+                String url = ossUtil.checkImage(file, SystemConstants.TOPS_DIR);
                 //无参数的连接 http://image-demo.oss-cn-hangzhou.aliyuncs.com/example.jpg
                 host = URLUtils.getPath(url);
 
@@ -89,6 +88,11 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
 
                 galleryMapper.insert(gallery);
             }
+
+
+
+
+
 
         } catch (Exception e) {
             e.printStackTrace();

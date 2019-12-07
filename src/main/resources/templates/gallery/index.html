@@ -13,7 +13,7 @@
     <!-- 注意： 如果通过 file://  引入 Respond.js 文件，则该文件无法起效果 -->
     <!--[if lt IE 9]>
 
-    <!--瀑布流-->
+    <!-- 瀑布流-->
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,500,700" rel="stylesheet">
@@ -83,6 +83,38 @@
             .pagination{ display: block; }
             .pagination li{ display: inline-block; }
         }
+
+
+        #imgBox img {
+            display: inline;
+            /*width: 30%;*/
+            /*height: 30%;*/
+            margin: 5px auto;
+            margin-right: 5px;
+        }
+
+        #fullPage {
+            display: none;
+            background: black;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 19930428;
+        }
+
+        #fullPage img {
+            display: block;
+            width: 100%;
+        }
+
+        #canvas {
+            width: 100%;
+            height: 100%;
+            background: none;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -130,12 +162,16 @@
         <div class="content content--center">
             <div class="grid grid--type-a">
                 <div class="grid__sizer"></div>
-                <div class="grid__item" th:each="gallery : ${galleryList}" >
+                <div class="grid__item" th:each="gallery : ${galleryList}" id="imgBox">
                     <a class="grid__link" href="#"><img class="grid__img" th:src="${gallery.url}+'?x-oss-process=image/auto-orient,1'" alt="Some image" /></a>
                 </div>
             </div>
         </div>
     </main>
+<!-- 图片预览 -->
+<div id="fullPage">
+    <canvas id="canvas"></canvas>
+</div>
 
 <div class="demo">
     <div class="container">
@@ -165,16 +201,27 @@
 <script src="/static/js/masonry.pkgd.min.js"></script>
 <script src="/static/js/anime.min.js"></script>
 <script src="/static/js/main.js"></script>
-<!--<script src="/static/assets/js/toastr.min.js"></script>-->
-<!--<script src="/static/assets/js/bootbox.locales.min.js"></script>-->
-<!--<script src="/static/assets/js/bootbox.min.js"></script>-->
-<!--<script src="/static/assets/js/bootbox.all.min.js"></script>-->
+<script src="/static/js/wxScale.js" type="text/javascript"></script>
 
 </body>
 
 
 <script type="text/javascript" th:inline="javascript">
     $(document).ready(function () {
+
+        //初始化
+        var wxScale = new WxScale({
+            fullPage: document.querySelector("#fullPage"),
+            canvas: document.querySelector("#canvas")
+        });
+        var imgBox = document.querySelectorAll("#imgBox img"); //为需要的图片添加放大功能
+        for (var i = 0; i < imgBox.length; i++) {
+            imgBox[i].onclick = function (e) {
+                wxScale.start(this); //这里的this指向需要放大的这张图片
+            }
+        }
+
+
         toastr.options.positionClass = 'toast-bottom-center';
 
         $("#saveContent").click(function () {

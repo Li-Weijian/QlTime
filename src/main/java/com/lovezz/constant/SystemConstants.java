@@ -13,4 +13,7 @@ public class SystemConstants {
     public static final String ACTIVE_PROFILE_DEV = "dev";
     public static final String ACTIVE_PROFILE_TEST = "test";
     public static final String ACTIVE_PROFILE_prod = "prod";
+
+    //小日常文件上传路径
+    public static final String TOPS_DIR = "topsImg/";
 }
