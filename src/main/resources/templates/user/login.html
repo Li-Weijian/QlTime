@@ -73,7 +73,7 @@
                         if (result.status == 200) {
                           toastr.success(result.message+",欢迎你呀 - "+ result.data.realname);
                           setTimeout(function () {
-                              window.location.href = "/ticController/time"
+                              window.location.href = "/menu/index"
                           }, 2000);
                         }else {
                             toastr.error(result.message);

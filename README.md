@@ -25,7 +25,10 @@ http://localhost:8091/galleryController/toGallery
 http://localhost:8091/user/toLogin
 
 ### 6.朋友圈
-http://localhost:8091/tops//toTops
+http://localhost:8091/tops/toTops
+
+### 7.首页
+http://localhost:8091/menu/toMenu
 
 ## 运行说明
 问： 如何运行

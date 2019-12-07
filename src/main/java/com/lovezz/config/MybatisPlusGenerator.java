@@ -42,7 +42,7 @@ public class MybatisPlusGenerator {
                 .setEntityLombokModel(false)
                 .setDbColumnUnderline(true)
                 .setNaming(NamingStrategy.underline_to_camel)
-                .setInclude("tb_tops","tb_comments");
+                .setInclude("tb_menu");
         config.setActiveRecord(false)
                 .setEnableCache(false)
                 .setAuthor("liweijian")

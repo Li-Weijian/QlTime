@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+        <title>首页</title>
+        <script src="/static/js/mui.min.js"></script>
+        <link href="/static/css/mui.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" type="text/css" href="/static/css/iconfont.css"/>
+        <script type="text/javascript" charset="utf-8">
+            mui.init();
+        </script>
+    </head>
+    <body>
+
+        <div class="mui-content">
+            <ul class="mui-table-view mui-grid-view mui-grid-9">
+                <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" th:each="menu: ${menuList}">
+                    <a th:href="${menu.url}">
+                        <span th:class="${menu.icon}"></span>
+                        <div class="mui-media-body" th:text="${menu.name}"></div>
+                    </a>
+                </li>
+                <!--<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+                    <a>
+                        <span class="mui-icon iconfont icon-gengduo"></span>
+                        <div class="mui-media-body" th:text="测试"></div>
+                    </a>
+                </li>-->
+            </ul>
+        </div>
+    </body>
+</html>
