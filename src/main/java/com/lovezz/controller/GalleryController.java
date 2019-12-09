@@ -1,5 +1,7 @@
 package com.lovezz.controller;
 
+import com.lovezz.annotation.OperationEmailDetail;
+import com.lovezz.constant.OperationModule;
 import com.lovezz.entity.TbGallery;
 import com.lovezz.service.TbGalleryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,7 @@ public class GalleryController {
      * @Function: 图片上传
      */
     @RequestMapping("/postImages")
+    @OperationEmailDetail(content = "新添加了一条【共同记忆】啦，快打开App查看吧", operationClass = OperationModule.GALLERY)
     public String fileUpload(@RequestParam(value = "fileupload", required = false) MultipartFile file) throws MalformedURLException {
         galleryService.fileUpload(file);
         return "redirect:/galleryController/toGallery";

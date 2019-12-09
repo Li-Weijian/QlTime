@@ -1,6 +1,8 @@
 package com.lovezz.controller;
 
 
+import com.lovezz.annotation.OperationEmailDetail;
+import com.lovezz.constant.OperationModule;
 import com.lovezz.entity.TbNote;
 import com.lovezz.service.TbNoteService;
 import com.lovezz.utils.RequestUtils;
@@ -43,6 +45,7 @@ public class NoteController {
 
     @RequestMapping("/savaContent")
     @ResponseBody
+    @OperationEmailDetail(content = "新添加了一条【小约定】啦，快打开App查看吧", operationClass = OperationModule.NOTE)
     public Boolean savaOrUpdateContent(TbNote note){
         note.setUserId(new RequestUtils().getLoginUserId());
 

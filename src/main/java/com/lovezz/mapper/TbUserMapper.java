@@ -3,6 +3,9 @@ package com.lovezz.mapper;
 import com.lovezz.entity.TbUser;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  *  Mapper 接口
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface TbUserMapper extends BaseMapper<TbUser> {
 
+    List<String> selectUserEmail(Map param);
 }

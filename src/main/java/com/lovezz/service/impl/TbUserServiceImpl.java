@@ -15,6 +15,7 @@ import org.springframework.util.DigestUtils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -60,4 +61,11 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
         user.setOnlieTime(new Date());
         userMapper.updateById(user);
     }
+
+    @Override
+    public List<String> selectUserEmail(Map param) {
+        return userMapper.selectUserEmail(param);
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package com.lovezz.service.impl;
 
+import com.lovezz.annotation.OperationEmailDetail;
 import com.lovezz.service.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

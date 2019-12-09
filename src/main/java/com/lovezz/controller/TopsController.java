@@ -1,5 +1,7 @@
 package com.lovezz.controller;
 
+import com.lovezz.annotation.OperationEmailDetail;
+import com.lovezz.constant.OperationModule;
 import com.lovezz.dto.BaseResult;
 import com.lovezz.dto.TopsDTO;
 import com.lovezz.entity.TbTops;
@@ -49,6 +51,7 @@ public class TopsController {
 
     @RequestMapping("/publishTops")
     @ResponseBody
+    @OperationEmailDetail(content = "新添加了一条【小日常】啦，快打开App查看吧", operationClass = OperationModule.TOPS)
     public Map<String,Object> publishTops(@RequestParam("file") MultipartFile[] file, @RequestParam("topText") String topText) throws Exception{
         Map<String, Object> resultMap = new HashMap<>();
 
