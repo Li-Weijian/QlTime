@@ -26,7 +26,8 @@ public @interface OperationEmailDetail {
     String content() default "";
 
     /**
-     * 邮件主题
+     * 邮件主题 默认为空，切面根据操作模块来拼接
+     * ps: 【新消息通知】小约定
      * @auther: liweijian
      * @date: 2019/12/9 20:37
      */
