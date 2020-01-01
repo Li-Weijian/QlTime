@@ -65,7 +65,7 @@ public class SendSmsJob {
             result = sendMessageService.sendMessaage(MOBILE, TEMPLATEID2, params);
 
             //发送短信失败
-            if (result.getResult() != 0 || "ok".equalsIgnoreCase(result.getErrmsg())){
+            if (result.getResult() != 0 || !"ok".equalsIgnoreCase(result.getErrmsg())){
                 String context = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                         + ": 短信发送失败，错误信息：" + result.getErrmsg() + ",错误码："+result.getResult();
 

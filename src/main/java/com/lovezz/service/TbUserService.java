@@ -34,4 +34,11 @@ public interface TbUserService extends IService<TbUser> {
      */
     List<String> selectUserEmail(Map param);
 
+    /**
+     * 获取用户名
+     * @auther: liweijian
+     * @date: 2020/1/1 20:02
+     */
+    String selectUserName(Integer userid);
+
 }

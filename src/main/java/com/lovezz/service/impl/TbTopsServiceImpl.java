@@ -13,9 +13,11 @@ import com.lovezz.mapper.TbGalleryMapper;
 import com.lovezz.mapper.TbTopsMapper;
 import com.lovezz.service.TbTopsService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.lovezz.service.TbUserService;
 import com.lovezz.utils.OssUtil;
 import com.lovezz.utils.RequestUtils;
 import com.lovezz.utils.URLUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +52,11 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
 
     @Autowired
     private TbCommentsMapper commentsMapper;
+
+    @Autowired
+    private TbUserService userService;
+
+    List<TbComments> resultList = new ArrayList<>();
 
 
     @Override
@@ -89,11 +96,6 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
                 galleryMapper.insert(gallery);
             }
 
-
-
-
-
-
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -110,31 +112,60 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
         List<TopsDTO> dtoList = new ArrayList<>();
 
         List<TbGallery> galleryList = null;
-        List<TbComments> commentsList = null;
 
         for (TbTops tops : topsList) {
             TopsDTO topsDTO = new TopsDTO();
+            List<List<TbComments>> commentsList = new ArrayList<>();
 
-
-            //添加图片
+            //查询图片
             galleryList = galleryMapper.selectList(new EntityWrapper<TbGallery>().eq("topId", tops.getId()).eq("flag", "1"));
             if (galleryList != null && galleryList.size() > 0){
                 topsDTO.setGalleryList(galleryList);
             }
 
-            //添加评论
-            commentsList =  commentsMapper.selectList(new EntityWrapper<TbComments>().eq("topId", tops.getId())
-                    .eq("state", "0").eq("isDelete", "0"));
-            if (commentsList != null && commentsList.size() > 0){
-                topsDTO.setCommentsList(commentsList);
+            //查询评论
+            List<TbComments> comments = this.commentsMapper.selectList(new EntityWrapper<TbComments>().eq("topId", tops.getId()).eq("isDelete", "0")
+                    .orderBy("created", true));
+            for (TbComments comm : comments) {
+                List<TbComments> replayList = new ArrayList<>();
+                String userName = userService.selectUserName(comm.getUserId());
+                comm.setContent(userName+" 回复："+comm.getContent());
+                replayList.add(comm);
+                replayList.addAll(selectCommentsByTopId(comm.getId()));
+                commentsList.add(replayList);
+                resultList.clear();
             }
+
+            topsDTO.setCommentsList(commentsList);
             topsDTO.setTops(tops);
             dtoList.add(topsDTO);
         }
 
-
         return dtoList;
     }
+
+    // 根据说说id构建属于该说说的评论列表
+    private List<TbComments> selectCommentsByTopId(String topsId){
+        List<TbComments> replayList = this.commentsMapper.selectList(new EntityWrapper<TbComments>().eq("lastId", topsId).eq("isDelete", "0")
+                .orderBy("created", true));
+
+        String userName;
+        String replayUserName;
+
+        if (replayList != null &&  replayList.size() > 0){
+            for (TbComments comments : replayList) {
+                userName = userService.selectUserName(comments.getUserId());
+                replayUserName = userService.selectUserName(comments.getReplayUserId());
+                comments.setContent(userName+" 回复 "+replayUserName + ":"+ comments.getContent());
+                resultList.add(comments);
+                this.selectCommentsByTopId(comments.getId());
+            }
+        }
+
+         return resultList;
+    }
+
+
 
     @Override
     public BaseResult deleteTops(String topsId) {
@@ -166,5 +197,34 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
 
             return BaseResult.success();
         }
+    }
+
+    @Override
+    public BaseResult doCommont(String topId, String content, String flag) {
+        TbComments comments = new TbComments();
+        comments.setIsDelete("0");
+        comments.setFlag(flag);
+        comments.setUserId(new RequestUtils().getLoginUserId());
+        comments.setFlag(flag);
+        comments.setContent(content);
+
+        //回复说说
+        if (StringUtils.isNotBlank(flag) && "0".equals(flag)){
+            comments.setTopId(topId);
+            comments.setLastId("");
+            TbTops tops = this.selectById(topId);
+            comments.setReplayUserId(tops.getUserId());
+
+        }else if (StringUtils.isNotBlank(flag) && "1".equals(flag)){
+            //回复评论
+            comments.setTopId("");
+            comments.setLastId(topId);
+            TbComments comm = this.commentsMapper.selectById(topId);
+            comments.setReplayUserId(comm.getUserId());
+        }
+
+        this.commentsMapper.insert(comments);
+
+        return BaseResult.success();
     }
 }

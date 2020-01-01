@@ -41,4 +41,11 @@ public interface TbTopsService extends IService<TbTops> {
      */
     BaseResult deleteTops(String topsId);
 
+    /**
+     * 发表评论
+     * @auther: liweijian
+     * @date: 2020/1/1 17:58
+     */
+    BaseResult doCommont(String topId, String content, String flag);
+
 }

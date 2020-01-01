@@ -22,7 +22,7 @@ public class TopsDTO {
     private List<TbGallery> galleryList;
 
     //评论列表
-    private List<TbComments> commentsList;
+    private List<List<TbComments>> commentsList;
 
 
     public TbTops getTops() {
@@ -41,11 +41,11 @@ public class TopsDTO {
         this.galleryList = galleryList;
     }
 
-    public List<TbComments> getCommentsList() {
+    public List<List<TbComments>> getCommentsList() {
         return commentsList;
     }
 
-    public void setCommentsList(List<TbComments> commentsList) {
+    public void setCommentsList(List<List<TbComments>> commentsList) {
         this.commentsList = commentsList;
     }
 }

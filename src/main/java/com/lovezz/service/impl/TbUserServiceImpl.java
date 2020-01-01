@@ -67,5 +67,10 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
         return userMapper.selectUserEmail(param);
     }
 
+    @Override
+    public String selectUserName(Integer userid) {
+        return userMapper.selectById(userid).getRealname();
+    }
+
 
 }

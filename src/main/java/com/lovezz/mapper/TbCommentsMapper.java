@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * </p>
  *
  * @author liweijian123
- * @since 2019-11-03
+ * @since 2020-01-01
  */
 public interface TbCommentsMapper extends BaseMapper<TbComments> {
 

@@ -100,8 +100,8 @@
 
 <div id="more" class="mui-popover">
     <ul class="mui-table-view">
-        <li class="mui-table-view-cell"><a id="commont" onclick="doCommont($(this).attr('value'))">评论</a></li>
-        <li class="mui-table-view-cell"><a id="delete" onclick="doDelete($(this).attr('value'))">删除</a></li>
+        <li class="mui-table-view-cell"><a id="commont" onclick="doCommont($(this).attr('value'),$(this).attr('flag'))">评论</a></li>
+        <li class="mui-table-view-cell"><a id="delete" onclick="doDelete($(this).attr('value'),$(this).attr('flag'))">删除</a></li>
     </ul>
 </div>
 
@@ -121,9 +121,23 @@
             </div>
             <div class="time">
                 <h6 style="float: left;" th:text="${#dates.format(top.tops.createTime, 'yyyy-MM-dd hh:mm:ss')}"></h6>
-                <a class="mui-icon mui-icon-more mui-pull-right openMore" th:id="openMore+${top.tops.id}" th:onclick="render([[${top.tops.id}]])"></a>
-<!--                <button type="button" class="mui-btn mui-btn-danger mui-btn-outlined mui-pull-right" id="doDelete" th:onclick="doDelete([[${top.tops.id}]])">删除</button>-->
-<!--                <button type="button" class="mui-btn mui-btn-primary mui-btn-outlined mui-pull-right" id="doCommont"  th:onclick="doCommont([[${top.tops.id}]])">评论</button>-->
+                <a class="mui-icon mui-icon-more mui-pull-right openMore" th:id="openMore+${top.tops.id}" th:onclick="render([[${top.tops.id}]],0)"></a>
+            </div>
+
+            <div style="margin-left: 50px;">
+                <div th:each="commList: ${top.commentsList}">
+                    <div th:each="comm:${commList}">
+                        <div style="width: 100%;display: flex;box-sizing: border-box; background: #F8f8f8;">
+                            <div style="width: 88%;justify-content: flex-start; margin-left: 8px;">
+                                <pre th:text="${comm.content}" style="font-size: 10px"></pre>
+                            </div>
+                            <div style="width:10%;justify-content: flex-end; margin-top: 5px">
+                                <a class="mui-icon mui-icon-more mui-pull-right openMore"  th:id="openMore+${comm.id}" th:onclick="render([[${comm.id}]],1)"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </a>
     </li>
@@ -154,18 +168,24 @@
     // 渲染弹出层并设置id
     //有个比较坑的问题是，Mui的弹出层不能在循环中渲染，因此必须要手动将对应数据的id传递给它。
     //还有一个需要注意的是，要在做处理的时候手动隐藏弹出层
-    function render(topsId) {
+    //flag： 0- 评论， 1-回复
+    function render(topsId,flag) {
+        //设置id
         document.getElementById("commont").setAttribute("value",topsId);
         document.getElementById("delete").setAttribute("value",topsId);
+        //设置flag
+        document.getElementById("commont").setAttribute("flag",flag);
+        document.getElementById("delete").setAttribute("flag",flag);
         mui('.mui-popover').popover('toggle',document.getElementById("openMore"+topsId));
     }
 
 
     //删除
-    function doDelete(topsId) {
+    function doDelete(topsId,flag) {
 
         var data = {
-            "topsId": topsId
+            "topsId": topsId,
+            "flag":flag
         };
         //关闭弹出层
         mui('.mui-popover').popover('hide',document.getElementById("openMore"+topsId));
@@ -200,11 +220,43 @@
         })
     }
 
-    function doCommont(topsId) {
+    function doCommont(topsId,flag) {
         //关闭弹出层
         mui('.mui-popover').popover('hide',document.getElementById("openMore"+topsId));
 
-        mui.toast('评论功能还没做啦哈哈哈',{ duration:'long', type:'div'})
+        //弹出评论窗体
+        mui.prompt('请输入您的评论哈','','评论',['提交','取消'],function (e) {
+            if (e.index == 0){
+                var data = {
+                    "topId": topsId,
+                    "content":e.value,
+                    "flag":flag
+                };
+                $.ajax(
+                    {
+                        type: "GET",
+                        contentType: "application/json;charset=UTF-8",
+                        url: "/tops/doCommont",
+                        data: data,
+                        dataType: "json",
+                        //请求成功
+                        success: function (result) {
+
+                            if (result != null && result != '' && result.status == 200) {
+                                mui.toast('发表成功啦',{ duration:'long', type:'div'})
+                            } else {
+                                mui.toast('发表失败了哦',{ duration:'long', type:'div'})
+                            }
+                            setTimeout(function () {
+                                window.location.reload()
+                            }, 1500);
+
+                        },
+                        async: false
+                    });
+            }
+
+        },'div');
     }
 
 

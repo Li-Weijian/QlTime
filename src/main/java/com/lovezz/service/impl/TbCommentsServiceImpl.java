@@ -1,5 +1,6 @@
 package com.lovezz.service.impl;
 
+import com.lovezz.dto.BaseResult;
 import com.lovezz.entity.TbComments;
 import com.lovezz.mapper.TbCommentsMapper;
 import com.lovezz.service.TbCommentsService;
@@ -17,4 +18,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class TbCommentsServiceImpl extends ServiceImpl<TbCommentsMapper, TbComments> implements TbCommentsService {
 
+
+    @Override
+    public BaseResult deleteComment(String commentId) {
+        TbComments comments = new TbComments();
+        comments.setId(commentId);
+        comments.setIsDelete("1");
+        this.updateById(comments);
+        return BaseResult.success();
+    }
 }
