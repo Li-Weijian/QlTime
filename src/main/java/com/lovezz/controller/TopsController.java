@@ -93,7 +93,7 @@ public class TopsController {
      */
     @RequestMapping("/doCommont")
     @ResponseBody
-//    @OperationEmailDetail(content = "【小日常】收到一条新评论啦，快打开App查看吧",operationClass = OperationModule.TOPS)
+    @OperationEmailDetail(content = "【小日常】收到一条新评论啦，快打开App查看吧",operationClass = OperationModule.TOPS)
     public BaseResult doCommont(String topId, String content, String flag){
 
         return topsService.doCommont(topId,content,flag);
