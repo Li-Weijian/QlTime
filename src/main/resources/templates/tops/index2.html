@@ -113,7 +113,7 @@
             <img th:if="${top.tops.userId == 2}" class="mui-media-object mui-pull-left"
                  src="/static/img/girl.jpg" style="max-width:44px; min-height: 44px; ">
             <div class="mui-media-body">
-                <span th:text="${top.tops.realname}"></span>
+                <span style="color: #6495ED" th:text="${top.tops.realname}"></span>
                 <pre th:text="${top.tops.content}"></pre>
                 <div class="mui-card-content mui-row" id="imgBox">
                     <img th:each="img :${top.galleryList}" th:src="${img.url}+'?x-oss-process=image/auto-orient,1'", th:alt="${img.fileName}" class="mui-col-xs-3"/>
