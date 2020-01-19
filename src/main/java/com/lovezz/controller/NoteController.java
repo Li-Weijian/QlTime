@@ -25,13 +25,14 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/noteController")
+@CrossOrigin("*")
 public class NoteController {
 
     @Autowired
     private TbNoteService noteService;
 
     @RequestMapping("/toNote")
-    public ModelAndView toNote(ModelAndView modelAndView, @RequestParam(defaultValue = "0") int offset, @RequestParam(defaultValue = "5") int limit){
+    public ModelAndView toNote(ModelAndView modelAndView, @RequestParam(defaultValue = "0") int offset, @RequestParam(defaultValue = "10") int limit){
         modelAndView.addObject("contentList", noteService.getNoteList(offset,limit));
         modelAndView.setViewName("note/ceshi");
         return modelAndView;
@@ -39,7 +40,7 @@ public class NoteController {
 
     @RequestMapping("/getNoteList")
     @ResponseBody
-    public List<TbNote> getNoteList(@RequestParam(defaultValue = "0") int offset, @RequestParam(defaultValue = "5") int limit) {
+    public List<TbNote> getNoteList(@RequestParam(defaultValue = "0") int offset, @RequestParam(defaultValue = "10") int limit) {
         return noteService.getNoteList(offset, limit);
     }
 

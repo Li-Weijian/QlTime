@@ -1,8 +1,13 @@
 package com.lovezz.controller;
 
+import com.lovezz.dto.BaseResult;
+import com.lovezz.service.TbLovetextService;
 import com.lovezz.utils.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
@@ -16,7 +21,11 @@ import java.util.Random;
  */
 @Controller
 @RequestMapping("/ticController")
+@CrossOrigin("*")
 public class TicController {
+
+    @Autowired
+    private TbLovetextService lovetextService;
 
     @RequestMapping("/time")
     public ModelAndView TimeRecording(ModelAndView modelAndView) throws IOException {
@@ -33,4 +42,11 @@ public class TicController {
     public String cleanPage(){
         return "tic/content/clean";
     }
+
+    @RequestMapping("/getLoveText")
+    @ResponseBody
+    public BaseResult getLoveText(){
+        return BaseResult.success("成功",lovetextService.getOneTextRandom());
+    }
+
 }

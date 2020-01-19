@@ -7,5 +7,6 @@
         inner join tb_user b where a.userId = b.id
         and a.isDelete = 0
         order by a.isComplete asc
+        LIMIT #{offset}, #{limit}
     </select>
 </mapper>
