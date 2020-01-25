@@ -1,5 +1,6 @@
 package com.lovezz.service;
 
+import com.lovezz.dto.GalleryVo;
 import com.lovezz.entity.TbGallery;
 import com.baomidou.mybatisplus.service.IService;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +19,14 @@ import java.util.List;
 public interface TbGalleryService extends IService<TbGallery> {
 
     String fileUpload(MultipartFile file) throws MalformedURLException;
+    String fileUpload(MultipartFile file, String flag) throws MalformedURLException;
+    List<String> fileUpload(MultipartFile[] file, String flag) throws MalformedURLException;
+
+
 
     List<TbGallery> selectGalleryList(Integer action, Integer page);
+
+    GalleryVo selectGalleryWrapper();
+
 
 }

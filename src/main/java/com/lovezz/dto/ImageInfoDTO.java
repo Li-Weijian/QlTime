@@ -6,11 +6,6 @@ package com.lovezz.dto;
  * @Description:
  */
 
-
-
-
-
-
 public class ImageInfoDTO
 {
     private FileSize FileSize;

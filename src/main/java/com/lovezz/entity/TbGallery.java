@@ -37,7 +37,7 @@ public class TbGallery implements Serializable {
     @TableField("userId")
     private Integer userId;
 
-    //用途：0 - 图库 ， 1- 留言板
+    //用途：0 - 图库 ， 1- 留言板, 2- 临时
     private String flag;
 
     //留言板id
