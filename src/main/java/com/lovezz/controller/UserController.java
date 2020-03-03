@@ -5,12 +5,17 @@ import com.lovezz.constant.SystemConstants;
 import com.lovezz.dto.BaseResult;
 import com.lovezz.entity.TbUser;
 import com.lovezz.service.TbUserService;
+import com.lovezz.utils.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author liweijian
@@ -64,6 +69,38 @@ public class UserController {
             request.getSession().setAttribute(SystemConstants.SESSION_USER_KEY,result);
             return BaseResult.success("登录成功啦",result);
         }
+    }
+
+    /**
+     * 登录 - 适配前后端分离架构
+     * @auther: liweijian
+     */
+    @RequestMapping(value = "/login2", method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResult login2(@RequestBody TbUser user, HttpServletRequest request, HttpServletResponse response){
+
+        TbUser result  = userService.login(user.getUsername(), user.getPassword());
+
+        if (result == null){
+            return BaseResult.fail("用户名或者密码错误");
+        }else {
+            String token = new RequestUtils().generateToken(result);
+
+            Cookie cookie = new Cookie("token", token);
+            //不设置路径的话, 会以当前路径为默认值，会导致其他页面不携带该cookie
+            cookie.setPath("/");
+            cookie.setMaxAge(2147483647);
+            response.addCookie(cookie);
+            Map<String, Object> data = new HashMap<>();
+            data.put("token", token);
+            data.put("user", result);
+            return BaseResult.success("登录成功啦",data);
+        }
+    }
+
+    @RequestMapping(value = "/goodbye")
+    public String goodbye(){
+        return "user/goodbye";
     }
 }
 

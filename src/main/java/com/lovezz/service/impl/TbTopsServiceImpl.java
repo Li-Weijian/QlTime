@@ -106,9 +106,12 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
 
     @Override
     public List<TopsDTO> getTopsList() {
+        return this.getTopsList(null, null);
+    }
 
-
-        List<TbTops> topsList = topsMapper.selectTopList();
+    @Override
+    public List<TopsDTO> getTopsList(Integer offset, Integer limit) {
+        List<TbTops> topsList = topsMapper.selectTopList(offset, limit);
         List<TopsDTO> dtoList = new ArrayList<>();
 
         List<TbGallery> galleryList = null;
@@ -143,6 +146,7 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
 
         return dtoList;
     }
+
 
     // 根据说说id构建属于该说说的评论列表
     private List<TbComments> selectCommentsByTopId(String topsId){

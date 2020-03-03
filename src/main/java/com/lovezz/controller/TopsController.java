@@ -99,6 +99,19 @@ public class TopsController {
         return topsService.doCommont(topId,content,flag);
     }
 
+    /**
+     *
+     * 获取分页数据
+     * @auther: liweijian
+     * @date: 2020/2/24 21:19
+     */
+    @RequestMapping("/getTopsList")
+    @ResponseBody
+    public BaseResult getTopsList(@RequestParam(defaultValue = "0") int offset, @RequestParam(defaultValue = "10") int limit){
+        List<TopsDTO> topsList = topsService.getTopsList(offset, limit);
+        return BaseResult.success("操作成功", topsList);
+    }
+
 
 
 

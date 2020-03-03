@@ -16,4 +16,6 @@ public class SystemConstants {
 
     //小日常文件上传路径
     public static final String TOPS_DIR = "topsImg/";
+
+    public static final String TOKEN = "token";
 }

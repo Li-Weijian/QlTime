@@ -35,6 +35,12 @@ public interface TbTopsService extends IService<TbTops> {
     List<TopsDTO> getTopsList();
 
     /**
+     * 获取分页留言列表
+     * @auther: liweijian
+     */
+    List<TopsDTO> getTopsList(Integer offset, Integer limit);
+
+    /**
      * 删除留言
      * @auther: liweijian
      * @date: 2019/11/6 20:34

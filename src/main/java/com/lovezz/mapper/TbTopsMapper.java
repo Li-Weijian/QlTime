@@ -2,6 +2,7 @@ package com.lovezz.mapper;
 
 import com.lovezz.entity.TbTops;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,5 +16,5 @@ import java.util.List;
  */
 public interface TbTopsMapper extends BaseMapper<TbTops> {
 
-    List<TbTops> selectTopList();
+    List<TbTops> selectTopList(@Param("offset") Integer offset, @Param("limit") Integer limit);
 }
