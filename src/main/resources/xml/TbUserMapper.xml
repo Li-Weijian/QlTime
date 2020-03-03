@@ -3,6 +3,9 @@
 <mapper namespace="com.lovezz.mapper.TbUserMapper">
 
     <select id="selectUserEmail" resultType="java.lang.String">
-        SELECT email FROM tb_user where isDelete = #{isDelete} and id &lt;&gt; #{id};
+        SELECT email FROM tb_user where isDelete = #{isDelete}
+        <if test="id != null">
+            and id &lt;&gt; #{id};
+        </if>
     </select>
 </mapper>

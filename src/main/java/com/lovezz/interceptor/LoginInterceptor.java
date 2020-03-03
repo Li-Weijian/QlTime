@@ -40,7 +40,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
         httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
 
-        Integer userId = new RequestUtils().getLoginUserId(httpServletRequest);
+        Integer userId = new RequestUtils().getLoginUserId();
         if (userId != null){
             //设置上线时间
             userService.setUserOnline(userId);

@@ -34,13 +34,16 @@ public class RequestUtils {
     }
 
     /**
-     * 获取当前登录用户id
-     * @return: 用户id
-     * @auther: liweijian
-     * @date: 2019/11/1 23:11
+     * 通过token获取用户id - 适配前后端分离架构
      */
     public Integer getLoginUserId(){
-        return getLoginUser().getId();
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (SystemConstants.TOKEN.equalsIgnoreCase(cookie.getName())){
+                return Integer.parseInt(cookie.getValue().split("|")[0]);
+            }
+        }
+        return null;
     }
 
     /**
@@ -52,18 +55,5 @@ public class RequestUtils {
         return user.getId() + "|" + DigestUtils.sha1Hex(user.getId() + user.getUsername());
     }
 
-    /**
-     * 通过token获取用户id - 适配前后端分离架构
-     * @param request
-     * @return
-     */
-    public Integer getLoginUserId(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (SystemConstants.TOKEN.equalsIgnoreCase(cookie.getName())){
-                return Integer.parseInt(cookie.getValue().split("|")[0]);
-            }
-        }
-       return null;
-    }
+
 }
