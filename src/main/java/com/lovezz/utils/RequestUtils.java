@@ -3,8 +3,6 @@ package com.lovezz.utils;
 import com.lovezz.constant.SystemConstants;
 import com.lovezz.entity.TbUser;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -19,7 +17,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class RequestUtils {
 
-    private HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+    private ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+    private HttpServletRequest request = attributes.getRequest();
 
 
     /**

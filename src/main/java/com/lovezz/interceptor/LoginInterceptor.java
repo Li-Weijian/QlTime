@@ -4,6 +4,7 @@ import com.lovezz.constant.SystemConstants;
 import com.lovezz.dto.BaseResult;
 import com.lovezz.entity.TbUser;
 import com.lovezz.service.TbUserService;
+import com.lovezz.utils.IpUtil;
 import com.lovezz.utils.RequestUtils;
 import com.lovezz.utils.SpringContextUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 
@@ -34,21 +36,26 @@ public class LoginInterceptor implements HandlerInterceptor {
 
 
     @Override
-    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
+    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) {
         //设置跨域，不设置会导致接收不了cookie
-        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
-        httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
-        httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
+//        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+//        httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+//        httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
+        try {
+            Integer userId = new RequestUtils().getLoginUserId();
+            if (userId != null){
+                //设置上线时间
+                userService.setUserOnline(userId);
+                String ipAddr = IpUtil.getIpAddr(httpServletRequest);
+                System.out.println("IP : " + ipAddr + ", 时间: " + LocalDateTime.now() + ", userId: " + userId);
 
-        Integer userId = new RequestUtils().getLoginUserId();
-        if (userId != null){
-            //设置上线时间
-            userService.setUserOnline(userId);
-            return true;
-        }else {
-           throw new RuntimeException("登录过期");
+                return true;
+            }else {
+                throw new RuntimeException("登录过期");
+            }
+        }catch (Exception e){
+            throw new RuntimeException("登录过期");
         }
-
     }
 
     @Override

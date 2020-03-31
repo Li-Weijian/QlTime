@@ -76,7 +76,7 @@ public class GalleryController {
     @ResponseBody
     @OperationEmailDetail(content = "新添加了一条【共同记忆】啦，快打开App查看吧", operationClass = OperationModule.GALLERY)
     public BaseResult uploadImages(@RequestParam(value = "fileupload", required = false) MultipartFile[] file) throws MalformedURLException {
-        List<String> urlList = galleryService.fileUpload(file,"2");
+        List<String> urlList = galleryService.fileUpload(file,"0");
         return BaseResult.success("成功", urlList);
     }
 
