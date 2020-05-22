@@ -42,6 +42,19 @@ public class TbMenu implements Serializable {
     private Date created = new Date();
     private Date updated = new Date();
 
+    /**
+     * 用途： 0- 前后端分离菜单， 1-单体菜单， 2-健康统计菜单
+     */
+    private String type;
+
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getId() {
         return id;
