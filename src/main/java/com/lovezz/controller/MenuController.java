@@ -6,10 +6,7 @@ import com.lovezz.entity.TbMenu;
 import com.lovezz.service.TbMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -44,8 +41,9 @@ public class MenuController {
 
     @GetMapping("/getMenuList")
     @ResponseBody
-    public BaseResult getMenuList(){
-        List<TbMenu> menuList = menuService.selectList(new EntityWrapper<TbMenu>().eq("type", "0").eq("isDelete","0"));
+    public BaseResult getMenuList(@RequestParam(value = "type", defaultValue = "0", required = false) String type){
+        List<TbMenu> menuList = menuService.selectList(new EntityWrapper<TbMenu>().eq("type",type).eq("isDelete","1"));
         return BaseResult.success("成功",menuList);
     }
+
 }

@@ -29,12 +29,12 @@ public class MybatisPlusGenerator {
 
     public void autoGeneration() {
         GlobalConfig config = new GlobalConfig();
-        String dbUrl = "jdbc:mysql://rm-wz9f64lkbumn4ydb89o.mysql.rds.aliyuncs.com:3306/lovezz?serverTimezone=GMT%2B8";
+        String dbUrl = "jdbc:mysql://39.106.156.28:3306/lovezz?serverTimezone=GMT%2B8";
         DataSourceConfig dataSourceConfig = new DataSourceConfig();
         dataSourceConfig.setDbType(DbType.MYSQL)
                 .setUrl(dbUrl)
                 .setUsername("root")
-                .setPassword("Qq352642663")
+                .setPassword("root")
                 .setDriverName("com.mysql.cj.jdbc.Driver");
         StrategyConfig strategyConfig = new StrategyConfig();
         strategyConfig
@@ -42,7 +42,7 @@ public class MybatisPlusGenerator {
                 .setEntityLombokModel(false)
                 .setDbColumnUnderline(true)
                 .setNaming(NamingStrategy.underline_to_camel)
-                .setInclude("tb_comments");
+                .setInclude("tb_weight");
         config.setActiveRecord(false)
                 .setEnableCache(false)
                 .setAuthor("liweijian")

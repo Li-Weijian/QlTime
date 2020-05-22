@@ -1,9 +1,7 @@
 package com.lovezz.service;
 
-import com.lovezz.entity.TbMenu;
+import com.lovezz.entity.TbWeight;
 import com.baomidou.mybatisplus.service.IService;
-
-import java.util.List;
 
 /**
  * <p>
@@ -11,8 +9,9 @@ import java.util.List;
  * </p>
  *
  * @author liweijian123
- * @since 2019-12-07
+ * @since 2020-05-22
  */
-public interface TbMenuService extends IService<TbMenu> {
+public interface TbWeightService extends IService<TbWeight>{
+
 
 }
