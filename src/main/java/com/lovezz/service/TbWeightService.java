@@ -1,7 +1,10 @@
 package com.lovezz.service;
 
+import com.lovezz.dto.CharNode;
 import com.lovezz.entity.TbWeight;
 import com.baomidou.mybatisplus.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -14,4 +17,21 @@ import com.baomidou.mybatisplus.service.IService;
 public interface TbWeightService extends IService<TbWeight>{
 
 
+    /**
+     * 获取图表数据
+     * @param day
+     * @return
+     */
+    List<CharNode> getChart(String day);
+
+    /**
+     * 添加体重
+     * @param weight
+     * @param loginUserId
+     */
+    void addWeight(Double weight, Integer loginUserId);
+
+    List<TbWeight> getWeightList(String day);
+
+    List<CharNode> tranCharNode(List<TbWeight> weightList);
 }

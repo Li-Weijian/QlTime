@@ -1,21 +1,24 @@
 package com.lovezz.controller;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.lovezz.dto.BaseResult;
+import com.lovezz.dto.CharNode;
 import com.lovezz.dto.HealthDTO;
 import com.lovezz.entity.TbWeight;
 import com.lovezz.service.TbWeightService;
+import com.lovezz.utils.RequestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -48,8 +51,44 @@ public class TbWeightController {
         return BaseResult.success("操作成功", healthDTO);
     }
 
+    @GetMapping("/getChart")
+    @ResponseBody
+    public BaseResult getChart(String day){
+        if (StringUtils.isBlank(day)){
+            day = "10";
+        }
 
+        return BaseResult.success("操作成功", weightService.getChart(day));
+    }
 
+    @GetMapping("/addWeight")
+    @ResponseBody
+    public BaseResult addWeight(@RequestParam(value = "weight") Double weight){
+        weightService.addWeight(weight,new RequestUtils().getLoginUserId());
 
+        return BaseResult.success("操作成功");
+    }
+
+    @GetMapping("/isExist")
+    @ResponseBody
+    public BaseResult isExist(){
+        List<TbWeight> existList = weightService.selectList(new EntityWrapper<TbWeight>().eq("created", DateUtil.today())
+                .eq("userId",new RequestUtils().getLoginUserId()).eq("isDelete","0"));
+        if (existList.size()>0){
+            //已存在
+            return BaseResult.success("操作成功",1);
+        }else {
+            return BaseResult.success("操作成功",0);
+        }
+    }
+
+    @GetMapping("/getWeightList")
+    @ResponseBody
+    public BaseResult getWeightList(String day){
+        if (StringUtils.isBlank(day)){
+            day = "10";
+        }
+        return BaseResult.success("操作成功",weightService.tranCharNode(weightService.getWeightList(day)));
+    }
 }
 

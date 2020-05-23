@@ -2,7 +2,9 @@ package com.lovezz.entity;
 
 import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 
 import java.io.Serializable;
 
@@ -19,8 +21,9 @@ public class TbWeight implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @TableId(type= IdType.AUTO)
     private Integer id;
-    private Date created;
+    private Date created = new Date();
     private Double weight;
     @TableField("userId")
     private Integer userId;
