@@ -42,7 +42,7 @@ public class MenuController {
     @GetMapping("/getMenuList")
     @ResponseBody
     public BaseResult getMenuList(@RequestParam(value = "type", defaultValue = "0", required = false) String type){
-        List<TbMenu> menuList = menuService.selectList(new EntityWrapper<TbMenu>().eq("type",type).eq("isDelete","1"));
+        List<TbMenu> menuList = menuService.selectList(new EntityWrapper<TbMenu>().eq("type",type).eq("isDelete","0"));
         return BaseResult.success("成功",menuList);
     }
 

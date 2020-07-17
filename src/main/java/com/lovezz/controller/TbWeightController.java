@@ -42,7 +42,8 @@ public class TbWeightController {
     public BaseResult getMenuList() throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        TbWeight weight = weightService.selectOne(new EntityWrapper<TbWeight>().orderBy("created", false));
+        TbWeight weight = weightService.selectOne(new EntityWrapper<TbWeight>().eq("isDelete", "0").eq("userId", new RequestUtils().getLoginUserId())
+                .orderBy("created", false));
         HealthDTO healthDTO = new HealthDTO();
         healthDTO.setData(String.valueOf(weight.getWeight()));
         healthDTO.setDate(simpleDateFormat.format(weight.getCreated()));
