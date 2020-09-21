@@ -37,9 +37,11 @@ public class RequestUtils {
      */
     public Integer getLoginUserId(){
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (SystemConstants.TOKEN.equalsIgnoreCase(cookie.getName())){
-                return Integer.parseInt(cookie.getValue().split("|")[0]);
+        if (cookies != null){
+            for (Cookie cookie : cookies) {
+                if (SystemConstants.TOKEN.equalsIgnoreCase(cookie.getName())){
+                    return Integer.parseInt(cookie.getValue().split("|")[0]);
+                }
             }
         }
         return null;
@@ -48,7 +50,6 @@ public class RequestUtils {
     /**
      * 生成token
      * @param user
-     * @param request
      */
     public String generateToken (TbUser user){
         return user.getId() + "|" + DigestUtils.sha1Hex(user.getId() + user.getUsername());

@@ -71,4 +71,12 @@ public class BaseResult implements Serializable {
         baseResult.setData(data);
         return baseResult;
     }
+
+    public BaseResult(int status, String message) {
+        this.status = status;
+        this.message = message;
+    }
+
+    public BaseResult() {
+    }
 }

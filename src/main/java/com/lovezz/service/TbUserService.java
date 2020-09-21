@@ -1,8 +1,10 @@
 package com.lovezz.service;
 
+import com.lovezz.dto.WxLoginInfoDto;
 import com.lovezz.entity.TbUser;
 import com.baomidou.mybatisplus.service.IService;
 
+import javax.servlet.http.Cookie;
 import java.util.List;
 import java.util.Map;
 
@@ -40,5 +42,18 @@ public interface TbUserService extends IService<TbUser> {
      * @date: 2020/1/1 20:02
      */
     String selectUserName(Integer userid);
+
+    /**
+     * 添加或者更新用户
+     * @param wxLoginInfo
+     * @return
+     */
+    TbUser addOrUpdateUser(WxLoginInfoDto wxLoginInfo);
+
+    /**
+     * 为token构造cookie
+     * @return
+     */
+    Cookie makeCookieByToken(String token);
 
 }

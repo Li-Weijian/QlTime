@@ -6,6 +6,7 @@ import com.lovezz.constant.OperationModule;
 import com.lovezz.entity.TbNote;
 import com.lovezz.service.TbNoteService;
 import com.lovezz.utils.RequestUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

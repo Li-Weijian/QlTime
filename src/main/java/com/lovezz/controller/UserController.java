@@ -1,11 +1,19 @@
 package com.lovezz.controller;
 
 
+import cn.binarywang.wx.miniapp.api.WxMaService;
+import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
+import com.lovezz.constant.MsgCommon;
 import com.lovezz.constant.SystemConstants;
 import com.lovezz.dto.BaseResult;
+import com.lovezz.dto.WxLoginInfoDto;
 import com.lovezz.entity.TbUser;
+import com.lovezz.exception.GlobalExceptionHandler;
 import com.lovezz.service.TbUserService;
 import com.lovezz.utils.RequestUtils;
+import me.chanjar.weixin.common.error.WxErrorException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +34,13 @@ import java.util.Map;
 @CrossOrigin("*")
 public class UserController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
     private TbUserService userService;
+
+    @Autowired
+    private WxMaService wxMaService;
 
 
     /**
@@ -86,12 +99,7 @@ public class UserController {
             return BaseResult.fail("用户名或者密码错误");
         }else {
             String token = new RequestUtils().generateToken(result);
-
-            Cookie cookie = new Cookie("token", token);
-            //不设置路径的话, 会以当前路径为默认值，会导致其他页面不携带该cookie
-            cookie.setPath("/");
-            cookie.setMaxAge(2147483647);
-            response.addCookie(cookie);
+            response.addCookie(userService.makeCookieByToken(token));
             Map<String, Object> data = new HashMap<>();
             data.put("token", token);
             data.put("user", result);
@@ -99,9 +107,31 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/goodbye")
-    public String goodbye(){
-        return "user/goodbye";
+    /**
+     * 微信授权登录
+     * @param wxLoginInfo
+     * @return
+     */
+    @PostMapping(value = "wxAuth")
+    @ResponseBody
+    public BaseResult wxAuth(@RequestBody WxLoginInfoDto wxLoginInfo, HttpServletResponse response){
+        try {
+            WxMaJscode2SessionResult result = wxMaService.getUserService().getSessionInfo(wxLoginInfo.getCode());
+            LOGGER.info("【微信授权】{}", result.toString());
+            wxLoginInfo.setSessionKey(result.getSessionKey());
+            wxLoginInfo.setOpenId(result.getOpenid());
+            TbUser user = userService.addOrUpdateUser(wxLoginInfo);
+
+            // 生成cookie
+            String token = new RequestUtils().generateToken(user);
+            response.addCookie(userService.makeCookieByToken(token));
+            user.setToken(token);
+            return BaseResult.success(MsgCommon.SUCCESS.getMessage(), user);
+        } catch (WxErrorException e) {
+            LOGGER.error("【微信授权】: {}", e.getMessage());
+            return BaseResult.fail(e.getMessage());
+        }
     }
+
 }
 

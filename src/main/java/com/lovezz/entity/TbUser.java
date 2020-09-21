@@ -1,21 +1,34 @@
 package com.lovezz.entity;
 
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldFill;
+import com.baomidou.mybatisplus.enums.FieldStrategy;
 import com.baomidou.mybatisplus.enums.IdType;
+
+import java.beans.Transient;
 import java.util.Date;
+
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import java.io.Serializable;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author liweijian123
  * @since 2019-10-30
  */
 @TableName("tb_user")
+@NoArgsConstructor
+@ToString
+@Data
 public class TbUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -45,10 +58,12 @@ public class TbUser implements Serializable {
     /**
      * 创建时间
      */
+    @TableField(fill = FieldFill.INSERT, strategy = FieldStrategy.IGNORED)
     private Date created;
     /**
      * 更新时间
      */
+    @TableField(fill = FieldFill.UPDATE, strategy = FieldStrategy.IGNORED)
     private Date updated;
     /**
      * 上线时间
@@ -61,98 +76,52 @@ public class TbUser implements Serializable {
     @TableField("isDelete")
     private Integer isDelete;
 
-    public String getRealname() {
-        return realname;
-    }
+    /**
+     * openId
+     */
+    private String openId;
 
-    public void setRealname(String realname) {
-        this.realname = realname;
-    }
+    /**
+     * sessionKey
+     */
+    private String sessionKey;
 
-    public Integer getId() {
-        return id;
-    }
+    /**
+     * 头像url
+     */
+    private String avatarUrl;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    /**
+     * 昵称
+     */
+    private String nickName;
 
-    public String getUsername() {
-        return username;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    /**
+     * 性别 0女 1男
+     */
+    private Integer gender;
 
-    public String getPassword() {
-        return password;
-    }
+    /**
+     * 城市
+     */
+    private String city;
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    /**
+     * 省份
+     */
+    private String province;
 
-    public String getPhone() {
-        return phone;
-    }
+    /**
+     * 国家
+     */
+    private String country;
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+    private String code;
 
-    public String getEmail() {
-        return email;
-    }
+    private String sceneCode;
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    @TableField(exist = false)
+    private String token;
 
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
-    }
-
-    public Date getOnlieTime() {
-        return onlieTime;
-    }
-
-    public void setOnlieTime(Date onlieTime) {
-        this.onlieTime = onlieTime;
-    }
-
-    public Integer getIsDelete() {
-        return isDelete;
-    }
-
-    public void setIsDelete(Integer isDelete) {
-        this.isDelete = isDelete;
-    }
-
-    @Override
-    public String toString() {
-        return "TbUser{" +
-        ", id=" + id +
-        ", username=" + username +
-        ", password=" + password +
-        ", phone=" + phone +
-        ", email=" + email +
-        ", created=" + created +
-        ", updated=" + updated +
-        ", onlieTime=" + onlieTime +
-        ", isDelete=" + isDelete +
-        "}";
-    }
 }

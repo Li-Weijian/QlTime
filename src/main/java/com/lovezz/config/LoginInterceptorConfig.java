@@ -32,6 +32,6 @@ public class LoginInterceptorConfig implements WebMvcConfigurer {
 
         // 添加拦截的请求，并排除几个不拦截的请求
         registry.addInterceptor(loginInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns("/index.html", "/", "/user/toLogin","/ticController/time","/user/login","/static/**","/sms/sendSms","/user/goodbye","/user/login2");
+                .excludePathPatterns("/index.html", "/", "/user/toLogin","/ticController/time","/user/login","/static/**","/sms/sendSms","/user/login2", "/user/wxAuth");
     }
 }

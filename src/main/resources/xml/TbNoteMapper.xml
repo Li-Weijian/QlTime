@@ -6,7 +6,7 @@
         select a.*,b.realname from tb_note a
         inner join tb_user b where a.userId = b.id
         and a.isDelete = 0
-        order by a.isComplete asc
+        order by a.isComplete asc, a.date desc
         LIMIT #{offset}, #{limit}
     </select>
 </mapper>

@@ -1,25 +1,19 @@
 package com.lovezz.interceptor;
 
-import com.lovezz.constant.SystemConstants;
-import com.lovezz.dto.BaseResult;
-import com.lovezz.entity.TbUser;
+import com.alibaba.fastjson.JSONObject;
+import com.lovezz.constant.MsgCommon;
 import com.lovezz.service.TbUserService;
 import com.lovezz.utils.IpUtil;
 import com.lovezz.utils.RequestUtils;
-import com.lovezz.utils.SpringContextUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Map;
 
 /**
  * 登录拦截器
@@ -51,10 +45,12 @@ public class LoginInterceptor implements HandlerInterceptor {
 
                 return true;
             }else {
-                throw new RuntimeException("登录过期");
+//                throw new RuntimeException("登录过期");
+                returnJson(httpServletResponse);
+                return false;
             }
         }catch (Exception e){
-            throw new RuntimeException("登录过期");
+            throw new RuntimeException("未知异常");
         }
     }
 
@@ -66,5 +62,21 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
 
+    }
+
+    private void returnJson(HttpServletResponse response){
+        PrintWriter writer = null;
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=utf-8");
+        try {
+            writer = response.getWriter();
+            writer.print(JSONObject.toJSON(MsgCommon.TOKEN_ERROR));
+        } catch (IOException e){
+//            LoggerUtil.logError(ECInterceptor.class, "拦截器输出流异常"+e);
+        } finally {
+            if(writer != null){
+                writer.close();
+            }
+        }
     }
 }
