@@ -121,7 +121,19 @@ public class TbUser implements Serializable {
 
     private String sceneCode;
 
+    /**
+     * 另一半id
+     */
+    private Integer helfId;
+
+    /**
+     * 在一起的时间
+     */
+    private Date togetheTime;
+
     @TableField(exist = false)
     private String token;
+
+
 
 }

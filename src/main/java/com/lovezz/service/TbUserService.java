@@ -1,5 +1,7 @@
 package com.lovezz.service;
 
+import com.lovezz.dto.BaseResult;
+import com.lovezz.dto.LoversDto;
 import com.lovezz.dto.WxLoginInfoDto;
 import com.lovezz.entity.TbUser;
 import com.baomidou.mybatisplus.service.IService;
@@ -56,4 +58,23 @@ public interface TbUserService extends IService<TbUser> {
      */
     Cookie makeCookieByToken(String token);
 
+    /**
+     * 获取情侣相关信息
+     * @param id
+     * @return
+     */
+    LoversDto selectLover(Integer id) throws Exception;
+
+    /**
+     * 设置在一起的时间
+     * @param user
+     */
+    void setTogetherTime(TbUser user);
+
+    /**
+     * 关联另一半
+     * @param user
+     * @return
+     */
+    BaseResult setHalf(TbUser user);
 }

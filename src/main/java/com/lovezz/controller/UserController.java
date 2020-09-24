@@ -6,11 +6,13 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import com.lovezz.constant.MsgCommon;
 import com.lovezz.constant.SystemConstants;
 import com.lovezz.dto.BaseResult;
+import com.lovezz.dto.LoversDto;
 import com.lovezz.dto.WxLoginInfoDto;
 import com.lovezz.entity.TbUser;
 import com.lovezz.exception.GlobalExceptionHandler;
 import com.lovezz.service.TbUserService;
 import com.lovezz.utils.RequestUtils;
+import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,9 +34,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/user")
 @CrossOrigin("*")
+@Slf4j
 public class UserController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private TbUserService userService;
@@ -117,7 +118,7 @@ public class UserController {
     public BaseResult wxAuth(@RequestBody WxLoginInfoDto wxLoginInfo, HttpServletResponse response){
         try {
             WxMaJscode2SessionResult result = wxMaService.getUserService().getSessionInfo(wxLoginInfo.getCode());
-            LOGGER.info("【微信授权】{}", result.toString());
+            log.info("【微信授权】{}", result.toString());
             wxLoginInfo.setSessionKey(result.getSessionKey());
             wxLoginInfo.setOpenId(result.getOpenid());
             TbUser user = userService.addOrUpdateUser(wxLoginInfo);
@@ -128,10 +129,55 @@ public class UserController {
             user.setToken(token);
             return BaseResult.success(MsgCommon.SUCCESS.getMessage(), user);
         } catch (WxErrorException e) {
-            LOGGER.error("【微信授权】: {}", e.getMessage());
+            log.error("【微信授权】: {}", e.getMessage());
             return BaseResult.fail(e.getMessage());
         }
     }
+
+    /**
+     * 获取情侣相关信息
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "selectLover/{id}")
+    @ResponseBody
+    public BaseResult selectLover(@PathVariable("id") Integer id){
+        LoversDto loversDto = null;
+        try {
+            loversDto = userService.selectLover(id);
+        } catch (Exception e) {
+            log.error("【情侣信息】:{}", e);
+            return BaseResult.fail(e.getLocalizedMessage());
+        }
+        return BaseResult.success(MsgCommon.SUCCESS.getMessage(), loversDto);
+
+    }
+
+    /**
+     * 设置在一起的时间
+     * @param user
+     * @return
+     */
+    @PostMapping(value = "setTogetherTime")
+    @ResponseBody
+    public BaseResult setTogetherTime(@RequestBody TbUser user){
+
+        userService.setTogetherTime(user);
+        return BaseResult.success();
+    }
+
+    /**
+     * 关联另一半
+     * @param user
+     * @return
+     */
+    @PostMapping(value = "setHalf")
+    @ResponseBody
+    public BaseResult setHalf(@RequestBody TbUser user){
+
+        return userService.setHalf(user);
+    }
+
 
 }
 

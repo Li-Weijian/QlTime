@@ -1,9 +1,14 @@
 package com.lovezz.service.impl;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.digest.MD5;
 import cn.hutool.json.JSONObject;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.lovezz.constant.MsgCommon;
+import com.lovezz.dto.BaseResult;
+import com.lovezz.dto.LoversDto;
 import com.lovezz.dto.RawDataDto;
 import com.lovezz.dto.WxLoginInfoDto;
 import com.lovezz.entity.TbUser;
@@ -103,6 +108,55 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
         cookie.setPath("/");
         cookie.setMaxAge(2147483647);
         return cookie;
+    }
+
+    @Override
+    public LoversDto selectLover(Integer id) throws Exception {
+        TbUser user = selectById(id);
+        if (null == user){
+            throw new Exception(MsgCommon.USER_NULL.getMessage());
+        }
+        LoversDto loversDto = new LoversDto();
+        user = setSensitiveInfoToNull(user);
+        loversDto.setMyself(user);
+
+        TbUser half = selectById(user.getHelfId());
+        if (half != null){
+            half = setSensitiveInfoToNull(half);
+            loversDto.setHelf(half);
+            if (user.getTogetheTime() != null){
+                loversDto.setDay(DateUtil.between(user.getTogetheTime(), new Date(), DateUnit.DAY));
+            }
+        }
+        return loversDto;
+    }
+
+    @Override
+    public void setTogetherTime(TbUser user) {
+        // 更新自己
+        TbUser myself = selectById(user.getId());
+        myself.setTogetheTime(user.getTogetheTime());
+        updateById(myself);
+
+        //更新另一半
+        TbUser helf = selectById(myself.getHelfId());
+        helf.setTogetheTime(user.getTogetheTime());
+        updateById(helf);
+    }
+
+    @Override
+    public BaseResult setHalf(TbUser user) {
+        TbUser myself = selectById(user.getId());
+        TbUser helf = selectById(user.getHelfId());
+        if (null == myself || null == helf){
+            return BaseResult.fail(MsgCommon.USER_NULL.getStatus(), MsgCommon.USER_NULL.getMessage());
+        }
+
+        myself.setHelfId(user.getHelfId());
+        helf.setHelfId(myself.getId());
+        updateById(myself);
+        updateById(helf);
+        return MsgCommon.SUCCESS;
     }
 
     /**
