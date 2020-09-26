@@ -21,4 +21,13 @@ public class GlobalExceptionHandler {
         BaseResult result = BaseResult.fail(response.getStatus(), "GlobalExceptionHandler:" + ex.getMessage());
         return result;
     }
+
+    @ResponseBody
+    @ExceptionHandler(CommonException.class)
+    public BaseResult commonException(HttpServletResponse response, CommonException ex) {
+        LOGGER.error("throw CommonException-" + ex.getMessage(), ex);
+        BaseResult result = BaseResult.fail(response.getStatus(), ex.getMessage());
+        return result;
+    }
+
 }

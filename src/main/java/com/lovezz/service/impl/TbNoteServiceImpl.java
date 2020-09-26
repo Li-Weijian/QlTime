@@ -26,8 +26,12 @@ public class TbNoteServiceImpl extends ServiceImpl<TbNoteMapper, TbNote> impleme
     private TbNoteMapper noteMapper;
 
     @Override
-    public List<TbNote> getNoteList(int offset, int limit) {
-        return noteMapper.selectNoteListAndUser(offset,limit);
+    public List<TbNote> getNoteList(int offset, int limit, List<Integer> ids) {
+        if (offset <= 0){
+            offset = 0;
+        }
+
+        return noteMapper.selectNoteListAndUser(offset,limit, ids);
     }
 
 

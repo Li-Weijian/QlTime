@@ -24,7 +24,7 @@ public interface TbNoteService extends IService<TbNote> {
      * @param offset
      * @param limit
      */
-    List<TbNote> getNoteList(int offset, int limit);
+    List<TbNote> getNoteList(int offset, int limit, List<Integer> ids);
 
 
 }

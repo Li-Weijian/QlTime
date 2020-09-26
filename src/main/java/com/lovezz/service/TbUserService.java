@@ -5,6 +5,7 @@ import com.lovezz.dto.LoversDto;
 import com.lovezz.dto.WxLoginInfoDto;
 import com.lovezz.entity.TbUser;
 import com.baomidou.mybatisplus.service.IService;
+import com.lovezz.exception.CommonException;
 
 import javax.servlet.http.Cookie;
 import java.util.List;
@@ -77,4 +78,11 @@ public interface TbUserService extends IService<TbUser> {
      * @return
      */
     BaseResult setHalf(TbUser user);
+
+    /**
+     * 获取两个人的用户id
+     * @param userId
+     * @return
+     */
+    List<Integer> selectAllIds(Integer userId) throws CommonException;
 }

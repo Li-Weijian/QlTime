@@ -12,6 +12,7 @@ import com.lovezz.dto.LoversDto;
 import com.lovezz.dto.RawDataDto;
 import com.lovezz.dto.WxLoginInfoDto;
 import com.lovezz.entity.TbUser;
+import com.lovezz.exception.CommonException;
 import com.lovezz.job.SendSmsJob;
 import com.lovezz.mapper.TbUserMapper;
 import com.lovezz.service.TbUserService;
@@ -26,10 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import javax.servlet.http.Cookie;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * <p>
@@ -157,6 +155,16 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
         updateById(myself);
         updateById(helf);
         return MsgCommon.SUCCESS;
+    }
+
+    @Override
+    public List<Integer> selectAllIds(Integer userId) throws CommonException {
+        TbUser user = selectById(userId);
+        if (null == user){
+            throw new CommonException(MsgCommon.USER_NULL);
+        }
+
+        return Arrays.asList(user.getId(), user.getHelfId());
     }
 
     /**
