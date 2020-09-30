@@ -1,12 +1,20 @@
 package com.lovezz.controller;
 
+import cn.hutool.json.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.lovezz.annotation.OperationEmailDetail;
+import com.lovezz.constant.GalleryFlagEnum;
+import com.lovezz.constant.MsgCommon;
 import com.lovezz.constant.OperationModule;
 import com.lovezz.dto.BaseResult;
 import com.lovezz.entity.TbGallery;
+import com.lovezz.exception.CommonException;
 import com.lovezz.service.TbGalleryService;
+import com.lovezz.service.TbUserService;
+import com.lovezz.utils.RequestUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,10 +34,14 @@ import java.util.List;
 @Controller
 @RequestMapping("/galleryController")
 @CrossOrigin("*")
+@Slf4j
 public class GalleryController {
 
     @Autowired
     private TbGalleryService galleryService;
+
+    @Autowired
+    private TbUserService userService;
 
     @RequestMapping("/toGallery")
     public ModelAndView toGallery(ModelAndView modelAndView,Integer action,@RequestParam(defaultValue = "1") Integer page){
@@ -66,7 +78,14 @@ public class GalleryController {
     @RequestMapping("/getGallery")
     @ResponseBody
     public BaseResult getGallery(){
-        return BaseResult.success("成功",galleryService.selectGalleryWrapper());
+        Integer userId = new RequestUtils().getLoginUserId();
+        try {
+            return BaseResult.success(MsgCommon.SUCCESS.getMessage(),
+                    galleryService.selectGalleryWrapper(userService.selectAllIds(userId)));
+        } catch (CommonException e) {
+            log.error("【获取图片列表】: {}", e);
+            return BaseResult.fail(e.getStatus(), e.getMessage());
+        }
     }
 
     /**
@@ -76,16 +95,16 @@ public class GalleryController {
     @ResponseBody
     @OperationEmailDetail(content = "新添加了一条【共同记忆】啦，快打开App查看吧", operationClass = OperationModule.GALLERY)
     public BaseResult uploadImages(@RequestParam(value = "fileupload", required = false) MultipartFile[] file) throws MalformedURLException {
-        List<String> urlList = galleryService.fileUpload(file,"0");
-        return BaseResult.success("成功", urlList);
+        List<String> urlList = galleryService.fileUpload(file, String.valueOf(GalleryFlagEnum.GALLERY.getType()));
+        return BaseResult.success(MsgCommon.SUCCESS.getMessage(), urlList);
     }
 
-
-//    @GetMapping("")
-
-
-
-
+    @PostMapping("/saveMemory")
+    @ResponseBody
+    public BaseResult saveMemory(@RequestBody String imageListStr) {
+        List<String> imageUrl = JSONObject.parseArray(imageListStr, String.class);
+        return galleryService.saveMemory(imageUrl);
+    }
 
 
 

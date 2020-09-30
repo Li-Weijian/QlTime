@@ -1,5 +1,6 @@
 package com.lovezz.service;
 
+import com.lovezz.dto.BaseResult;
 import com.lovezz.dto.GalleryVo;
 import com.lovezz.entity.TbGallery;
 import com.baomidou.mybatisplus.service.IService;
@@ -24,7 +25,7 @@ public interface TbGalleryService extends IService<TbGallery> {
 
     List<TbGallery> selectGalleryList(Integer action, Integer page);
 
-    GalleryVo selectGalleryWrapper();
+    GalleryVo selectGalleryWrapper(List<Integer> ids);
 
     /**
      * 构建图库对象
@@ -32,5 +33,10 @@ public interface TbGalleryService extends IService<TbGallery> {
      */
     TbGallery makeGallery(String url, String topsId, String flag, String fileName);
 
-
+    /**
+     * 保存回忆图片
+     * @param imageUrl
+     * @return
+     */
+    BaseResult saveMemory(List<String> imageUrl);
 }

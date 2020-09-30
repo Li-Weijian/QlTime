@@ -85,4 +85,5 @@ public interface TbUserService extends IService<TbUser> {
      * @return
      */
     List<Integer> selectAllIds(Integer userId) throws CommonException;
+
 }

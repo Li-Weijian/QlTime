@@ -1,6 +1,10 @@
 package com.lovezz.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.lovezz.constant.GalleryFlagEnum;
+import com.lovezz.dto.BaseResult;
 import com.lovezz.dto.GalleryVo;
 import com.lovezz.dto.ImageInfoDTO;
 import com.lovezz.entity.TbGallery;
@@ -13,15 +17,12 @@ import com.lovezz.utils.URLUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
-import org.w3c.dom.ls.LSInput;
 
 import java.net.MalformedURLException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -83,7 +84,7 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
 
     @Override
     public String fileUpload(MultipartFile file) throws MalformedURLException {
-        return galleryService.fileUpload(file,"0");
+        return galleryService.fileUpload(file, String.valueOf(GalleryFlagEnum.GALLERY.getType()));
     }
 
     @Override
@@ -96,13 +97,18 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
     }
 
     @Override
-    public GalleryVo selectGalleryWrapper() {
+    public GalleryVo selectGalleryWrapper(List<Integer> ids) {
         GalleryVo galleryVo = null;
-        List<String> imageList = galleryMapper.selectGalleryWrapper();
-        if (imageList != null && imageList.size() > 0){
+        Wrapper<TbGallery> wrapper = new EntityWrapper<TbGallery>().eq("flag", 0);
+        wrapper.in("userId", ids);
+        wrapper.orderBy("uploadDate", false);
+
+        List<TbGallery> galleryList = galleryMapper.selectList(wrapper);
+        if (CollectionUtil.isNotEmpty(galleryList)){
             galleryVo = new GalleryVo();
-            galleryVo.setImageUrl(imageList);
-            galleryVo.setCount(imageList.size());
+            galleryVo.setImageUrl(galleryList.stream().map(item -> {return item.getUrl();}).collect(Collectors.toList()));
+            galleryVo.setCount(galleryList.size());
+            galleryVo.setGalleryList(galleryList);
         }
         return galleryVo;
     }
@@ -127,6 +133,14 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
         galleryMapper.insert(gallery);
 
         return gallery;
+    }
+
+    @Override
+    public BaseResult saveMemory(List<String> imageUrl) {
+        for (String url : imageUrl) {
+            this.makeGallery(url, null, String.valueOf(GalleryFlagEnum.GALLERY.getType()), "memoryImage");
+        }
+        return BaseResult.success();
     }
 
 }

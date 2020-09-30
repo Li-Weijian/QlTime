@@ -1,5 +1,6 @@
 package com.lovezz.dto;
 
+import com.lovezz.entity.TbGallery;
 import lombok.Data;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public class GalleryVo  {
     Integer count;
 
     String topText;
+
+    List<TbGallery> galleryList;
 }
