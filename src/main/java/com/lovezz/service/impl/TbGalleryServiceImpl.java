@@ -107,4 +107,26 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
         return galleryVo;
     }
 
+    @Override
+    public TbGallery makeGallery(String url, String topsId, String flag, String fileName) {
+        TbGallery gallery = new TbGallery();
+        gallery.setId(UUID.randomUUID().toString());
+        gallery.setUrl(url);
+        gallery.setUploadDate(new Date());
+
+        ImageInfoDTO imageInfo = ossUtil.getImageInfo(url);
+        gallery.setFormat(imageInfo.getFormat().getValue());
+        gallery.setImageHeight(imageInfo.getImageHeight().getValue());
+        gallery.setImageWidth(imageInfo.getImageWidth().getValue());
+        gallery.setFilesize(imageInfo.getFileSize().getValue());
+        gallery.setFileName(fileName);
+        gallery.setUserId(new RequestUtils().getLoginUserId());
+        gallery.setTopId(topsId);
+        gallery.setFlag(flag);
+
+        galleryMapper.insert(gallery);
+
+        return gallery;
+    }
+
 }

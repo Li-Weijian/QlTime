@@ -1,16 +1,18 @@
 package com.lovezz.service.impl;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.lovezz.constant.GalleryFlagEnum;
 import com.lovezz.constant.SystemConstants;
 import com.lovezz.dto.BaseResult;
-import com.lovezz.dto.ImageInfoDTO;
 import com.lovezz.dto.TopsDTO;
 import com.lovezz.entity.TbComments;
 import com.lovezz.entity.TbGallery;
 import com.lovezz.entity.TbTops;
+import com.lovezz.exception.CommonException;
 import com.lovezz.mapper.TbCommentsMapper;
 import com.lovezz.mapper.TbGalleryMapper;
 import com.lovezz.mapper.TbTopsMapper;
+import com.lovezz.service.TbGalleryService;
 import com.lovezz.service.TbTopsService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.lovezz.service.TbUserService;
@@ -23,8 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,6 +58,9 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
     @Autowired
     private TbUserService userService;
 
+    @Autowired
+    private TbGalleryService galleryService;
+
     List<TbComments> resultList = new ArrayList<>();
 
 
@@ -64,36 +69,14 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
 
         String host = null;
         try {
-            TbTops tops = new TbTops();
-            String id = UUID.randomUUID().toString().replace("-", "");
-            tops.setId(id);
-            tops.setContent(topText);
-            tops.setUserId(new RequestUtils().getLoginUserId());
-            topsMapper.insert(tops);
+            TbTops tops = makeTops(topText);
 
             for (MultipartFile file : fileList) {
                 String url = ossUtil.checkImage(file, SystemConstants.TOPS_DIR);
                 //无参数的连接 http://image-demo.oss-cn-hangzhou.aliyuncs.com/example.jpg
                 host = URLUtils.getPath(url);
 
-                //保存url
-                TbGallery gallery = new TbGallery();
-                gallery.setId(UUID.randomUUID().toString());
-                gallery.setUrl(host);
-                gallery.setUploadDate(new Date());
-
-                ImageInfoDTO imageInfo = ossUtil.getImageInfo(host);
-                gallery.setFormat(imageInfo.getFormat().getValue());
-                gallery.setImageHeight(imageInfo.getImageHeight().getValue());
-                gallery.setImageWidth(imageInfo.getImageWidth().getValue());
-                gallery.setFilesize(imageInfo.getFileSize().getValue());
-                gallery.setFileName(file.getOriginalFilename());
-                gallery.setUserId(new RequestUtils().getLoginUserId());
-                gallery.setTopId(id);
-                //设置图片用途为留言板
-                gallery.setFlag("1");
-
-                galleryMapper.insert(gallery);
+                galleryService.makeGallery(host, tops.getId(),String.valueOf(GalleryFlagEnum.TOPS.getType()), "Topsfile");
             }
 
         } catch (Exception e) {
@@ -105,13 +88,34 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
     }
 
     @Override
-    public List<TopsDTO> getTopsList() {
-        return this.getTopsList(null, null);
+    public boolean publishTops(List<String> fileList, String topText) throws MalformedURLException {
+        TbTops tops = makeTops(topText);
+        for (String fileUrl : fileList) {
+            galleryService.makeGallery(fileUrl, tops.getId(),String.valueOf(GalleryFlagEnum.TOPS.getType()), "Topsfile");
+        }
+        return true;
+    }
+
+    private TbTops makeTops(String topText){
+        TbTops tops = new TbTops();
+        String id = UUID.randomUUID().toString().replace("-", "");
+        tops.setId(id);
+        tops.setContent(topText);
+        tops.setUserId(new RequestUtils().getLoginUserId());
+        topsMapper.insert(tops);
+        return tops;
+    }
+
+
+    @Override
+    public List<TopsDTO> getTopsList(Integer userId) throws CommonException {
+
+        return this.getTopsList(null, null, userService.selectAllIds(userId));
     }
 
     @Override
-    public List<TopsDTO> getTopsList(Integer offset, Integer limit) {
-        List<TbTops> topsList = topsMapper.selectTopList(offset, limit);
+    public List<TopsDTO> getTopsList(Integer offset, Integer limit, List<Integer> ids) {
+        List<TbTops> topsList = topsMapper.selectTopList(offset, limit, ids);
         List<TopsDTO> dtoList = new ArrayList<>();
 
         List<TbGallery> galleryList = null;
@@ -230,5 +234,18 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
         this.commentsMapper.insert(comments);
 
         return BaseResult.success();
+    }
+
+    @Override
+    public List<String> uploadTopsImages(MultipartFile[] fileList) throws MalformedURLException {
+
+        List<String> resultList = new ArrayList<>();
+
+        for (MultipartFile file : fileList) {
+            String url = ossUtil.checkImage(file, SystemConstants.TOPS_DIR);
+            //无参数的连接 http://image-demo.oss-cn-hangzhou.aliyuncs.com/example.jpg
+            resultList.add(URLUtils.getPath(url));
+        }
+        return resultList;
     }
 }

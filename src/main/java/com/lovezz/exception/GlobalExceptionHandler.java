@@ -1,5 +1,6 @@
 package com.lovezz.exception;
 
+import com.lovezz.constant.MsgCommon;
 import com.lovezz.dto.BaseResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public BaseResult globalException(HttpServletResponse response, Exception ex) {
         LOGGER.error("throw Exception-" + ex.getMessage(), ex);
-        BaseResult result = BaseResult.fail(response.getStatus(), "GlobalExceptionHandler:" + ex.getMessage());
+        BaseResult result = BaseResult.fail(MsgCommon.ERROR.getStatus(), "GlobalExceptionHandler:" + ex.getMessage());
         return result;
     }
 

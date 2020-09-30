@@ -3,19 +3,23 @@ package com.lovezz.entity;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
+import lombok.Data;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author liweijian123
  * @since 2020-01-01
  */
 @TableName("tb_comments")
+@Data
+@ToString
 public class TbComments implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -52,90 +56,10 @@ public class TbComments implements Serializable {
     @TableField("flag")
     private String flag;
 
-    public String getId() {
-        return id;
-    }
+    @TableField(exist = false)
+    private String nickName;
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    @TableField(exist = false)
+    private String avatarUrl;
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public String getTopId() {
-        return topId;
-    }
-
-    public void setTopId(String topId) {
-        this.topId = topId;
-    }
-
-    public String getIsDelete() {
-        return isDelete;
-    }
-
-    public void setIsDelete(String isDelete) {
-        this.isDelete = isDelete;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Integer getReplayUserId() {
-        return replayUserId;
-    }
-
-    public void setReplayUserId(Integer replayUserId) {
-        this.replayUserId = replayUserId;
-    }
-
-    public String getLastId() {
-        return lastId;
-    }
-
-    public void setLastId(String lastId) {
-        this.lastId = lastId;
-    }
-
-    public String getFlag() {
-        return flag;
-    }
-
-    public void setFlag(String flag) {
-        this.flag = flag;
-    }
-
-    @Override
-    public String toString() {
-        return "TbComments{" +
-                "id='" + id + '\'' +
-                ", content='" + content + '\'' +
-                ", userId=" + userId +
-                ", topId='" + topId + '\'' +
-                ", isDelete='" + isDelete + '\'' +
-                ", created=" + created +
-                ", replayUserId=" + replayUserId +
-                ", lastId='" + lastId + '\'' +
-                ", flag='" + flag + '\'' +
-                '}';
-    }
 }

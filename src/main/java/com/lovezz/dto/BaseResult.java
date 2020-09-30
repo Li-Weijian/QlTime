@@ -1,5 +1,7 @@
 package com.lovezz.dto;
 
+import com.lovezz.constant.MsgCommon;
+
 import java.io.Serializable;
 
 /**
@@ -39,6 +41,7 @@ public class BaseResult implements Serializable {
     public static BaseResult fail(int status, String message) {
         return BaseResult.createResult(status, message, null);
     }
+
 
     public int getStatus() {
         return status;

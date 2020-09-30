@@ -7,8 +7,8 @@
         inner join tb_user b where a.userId = b.id
         and a.isDelete = 0 and a.userId in
         <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
-                            #{item}
-                    </foreach>
+           #{item}
+        </foreach>
         order by a.isComplete asc, a.date desc
         LIMIT #{offset}, #{limit}
     </select>

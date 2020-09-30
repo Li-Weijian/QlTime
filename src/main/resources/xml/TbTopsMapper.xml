@@ -3,9 +3,12 @@
 <mapper namespace="com.lovezz.mapper.TbTopsMapper">
 
     <select id="selectTopList" resultType="com.lovezz.entity.TbTops">
-        SELECT a.*,b.realname FROM tb_tops a
+        SELECT a.*,b.realname,b.avatarUrl, b.nickName FROM tb_tops a
         INNER JOIN tb_user b ON b.id = a.userId
-        where a.isDelete = '0'
+        where a.isDelete = '0' and a.userId in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
         ORDER BY a.createTime DESC
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}

@@ -22,11 +22,15 @@ public interface TbGalleryService extends IService<TbGallery> {
     String fileUpload(MultipartFile file, String flag) throws MalformedURLException;
     List<String> fileUpload(MultipartFile[] file, String flag) throws MalformedURLException;
 
-
-
     List<TbGallery> selectGalleryList(Integer action, Integer page);
 
     GalleryVo selectGalleryWrapper();
+
+    /**
+     * 构建图库对象
+     * @return
+     */
+    TbGallery makeGallery(String url, String topsId, String flag, String fileName);
 
 
 }

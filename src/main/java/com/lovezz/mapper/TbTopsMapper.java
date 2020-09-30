@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * <p>
- *  Mapper 接口
+ * Mapper 接口
  * </p>
  *
  * @author liweijian123
@@ -16,5 +16,5 @@ import java.util.List;
  */
 public interface TbTopsMapper extends BaseMapper<TbTops> {
 
-    List<TbTops> selectTopList(@Param("offset") Integer offset, @Param("limit") Integer limit);
+    List<TbTops> selectTopList(@Param("offset") Integer offset, @Param("limit") Integer limit, @Param("ids") List<Integer> ids);
 }

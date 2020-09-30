@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,19 +14,22 @@ import java.util.UUID;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author liweijian123
  * @since 2019-11-03
  */
 @TableName("tb_tops")
+@Data
+@ToString
 public class TbTops implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private String id;
     private String content;
+    @JsonFormat(pattern="yyyy-MM-dd hh:mm:ss",timezone = "GMT+8")
     @TableField("createTime")
     private Date createTime = new Date();
     /**
@@ -39,70 +45,9 @@ public class TbTops implements Serializable {
     @TableField(exist = false)
     private String realname;
 
-    public String getIsDelete() {
-        return isDelete;
-    }
+    @TableField(exist = false)
+    private String nickName;
 
-    public void setIsDelete(String isDelete) {
-        this.isDelete = isDelete;
-    }
-
-    public String getRealname() {
-        return realname;
-    }
-
-    public void setRealname(String realname) {
-        this.realname = realname;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Integer getZan() {
-        return zan;
-    }
-
-    public void setZan(Integer zan) {
-        this.zan = zan;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    @Override
-    public String toString() {
-        return "TbTops{" +
-        ", id=" + id +
-        ", content=" + content +
-        ", createTime=" + createTime +
-        ", zan=" + zan +
-        ", userId=" + userId +
-        "}";
-    }
+    @TableField(exist = false)
+    private String avatarUrl;
 }
