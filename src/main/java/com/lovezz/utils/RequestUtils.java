@@ -40,7 +40,7 @@ public class RequestUtils {
         if (cookies != null){
             for (Cookie cookie : cookies) {
                 if (SystemConstants.TOKEN.equalsIgnoreCase(cookie.getName())){
-                    return Integer.parseInt(cookie.getValue().split("|")[0]);
+                    return Integer.parseInt(cookie.getValue().split("\\|")[0]);
                 }
             }
         }
