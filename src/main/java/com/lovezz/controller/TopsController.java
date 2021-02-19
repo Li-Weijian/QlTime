@@ -122,9 +122,11 @@ public class TopsController {
     public BaseResult getTopsList(@RequestParam(defaultValue = "0") int offset, @RequestParam(defaultValue = "10") int limit){
 
         try {
+
             Integer userId = new RequestUtils().getLoginUserId();
             List<TopsDTO> topsList = null;
             topsList = topsService.getTopsList(offset, limit, userService.selectAllIds(userId));
+            log.info("进入 TopsList :{}", userId);
             return BaseResult.success("操作成功", topsList);
         } catch (CommonException e) {
             log.error("【获取小日常列表】: {}" ,e.getMessage());

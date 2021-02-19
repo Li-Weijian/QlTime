@@ -80,6 +80,7 @@ public class GalleryController {
     public BaseResult getGallery(){
         Integer userId = new RequestUtils().getLoginUserId();
         try {
+            log.info("进入 图片列表:{}", userId);
             return BaseResult.success(MsgCommon.SUCCESS.getMessage(),
                     galleryService.selectGalleryWrapper(userService.selectAllIds(userId)));
         } catch (CommonException e) {

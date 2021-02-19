@@ -56,6 +56,7 @@ public class NoteController {
     public List<TbNote> getNoteList(@RequestParam(defaultValue = "0") int offset, @RequestParam(defaultValue = "10") int limit) {
         Integer userId = new RequestUtils().getLoginUserId();
         try {
+            log.info("进入 约定列表 :{}", userId);
             return noteService.getNoteList(offset, limit,userService.selectAllIds(userId));
         } catch (CommonException e) {
             log.error("【获取约定列表】: {}", e);

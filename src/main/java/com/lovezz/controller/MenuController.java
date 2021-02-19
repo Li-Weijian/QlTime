@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.lovezz.dto.BaseResult;
 import com.lovezz.entity.TbMenu;
 import com.lovezz.service.TbMenuService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/menu")
 @CrossOrigin("*")
+@Slf4j
 public class MenuController {
 
     @Autowired
@@ -42,6 +44,7 @@ public class MenuController {
     @GetMapping("/getMenuList")
     @ResponseBody
     public BaseResult getMenuList(@RequestParam(value = "type", defaultValue = "0", required = false) String type){
+        log.info("进入 getMenuList");
         List<TbMenu> menuList = menuService.selectList(new EntityWrapper<TbMenu>().eq("type",type).eq("isDelete","0"));
         return BaseResult.success("成功",menuList);
     }
