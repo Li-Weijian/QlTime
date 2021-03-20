@@ -66,7 +66,7 @@ public class NoteController {
 
     @RequestMapping("/savaContent")
     @ResponseBody
-    @OperationEmailDetail(content = "新添加了一条【小约定】啦，快打开App查看吧", operationClass = OperationModule.NOTE)
+//    @OperationEmailDetail(content = "新添加了一条【小约定】啦，快打开App查看吧", operationClass = OperationModule.NOTE)
     public Boolean savaOrUpdateContent(TbNote note){
 
         //更新

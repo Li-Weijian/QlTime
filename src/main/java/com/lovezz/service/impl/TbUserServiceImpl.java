@@ -14,6 +14,7 @@ import com.lovezz.exception.CommonException;
 import com.lovezz.mapper.TbUserMapper;
 import com.lovezz.service.TbUserService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.lovezz.utils.RequestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -161,6 +162,19 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
         }
 
         return Arrays.asList(user.getId(), user.getHelfId());
+    }
+
+    @Override
+    public void clearRelationship() throws CommonException {
+        List<Integer> allIds = this.selectAllIds(new RequestUtils().getLoginUserId());
+        for (Integer id : allIds) {
+            TbUser user = this.selectById(id);
+            user.setId(null);
+            user.setHelfId(null);
+            user.setTogetheTime(null);
+            this.insert(user);
+        }
+        this.deleteBatchIds(allIds);
     }
 
     /**

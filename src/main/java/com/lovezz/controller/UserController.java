@@ -9,11 +9,13 @@ import com.lovezz.dto.BaseResult;
 import com.lovezz.dto.LoversDto;
 import com.lovezz.dto.WxLoginInfoDto;
 import com.lovezz.entity.TbUser;
+import com.lovezz.exception.CommonException;
 import com.lovezz.exception.GlobalExceptionHandler;
 import com.lovezz.service.TbUserService;
 import com.lovezz.utils.RequestUtils;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
+import org.bouncycastle.cert.ocsp.Req;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -176,6 +178,44 @@ public class UserController {
     public BaseResult setHalf(@RequestBody TbUser user){
 
         return userService.setHalf(user);
+    }
+
+    /**
+     * 修改个人信息
+     * @param user
+     * @return
+     */
+    @PostMapping("/saveUserInfo")
+    @ResponseBody
+    public BaseResult saveUserInfo(@RequestBody TbUser user){
+        Integer userId = new RequestUtils().getLoginUserId();
+        user.setId(userId);
+        return userService.updateById(user) == true ? BaseResult.success() : BaseResult.fail("修改失败");
+    }
+
+    /**
+     * 获取个人信息
+     * @return
+     */
+    @GetMapping("/getUserInfo")
+    @ResponseBody
+    public BaseResult getUserInfo(@RequestParam(value = "userId",required = false) Integer userId){
+        if(userId == null){
+            userId = new RequestUtils().getLoginUserId();
+        }
+        return BaseResult.success(MsgCommon.SUCCESS.getMessage(), userService.selectById(userId));
+    }
+
+    /**
+     * 解除关系
+     * @return
+     */
+    @GetMapping("/clearRelationship")
+    @ResponseBody
+    public BaseResult clearRelationship() throws CommonException {
+        userService.clearRelationship();
+        return BaseResult.success();
+
     }
 
 

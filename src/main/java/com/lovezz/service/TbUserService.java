@@ -86,4 +86,9 @@ public interface TbUserService extends IService<TbUser> {
      */
     List<Integer> selectAllIds(Integer userId) throws CommonException;
 
+    /**
+     * 解除情侣关系
+     */
+    void clearRelationship() throws CommonException;
+
 }

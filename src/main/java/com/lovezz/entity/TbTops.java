@@ -29,7 +29,7 @@ public class TbTops implements Serializable {
 
     private String id;
     private String content;
-    @JsonFormat(pattern="yyyy-MM-dd hh:mm:ss",timezone = "GMT+8")
+//    @JsonFormat(pattern="yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
     @TableField("createTime")
     private Date createTime = new Date();
     /**
