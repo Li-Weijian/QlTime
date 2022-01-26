@@ -24,8 +24,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
-@Component
-@Configuration
+//@Component
+//@Configuration
 public class SendSmsJob {
 
     private static final Logger logger = LoggerFactory.getLogger(SendSmsJob.class);

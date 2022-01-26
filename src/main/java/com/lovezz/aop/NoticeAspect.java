@@ -51,7 +51,7 @@ public class NoticeAspect {
             return res;
         }finally {
             //发送邮件
-            sendMail(joinPoint);
+//            sendMail(joinPoint);
         }
     }
 
