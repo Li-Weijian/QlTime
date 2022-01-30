@@ -163,6 +163,11 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
         return Arrays.asList(user.getId(), user.getHelfId());
     }
 
+    @Override
+    public TbUser getHalf(Integer myId) {
+        return Optional.ofNullable(selectById(myId)).map(TbUser::getHelfId).map(this::selectById).orElse(null);
+    }
+
     /**
      * 构造用户数据
      * @param wxLoginInfo

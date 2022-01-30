@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * http强制跳转https
  */
-@Configuration
+//@Configuration
 public class Http2Https {
 
     @Value("${server.port}")

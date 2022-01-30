@@ -1,16 +1,20 @@
 package com.lovezz.aop;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.lovezz.annotation.OperationEmailDetail;
 import com.lovezz.entity.TbUser;
 import com.lovezz.service.MailService;
 import com.lovezz.service.TbUserService;
 import com.lovezz.utils.RequestUtils;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.bouncycastle.cert.ocsp.Req;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,21 +45,12 @@ public class NoticeAspect {
     public void operationEmail(){}
 
 
-    @Around("operationEmail()")
-    public Object Interceptor(ProceedingJoinPoint joinPoint) throws Throwable {
-        Object res = null;
-
-        try {
-            res = joinPoint.proceed();
-
-            return res;
-        }finally {
-            //发送邮件
-//            sendMail(joinPoint);
-        }
+    @After("operationEmail()")
+    public void Interceptor(JoinPoint joinPoint) throws Throwable {
+        sendMail(joinPoint);
     }
 
-    private void sendMail(ProceedingJoinPoint joinPoint){
+    private void sendMail(JoinPoint joinPoint){
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         OperationEmailDetail annotation = signature.getMethod().getAnnotation(OperationEmailDetail.class);
@@ -70,14 +65,11 @@ public class NoticeAspect {
             String subject = annotation.subject();
 
             //传入的发送列表为空，从数据库中查询
-            List<String> emailList = Arrays.asList(annotation.to());
+            List<String> emailList = CollUtil.newArrayList(annotation.to());
             if (emailList.size() == 0){
-
-                //获取所有有效用户（排除当前用户）
-                Map<String,Object> map = new HashMap<>();
-                map.put("isDelete","0");
-                map.put("id",new RequestUtils().getLoginUserId());
-                emailList = userService.selectUserEmail(map);
+                Optional.ofNullable(userService.getHalf(new RequestUtils().getLoginUserId())).ifPresent(user -> {
+                    emailList.add(user.getEmail());
+                });
             }
 
             for (String email: emailList) {

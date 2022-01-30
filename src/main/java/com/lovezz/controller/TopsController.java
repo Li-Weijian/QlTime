@@ -69,7 +69,7 @@ public class TopsController {
 
     @RequestMapping("/publishTops")
     @ResponseBody
-    @OperationEmailDetail(content = "新添加了一条【小日常】啦，快打开App查看吧", operationClass = OperationModule.TOPS)
+    @OperationEmailDetail(content = "新添加了一条【小日常】啦，快打开小程序查看吧", operationClass = OperationModule.TOPS)
     public Map<String,Object> publishTops(@RequestParam("file") MultipartFile[] file, @RequestParam("topText") String topText) throws Exception{
         Map<String, Object> resultMap = new HashMap<>();
 
@@ -159,6 +159,7 @@ public class TopsController {
      */
     @PostMapping("/publishTopsByWx")
     @ResponseBody
+    @OperationEmailDetail(content = "新添加了一条【小日常】啦，快打开小程序查看吧", operationClass = OperationModule.TOPS)
     public BaseResult publishTopsByWx(@RequestBody GalleryVo galleryVo){
         try {
             boolean isSucc = topsService.publishTops(galleryVo.getImageUrl() ,galleryVo.getTopText());

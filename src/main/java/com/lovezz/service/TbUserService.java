@@ -86,4 +86,11 @@ public interface TbUserService extends IService<TbUser> {
      */
     List<Integer> selectAllIds(Integer userId) throws CommonException;
 
+    /**
+     * 查询另一半
+     * @param myId
+     * @return
+     */
+    TbUser getHalf(Integer myId);
+
 }
