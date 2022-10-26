@@ -8,11 +8,11 @@
         <version>2.1.6.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.lovezz</groupId>
-    <artifactId>lovezz</artifactId>
+    <groupId>com.qltime</groupId>
+    <artifactId>qltime</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>lovezz</name>
+    <name>qltime</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -173,6 +173,7 @@
     </dependencies>
 
     <build>
+        <finalName>qltime</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

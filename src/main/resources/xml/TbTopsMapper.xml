@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lovezz.mapper.TbTopsMapper">
+<mapper namespace="com.qltime.mapper.TbTopsMapper">
 
-    <select id="selectTopList" resultType="com.lovezz.entity.TbTops">
+    <select id="selectTopList" resultType="com.qltime.entity.TbTops">
         SELECT a.*,b.realname,b.avatarUrl, b.nickName FROM tb_tops a
         INNER JOIN tb_user b ON b.id = a.userId
         where a.isDelete = '0' and a.userId in
