@@ -5,6 +5,7 @@ import com.qltime.annotation.OperationEmailDetail;
 import com.qltime.service.MailService;
 import com.qltime.service.TbUserService;
 import com.qltime.utils.RequestUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -25,6 +26,7 @@ import java.util.*;
 
 @Aspect
 @Component
+@Slf4j
 public class NoticeAspect {
 
     @Autowired
@@ -42,7 +44,11 @@ public class NoticeAspect {
 
     @After("operationEmail()")
     public void Interceptor(JoinPoint joinPoint) throws Throwable {
-        sendMail(joinPoint);
+        try {
+            sendMail(joinPoint);
+        }catch (Exception e){
+            log.error("发送邮件失败. ", e);
+        }
     }
 
     private void sendMail(JoinPoint joinPoint){

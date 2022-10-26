@@ -9,9 +9,11 @@ import java.util.Date;
 
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 
@@ -127,6 +129,7 @@ public class TbUser implements Serializable {
     /**
      * 在一起的时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date togetheTime;
 
     @TableField(exist = false)

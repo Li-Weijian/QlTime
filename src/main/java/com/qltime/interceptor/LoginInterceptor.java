@@ -50,7 +50,7 @@ public class LoginInterceptor implements HandlerInterceptor {
                 return false;
             }
         }catch (Exception e){
-            throw new RuntimeException("未知异常");
+            throw new RuntimeException("未知异常", e);
         }
     }
 
