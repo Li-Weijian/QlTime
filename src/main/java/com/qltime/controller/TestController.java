@@ -1,8 +1,8 @@
 package com.qltime.controller;
 
 
-import com.qltime.entity.TbLovetext;
-import com.qltime.entity.Test;
+import com.qltime.model.entity.TbLovetext;
+import com.qltime.model.entity.Test;
 import com.qltime.service.TbLovetextService;
 import com.qltime.service.TestService;
 import com.qltime.utils.FileUtils;

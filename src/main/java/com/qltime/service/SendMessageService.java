@@ -1,7 +1,7 @@
 package com.qltime.service;
 
 import com.github.qcloudsms.httpclient.HTTPException;
-import com.qltime.dto.SmsResult;
+import com.qltime.model.dto.SmsResult;
 
 import java.io.IOException;
 import java.util.ArrayList;

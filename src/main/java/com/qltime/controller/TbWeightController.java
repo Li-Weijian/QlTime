@@ -2,9 +2,9 @@ package com.qltime.controller;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.qltime.dto.BaseResult;
-import com.qltime.dto.HealthDTO;
-import com.qltime.entity.TbWeight;
+import com.qltime.model.dto.BaseResult;
+import com.qltime.model.dto.HealthDTO;
+import com.qltime.model.entity.TbWeight;
 import com.qltime.service.TbWeightService;
 import com.qltime.utils.RequestUtils;
 import org.apache.commons.lang3.StringUtils;

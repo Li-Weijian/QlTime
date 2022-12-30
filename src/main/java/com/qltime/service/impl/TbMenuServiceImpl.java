@@ -1,6 +1,6 @@
 package com.qltime.service.impl;
 
-import com.qltime.entity.TbMenu;
+import com.qltime.model.entity.TbMenu;
 import com.qltime.mapper.TbMenuMapper;
 import com.qltime.service.TbMenuService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;

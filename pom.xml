@@ -17,9 +17,46 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <spring-boot.version>2.7.5</spring-boot.version>
+        <swagger.version>3.0.0</swagger.version>
+        <knife4j.version>3.0.3</knife4j.version>
+        <fastjson.version>2.0.15</fastjson.version>
+        <openfeign.version>2.1.5.RELEASE</openfeign.version>
+        <hutools.version>5.8.11</hutools.version>
+        <weixin-mp.version>3.3.0</weixin-mp.version>
     </properties>
 
+
     <dependencies>
+        <!--hutools-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutools.version}</version>
+        </dependency>
+
+        <!--open feign-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>${openfeign.version}</version>
+        </dependency>
+
+        <!--httpclient的依赖，因为选择了使用httpclient-->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-httpclient</artifactId>
+            <version>10.4.0</version>
+        </dependency>
+
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -140,12 +177,6 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-        <!--  hutool -->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>5.3.5</version>
-        </dependency>
 
         <!--微信小程序开发工具包-->
         <dependency>
@@ -159,6 +190,14 @@
             <artifactId>weixin-java-common</artifactId>
             <version>3.9.0</version>
         </dependency>
+
+        <!--weixin-java-mp-->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-mp</artifactId>
+            <version>3.9.0</version>
+        </dependency>
+
 
         <!-- lombok -->
         <dependency>

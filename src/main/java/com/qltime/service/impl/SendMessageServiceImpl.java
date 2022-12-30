@@ -1,10 +1,11 @@
+/*
 package com.qltime.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.qcloudsms.SmsSingleSender;
 import com.github.qcloudsms.SmsSingleSenderResult;
 import com.github.qcloudsms.httpclient.HTTPException;
-import com.qltime.dto.SmsResult;
+import com.qltime.model.dto.SmsResult;
 import com.qltime.service.SendMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,11 +18,13 @@ import org.springframework.web.client.RestTemplate;
 import java.io.*;
 import java.util.ArrayList;
 
+*/
 /**
  * @Auther: liweijian
  * @Date: 2019/7/13 11:07
  * @Description:
- */
+ *//*
+
 @Service
 public class SendMessageServiceImpl implements SendMessageService {
 
@@ -47,14 +50,16 @@ public class SendMessageServiceImpl implements SendMessageService {
     private String SMSSIGN = "峥峥宝贝专属";
 
 
-    /**
+    */
+/**
      * 发送短信
      *
      * @param mobile  手机号
      * @param templateid  模版id
      * @param content  内容，内容请根据模版的顺序，使用 , 进行拼接
      * @return
-     */
+     *//*
+
     @Override
     public String sendMessaage(String mobile, String templateid, String content) throws IOException {
         //单发短信API
@@ -82,13 +87,15 @@ public class SendMessageServiceImpl implements SendMessageService {
     }
 
 
-    /**
+    */
+/**
      * 功能描述: 腾讯云 发送短信
      * @param:
      * @return:
      * @auther: liweijian
      * @date: 2019/10/21 20:11
-     */
+     *//*
+
     @Override
     public SmsResult sendMessaage(String mobile, Integer templateid, ArrayList<String> params) throws IOException, HTTPException {
 
@@ -107,3 +114,4 @@ public class SendMessageServiceImpl implements SendMessageService {
 
 
 }
+*/

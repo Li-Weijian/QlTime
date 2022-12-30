@@ -6,7 +6,7 @@ import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.model.*;
-import com.qltime.dto.ImageInfoDTO;
+import com.qltime.model.dto.ImageInfoDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

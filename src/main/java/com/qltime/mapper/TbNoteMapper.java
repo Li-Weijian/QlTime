@@ -1,6 +1,6 @@
 package com.qltime.mapper;
 
-import com.qltime.entity.TbNote;
+import com.qltime.model.entity.TbNote;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 

@@ -4,24 +4,64 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
 import cn.binarywang.wx.miniapp.config.WxMaConfig;
 import cn.binarywang.wx.miniapp.config.impl.WxMaDefaultConfigImpl;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
+import java.util.List;
+
+@Data
+@ConfigurationProperties(prefix = "wx")
+@Component
 public class WxConfig {
 
-    @Value("${wx.miniapp.appid}")
-    private String APP_ID;
+    private List<WechatTemplate> templateList;
+    private MiniApp miniApp;
+    private WxPush wxPush;
 
-    @Value("${wx.miniapp.appSecret}")
-    private String APP_SECRET;
+
+    /**
+     * 小程序
+     */
+    @Data
+    public static class MiniApp {
+        private String appid;
+        private String appSecret;
+    }
+
+    /**
+     * 微信推送
+     */
+    @Data
+    public static class WxPush {
+        private String appid;
+        private String appSecret;
+    }
+
+    /**
+     * 微信推送模板
+     */
+    @Data
+    public static class WechatTemplate {
+        /**
+         * 模板类型
+         */
+        private Integer type;
+
+        /**
+         * 模板ID
+         */
+        private String templateId;
+    }
+
+
 
     @Bean
     public WxMaConfig wxMaConfig() {
         WxMaDefaultConfigImpl config = new WxMaDefaultConfigImpl();
-        config.setAppid(APP_ID);
-        config.setSecret(APP_SECRET);
+        config.setAppid(getMiniApp().getAppid());
+        config.setSecret(getMiniApp().getAppSecret());
         return config;
     }
 

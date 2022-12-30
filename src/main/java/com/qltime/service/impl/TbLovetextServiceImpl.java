@@ -1,6 +1,6 @@
 package com.qltime.service.impl;
 
-import com.qltime.entity.TbLovetext;
+import com.qltime.model.entity.TbLovetext;
 import com.qltime.mapper.TbLovetextMapper;
 import com.qltime.service.TbLovetextService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;

@@ -1,8 +1,8 @@
 package com.qltime.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.qltime.dto.BaseResult;
-import com.qltime.entity.TbMenu;
+import com.qltime.model.dto.BaseResult;
+import com.qltime.model.entity.TbMenu;
 import com.qltime.service.TbMenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

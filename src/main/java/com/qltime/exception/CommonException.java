@@ -1,6 +1,6 @@
 package com.qltime.exception;
 
-import com.qltime.dto.BaseResult;
+import com.qltime.model.dto.BaseResult;
 import lombok.Data;
 
 /**

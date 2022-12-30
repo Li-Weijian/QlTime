@@ -1,7 +1,7 @@
 package com.qltime.service;
 
-import com.qltime.dto.CharNode;
-import com.qltime.entity.TbWeight;
+import com.qltime.model.dto.CharNode;
+import com.qltime.model.entity.TbWeight;
 import com.baomidou.mybatisplus.service.IService;
 
 import java.util.List;

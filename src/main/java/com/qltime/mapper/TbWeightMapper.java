@@ -1,6 +1,6 @@
 package com.qltime.mapper;
 
-import com.qltime.entity.TbWeight;
+import com.qltime.model.entity.TbWeight;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**

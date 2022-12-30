@@ -1,6 +1,6 @@
 package com.qltime.service.impl;
 
-import com.qltime.entity.Test;
+import com.qltime.model.entity.Test;
 import com.qltime.mapper.TestMapper;
 import com.qltime.service.TestService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;

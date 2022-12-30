@@ -1,6 +1,6 @@
 package com.qltime.service;
 
-import com.qltime.dto.BaseResult;
+import com.qltime.model.dto.BaseResult;
 
 import java.util.List;
 

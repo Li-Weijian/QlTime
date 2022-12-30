@@ -6,7 +6,7 @@ package com.qltime.job;
  * @Description:
  */
 
-import com.qltime.dto.SmsResult;
+import com.qltime.model.dto.SmsResult;
 import com.qltime.service.MailService;
 import com.qltime.service.SendMessageService;
 import com.qltime.utils.TimeUtils;

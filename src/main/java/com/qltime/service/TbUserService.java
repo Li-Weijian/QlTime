@@ -1,9 +1,9 @@
 package com.qltime.service;
 
-import com.qltime.dto.BaseResult;
-import com.qltime.dto.LoversDto;
-import com.qltime.dto.WxLoginInfoDto;
-import com.qltime.entity.TbUser;
+import com.qltime.model.dto.BaseResult;
+import com.qltime.model.dto.LoversDto;
+import com.qltime.model.dto.WxLoginInfoDto;
+import com.qltime.model.entity.TbUser;
 import com.baomidou.mybatisplus.service.IService;
 import com.qltime.exception.CommonException;
 
@@ -92,5 +92,11 @@ public interface TbUserService extends IService<TbUser> {
      * @return
      */
     TbUser getHalf(Integer myId);
+
+    /**
+     * 获取当前正常用户
+     * @return
+     */
+    List<TbUser> listUserInfo();
 
 }

@@ -5,11 +5,11 @@ import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.qltime.constant.MsgCommon;
-import com.qltime.dto.BaseResult;
-import com.qltime.dto.LoversDto;
-import com.qltime.dto.RawDataDto;
-import com.qltime.dto.WxLoginInfoDto;
-import com.qltime.entity.TbUser;
+import com.qltime.model.dto.BaseResult;
+import com.qltime.model.dto.LoversDto;
+import com.qltime.model.dto.RawDataDto;
+import com.qltime.model.dto.WxLoginInfoDto;
+import com.qltime.model.entity.TbUser;
 import com.qltime.exception.CommonException;
 import com.qltime.mapper.TbUserMapper;
 import com.qltime.service.TbUserService;
@@ -36,10 +36,13 @@ import java.util.*;
 @Service
 public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> implements TbUserService {
 
-    @Autowired
-    private TbUserMapper userMapper;
+    private final TbUserMapper userMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(TbUserServiceImpl.class);
+
+    public TbUserServiceImpl(TbUserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
 
     @Override
     public TbUser login(String username, String password) {
@@ -166,6 +169,11 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
     @Override
     public TbUser getHalf(Integer myId) {
         return Optional.ofNullable(selectById(myId)).map(TbUser::getHelfId).map(this::selectById).orElse(null);
+    }
+
+    @Override
+    public List<TbUser> listUserInfo() {
+        return userMapper.selectList(null);
     }
 
     /**

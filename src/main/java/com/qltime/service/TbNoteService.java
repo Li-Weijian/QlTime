@@ -1,6 +1,6 @@
 package com.qltime.service;
 
-import com.qltime.entity.TbNote;
+import com.qltime.model.entity.TbNote;
 import com.baomidou.mybatisplus.service.IService;
 
 import java.util.List;

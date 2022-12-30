@@ -1,7 +1,7 @@
 package com.qltime.utils;
 
 import com.qltime.constant.SystemConstants;
-import com.qltime.entity.TbUser;
+import com.qltime.model.entity.TbUser;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

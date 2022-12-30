@@ -1,8 +1,8 @@
 package com.qltime.service;
 
-import com.qltime.dto.BaseResult;
-import com.qltime.dto.TopsDTO;
-import com.qltime.entity.TbTops;
+import com.qltime.model.dto.BaseResult;
+import com.qltime.model.dto.TopsDTO;
+import com.qltime.model.entity.TbTops;
 import com.baomidou.mybatisplus.service.IService;
 import com.qltime.exception.CommonException;
 import org.springframework.web.multipart.MultipartFile;

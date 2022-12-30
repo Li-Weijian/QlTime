@@ -1,8 +1,8 @@
 package com.qltime.service;
 
-import com.qltime.dto.BaseResult;
-import com.qltime.dto.GalleryVo;
-import com.qltime.entity.TbGallery;
+import com.qltime.model.dto.BaseResult;
+import com.qltime.model.dto.GalleryVo;
+import com.qltime.model.entity.TbGallery;
 import com.baomidou.mybatisplus.service.IService;
 import org.springframework.web.multipart.MultipartFile;
 

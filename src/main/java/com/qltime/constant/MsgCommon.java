@@ -1,6 +1,6 @@
 package com.qltime.constant;
 
-import com.qltime.dto.BaseResult;
+import com.qltime.model.dto.BaseResult;
 
 /**
  * @auther: liweijian

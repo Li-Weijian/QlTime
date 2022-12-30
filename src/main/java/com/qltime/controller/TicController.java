@@ -1,6 +1,6 @@
 package com.qltime.controller;
 
-import com.qltime.dto.BaseResult;
+import com.qltime.model.dto.BaseResult;
 import com.qltime.service.TbLovetextService;
 import com.qltime.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;

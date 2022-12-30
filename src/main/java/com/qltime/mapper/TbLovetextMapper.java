@@ -1,6 +1,6 @@
 package com.qltime.mapper;
 
-import com.qltime.entity.TbLovetext;
+import com.qltime.model.entity.TbLovetext;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**

@@ -1,7 +1,7 @@
 package com.qltime.service.impl;
 
-import com.qltime.dto.BaseResult;
-import com.qltime.entity.TbComments;
+import com.qltime.model.dto.BaseResult;
+import com.qltime.model.entity.TbComments;
 import com.qltime.mapper.TbCommentsMapper;
 import com.qltime.service.TbCommentsService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;

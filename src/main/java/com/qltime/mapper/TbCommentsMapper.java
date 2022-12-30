@@ -1,6 +1,6 @@
 package com.qltime.mapper;
 
-import com.qltime.entity.TbComments;
+import com.qltime.model.entity.TbComments;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 /**

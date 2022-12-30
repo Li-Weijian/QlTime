@@ -1,6 +1,6 @@
 package com.qltime.controller;
 
-import com.qltime.dto.BaseResult;
+import com.qltime.model.dto.BaseResult;
 import com.qltime.exception.CommonException;
 import com.qltime.service.StatisticsService;
 import com.qltime.service.TbUserService;
