@@ -4,24 +4,21 @@ package com.qltime.service.components;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.system.UserInfo;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.google.gson.JsonObject;
 import com.qltime.config.ApplicationConfiguration;
 import com.qltime.config.WxConfig;
-import com.qltime.feign.BaiduWeatherRemoteClient;
 import com.qltime.feign.TianDataRemoteClient;
-import com.qltime.model.dto.TianRainbow;
-import com.qltime.model.dto.baidu.BaiduWeatherResult;
+import com.qltime.model.dto.tianxin.TianRainbow;
 import com.qltime.model.dto.baidu.Forecasts;
-import com.qltime.model.dto.baidu.Now;
 import com.qltime.model.dto.tianxin.TianEnsentence;
+import com.qltime.model.dto.tianxin.TianStar;
+import com.qltime.model.dto.wxpush.WxPushDaily;
 import com.qltime.model.entity.TbUser;
-import com.qltime.model.param.BaiduWeatherParam;
+import com.qltime.model.param.TianStarParam;
 import com.qltime.model.param.TianXinParam;
 import com.qltime.service.PushDailyWechat;
 import com.qltime.service.TbUserService;
+import com.qltime.service.WeatherService;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -36,13 +33,18 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 
+/**
+ * 推送微信日常
+ * @author liweijian
+ */
 @Slf4j
 @Service
 public class PushDailyWechatImpl implements PushDailyWechat {
 
     private final TbUserService userService;
-    private final BaiduWeatherRemoteClient baiduWeatherRemoteClient;
+
     private final TianDataRemoteClient tianDataRemoteClient;
+    private final WeatherService weatherService;
 
     /**
      * 微信配置类
@@ -52,10 +54,10 @@ public class PushDailyWechatImpl implements PushDailyWechat {
     private final ApplicationConfiguration applicationConfiguration;
 
 
-    public PushDailyWechatImpl(TbUserService userService, BaiduWeatherRemoteClient baiduWeatherRemoteClient, TianDataRemoteClient tianDataRemoteClient, WxConfig wxConfig, ApplicationConfiguration applicationConfiguration) {
+    public PushDailyWechatImpl(TbUserService userService, TianDataRemoteClient tianDataRemoteClient, WeatherService weatherService, WxConfig wxConfig, ApplicationConfiguration applicationConfiguration) {
         this.userService = userService;
-        this.baiduWeatherRemoteClient = baiduWeatherRemoteClient;
         this.tianDataRemoteClient = tianDataRemoteClient;
+        this.weatherService = weatherService;
         this.wxConfig = wxConfig;
         this.applicationConfiguration = applicationConfiguration;
     }
@@ -65,7 +67,7 @@ public class PushDailyWechatImpl implements PushDailyWechat {
      * 给不同的用户推送消息
      */
     @Override
-    public void pushWechat() throws WxErrorException {
+    public void pushWechat() {
         // 获取用户列表
         List<TbUser> userInfoList = userService.listUserInfo();
         if (!CollectionUtils.isEmpty(userInfoList)) {
@@ -83,62 +85,46 @@ public class PushDailyWechatImpl implements PushDailyWechat {
         }
     }
 
+
+
     /**
      * 封装微信数据
      *
      * @param wechatId
      * @param templateId
      */
-    private void wechatData(String wechatId, String templateId, TbUser userInfo) throws WxErrorException {
-        // 创建配置信息
-        WxMpDefaultConfigImpl wxStorage = new WxMpDefaultConfigImpl();
+    private void wechatData(String wechatId, String templateId, TbUser userInfo) {
 
-        wxStorage.setAppId(wxConfig.getWxPush().getAppid());
-        wxStorage.setSecret(wxConfig.getWxPush().getAppSecret());
-        WxMpService wxMpService = new WxMpServiceImpl();
-        wxMpService.setWxMpConfigStorage(wxStorage);
-
-        // 创建模板信息
-        WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
-            .toUser(wechatId)
-            .templateId(templateId)
-            .build();
-
-        // 获取天气预报信息
-        BaiduWeatherParam baiduWeatherParam = BaiduWeatherParam.builder()
-            .district_id(userInfo.getCity())
-            .data_type("all")
-            .ak(applicationConfiguration.getBaidu().getAk())
-            .build();
-        BaiduWeatherResult baiduWeatherResult = baiduWeatherRemoteClient.queryWeather(baiduWeatherParam);
-        log.info("查询的百度天气信息为：{}", baiduWeatherResult);
-        List<Forecasts> baiduForecastsWeatherList = baiduWeatherResult.getResult().getForecasts();
+        // 获取天气
+        Forecasts todayForecasts = weatherService.getWeatherForecasts(userInfo.getCity());
 
         // 获取彩虹屁
-        TianXinParam tianXinParam = TianXinParam.builder().key(applicationConfiguration.getTianXin().getKey()).build();
+        String tianXinKey = applicationConfiguration.getTianXin().getKey();
+        TianXinParam tianXinParam = new TianXinParam().setKey(tianXinKey);
         TianRainbow.Result rainbow = tianDataRemoteClient.queryRainbow(tianXinParam).getNewslist().get(0);
 
         // 获取每日一句
         TianEnsentence.Result ensentence = tianDataRemoteClient.queryEnsentence(tianXinParam).getNewslist().get(0);
 
-        // 封装模板数据
-        Now now = baiduWeatherResult.getResult().getNow();
-        Forecasts todayForecasts = baiduForecastsWeatherList.get(0);
-        templateMessage.addData(new WxMpTemplateData("now", this.pareDateNow(todayForecasts), "#FFB6C1"));
-        templateMessage.addData(new WxMpTemplateData("city", baiduWeatherResult.getResult().getLocation().getCity(), "#B95EA6"));
-        templateMessage.addData(new WxMpTemplateData("text", todayForecasts.getText_day(), "#173177"));
-        templateMessage.addData(new WxMpTemplateData("high", String.valueOf(todayForecasts.getHigh()), "#87cefa"));
-        templateMessage.addData(new WxMpTemplateData("low", String.valueOf(todayForecasts.getLow()), "#FF6347"));
-        templateMessage.addData(new WxMpTemplateData("scq_day", this.calScqDate(userInfo), "#FF1493"));
-//        templateMessage.addData(new WxMpTemplateData("bir_day", this.calBirData(userInfo), "#FF00FF"));
-        templateMessage.addData(new WxMpTemplateData("bir_day", "520", "#FF00FF"));
-        templateMessage.addData(new WxMpTemplateData("daily_english_cn", ensentence.getNote(), "#800080"));
-        templateMessage.addData(new WxMpTemplateData("daily_english_en", ensentence.getContent(), "#FFA500"));
-        templateMessage.addData(new WxMpTemplateData("rainbow", rainbow.getContent(), "#FFA500"));
+        // 获取星座运势
+        List<TianStar.Result> star = tianDataRemoteClient.queryStar(new TianStarParam().setAstro(userInfo.getStar()).setKey(tianXinKey)).getNewslist();
 
-        log.info("发送的消息为：{}", JSON.toJSONString(templateMessage));
-        wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
+        pushDaily(new WxPushDaily(wechatId, templateId)
+            .setNow(todayForecasts)
+            .setCity(weatherService.getLocation(userInfo.getCity()).getCity())
+            .setWeather(todayForecasts.getText_day())
+            .setHighTemperature(String.valueOf(todayForecasts.getHigh()))
+            .setLowTemperature(String.valueOf(todayForecasts.getLow()))
+            .setScqDay(this.calScqDate(userInfo))
+            .setDailyEnglishCn(ensentence.getNote())
+            .setDailyEnglishEn(ensentence.getContent())
+            .setRainbow(rainbow.getContent())
+            .setHoroscope(star)
+            .setStar(userInfo.getStar())
+        );
+
     }
+
 
     /**
      * 计算想认识/想恋日期
@@ -156,44 +142,11 @@ public class PushDailyWechatImpl implements PushDailyWechat {
         return "";
     }
 
-    /**
-     * 计算生日
-     *
-     * @param userInfo
-     * @return
-     */
-/*    private String calBirData(UserInfo userInfo) {
-        // 获取用户的出生日期
-        if (Objects.nonNull(userInfo)) {
-            Date birTime = userInfo.getBirTime();
-            // 今日日期
-            Calendar today = Calendar.getInstance();
-            // 出生日期
-            Calendar birthDay = Calendar.getInstance();
-            // 设置生日
-            birthDay.setTime(birTime);
-            // 修改为本年
-            int bir;
-            birthDay.set(Calendar.YEAR, today.get(Calendar.YEAR));
-            if (birthDay.get(Calendar.DAY_OF_YEAR) < today.get(Calendar.DAY_OF_YEAR)) {
-                // 生日已经过了，计算明年的
-                bir = today.getActualMaximum(Calendar.DAY_OF_YEAR) - today.get(Calendar.DAY_OF_YEAR);
-                bir += birthDay.get(Calendar.DAY_OF_YEAR);
-            } else {
-                // 生日还没过
-                bir = birthDay.get(Calendar.DAY_OF_YEAR) - today.get(Calendar.DAY_OF_YEAR);
-            }
-            return String.valueOf(bir);
-        }
-        return "";
-    }*/
-
 
     /**
      * 拼接今日时间
      *
      * @return
-     * @param baiduForecastsWeather
      */
     private String pareDateNow(Forecasts baiduForecastsWeather) {
         // 获取当前日期
@@ -201,5 +154,67 @@ public class PushDailyWechatImpl implements PushDailyWechat {
         // 获取星期几
         String week = baiduForecastsWeather.getWeek();
         return now + " " + week;
+    }
+
+    /**
+     * 每日推送
+     * @param wxPushDaily
+     */
+    private void pushDaily(WxPushDaily wxPushDaily){
+
+        // 创建配置信息
+        WxMpDefaultConfigImpl wxStorage = new WxMpDefaultConfigImpl();
+
+        wxStorage.setAppId(wxConfig.getWxPush().getAppid());
+        wxStorage.setSecret(wxConfig.getWxPush().getAppSecret());
+        WxMpService wxMpService = new WxMpServiceImpl();
+        wxMpService.setWxMpConfigStorage(wxStorage);
+
+        // 创建模板信息
+        WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
+            .toUser(wxPushDaily.getWechatId())
+            .templateId(wxPushDaily.getTemplateId())
+            .build();
+
+        // 封装模板数据
+        templateMessage.addData(new WxMpTemplateData("now", this.pareDateNow(wxPushDaily.getNow()), "#FFB6C1"));
+        templateMessage.addData(new WxMpTemplateData("city", wxPushDaily.getCity(), "#B95EA6"));
+        templateMessage.addData(new WxMpTemplateData("weather", wxPushDaily.getWeather(), "#173177"));
+        templateMessage.addData(new WxMpTemplateData("high", wxPushDaily.getHighTemperature(), "#87cefa"));
+        templateMessage.addData(new WxMpTemplateData("low", wxPushDaily.getLowTemperature(), "#FF6347"));
+        templateMessage.addData(new WxMpTemplateData("scq_day", wxPushDaily.getScqDay(), "#FF1493"));
+        templateMessage.addData(new WxMpTemplateData("daily_english_cn", wxPushDaily.getDailyEnglishCn(), "#800080"));
+        templateMessage.addData(new WxMpTemplateData("daily_english_en", wxPushDaily.getDailyEnglishEn(), "#FFA500"));
+        templateMessage.addData(new WxMpTemplateData("rainbow", wxPushDaily.getRainbow(), "#FFA500"));
+
+        // 运势
+        buildStarData(templateMessage, wxPushDaily.getStar(), wxPushDaily.getHoroscope());
+
+        log.info("发送的消息为：{}", JSON.toJSONString(templateMessage));
+        try {
+            wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
+        } catch (WxErrorException e) {
+            log.error("[微信每日推送]. wechatId: {}, templateId: {}", wxPushDaily.getWechatId(), wxPushDaily.getTemplateId(), e);
+        }
+    }
+
+    /**
+     * 构建星座运势模板
+     * @param templateMessage
+     * @param star
+     * @param horoscope
+     * @return
+     */
+    private void buildStarData(WxMpTemplateMessage templateMessage, String star, List<TianStar.Result> horoscope) {
+
+        templateMessage.addData(new WxMpTemplateData("composite", horoscope.get(0).getContent(), "#FFA500"));
+        templateMessage.addData(new WxMpTemplateData("star", star, "#FFFFFF"));
+        templateMessage.addData(new WxMpTemplateData("overview", horoscope.get(8).getContent(), "#FFA500"));
+        templateMessage.addData(new WxMpTemplateData("love", horoscope.get(1).getContent(), "#FFA500"));
+        templateMessage.addData(new WxMpTemplateData("work", horoscope.get(2).getContent(), "#FFA500"));
+        templateMessage.addData(new WxMpTemplateData("wealth", horoscope.get(4).getContent(), "#FFA500"));
+        templateMessage.addData(new WxMpTemplateData("healthy", horoscope.get(3).getContent(), "#FFA500"));
+        templateMessage.addData(new WxMpTemplateData("lucky", horoscope.get(5).getContent(), "#FFA500"));
+        templateMessage.addData(new WxMpTemplateData("lucky_number", horoscope.get(6).getContent(), "#FFA500"));
     }
 }

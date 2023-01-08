@@ -1,7 +1,9 @@
 package com.qltime.feign;
 
-import com.qltime.model.dto.TianRainbow;
+import com.qltime.model.dto.tianxin.TianRainbow;
 import com.qltime.model.dto.tianxin.TianEnsentence;
+import com.qltime.model.dto.tianxin.TianStar;
+import com.qltime.model.param.TianStarParam;
 import com.qltime.model.param.TianXinParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
@@ -33,5 +35,16 @@ public interface TianDataRemoteClient {
         produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     TianEnsentence queryEnsentence(@SpringQueryMap TianXinParam tianXinParam);
+
+
+    /**
+     * 获取星座运势
+     */
+    @GetMapping(value = "/star/index",
+        consumes = {MediaType.APPLICATION_JSON_VALUE},
+        produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    TianStar queryStar(@SpringQueryMap TianXinParam param);
+
 
 }

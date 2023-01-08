@@ -5,6 +5,7 @@ import com.qltime.service.PushDailyWechat;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,10 +22,10 @@ public class PushDailyController {
 
 
     @GetMapping("/pushWechat")
-    public BaseResult pushWechat() throws WxErrorException {
+    public BaseResult pushWechat() {
         pushDailyWechat.pushWechat();
         return BaseResult.success();
-
     }
+
 
 }

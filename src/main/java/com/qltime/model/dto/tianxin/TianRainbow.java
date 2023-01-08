@@ -1,4 +1,4 @@
-package com.qltime.model.dto;
+package com.qltime.model.dto.tianxin;
 
 import lombok.Data;
 

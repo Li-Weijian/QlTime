@@ -140,5 +140,10 @@ public class TbUser implements Serializable {
      */
     private String wechatId;
 
+    /**
+     * 星座
+     */
+    private String star;
+
 
 }
