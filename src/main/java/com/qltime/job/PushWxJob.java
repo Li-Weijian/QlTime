@@ -30,7 +30,7 @@ public class PushWxJob {
     }
 
 
-    @Scheduled(cron = "0 30 8 * * ? ")
+    @Scheduled(cron = "0 30 6 * * ? ")
     public void pushWx() {
         try {
             logger.info("定时任务开始执行：推送时间" + LocalDateTime.now());
