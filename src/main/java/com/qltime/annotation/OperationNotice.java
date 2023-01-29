@@ -1,5 +1,6 @@
 package com.qltime.annotation;
 
+import com.qltime.constant.NoticeType;
 import com.qltime.constant.OperationModule;
 
 import java.lang.annotation.*;
@@ -12,10 +13,10 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-public @interface OperationEmailDetail {
+public @interface OperationNotice {
 
     /**
-     * 邮件需要发送的文本
+     * 邮件需要发送的文本, 微信Push有默认配置的模板，不支持在程序中自定义
      * @auther: liweijian
      * @date: 2019/12/9 20:36
      */
@@ -42,5 +43,12 @@ public @interface OperationEmailDetail {
      * @date: 2019/12/9 20:55
      */
     String operationClass() default OperationModule.UNKNOWN;
+
+    /**
+     * 通知类型
+     * @return
+     */
+    String noticeType() default NoticeType.WX_PUSH;
+
 
 }

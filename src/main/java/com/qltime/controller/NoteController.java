@@ -1,7 +1,7 @@
 package com.qltime.controller;
 
 
-import com.qltime.annotation.OperationEmailDetail;
+import com.qltime.annotation.OperationNotice;
 import com.qltime.constant.MsgCommon;
 import com.qltime.constant.OperationModule;
 import com.qltime.model.dto.BaseResult;
@@ -65,7 +65,7 @@ public class NoteController {
 
     @RequestMapping("/savaContent")
     @ResponseBody
-    @OperationEmailDetail(content = "新添加了一条【小约定】啦，快打开小程序查看吧", operationClass = OperationModule.NOTE)
+    @OperationNotice(content = "新添加了一条【小约定】啦，快打开小程序查看吧", operationClass = OperationModule.NOTE)
     public Boolean savaOrUpdateContent(TbNote note){
 
         //更新

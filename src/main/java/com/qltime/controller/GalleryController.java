@@ -1,7 +1,7 @@
 package com.qltime.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.qltime.annotation.OperationEmailDetail;
+import com.qltime.annotation.OperationNotice;
 import com.qltime.constant.GalleryFlagEnum;
 import com.qltime.constant.MsgCommon;
 import com.qltime.constant.OperationModule;
@@ -59,7 +59,7 @@ public class GalleryController {
      * 适用本项目前端上传
      */
     @RequestMapping("/postImages")
-    @OperationEmailDetail(content = "新添加了一条【小记忆】啦，快打开小程序查看吧", operationClass = OperationModule.GALLERY)
+    @OperationNotice(content = "新添加了一条【小记忆】啦，快打开小程序查看吧", operationClass = OperationModule.GALLERY)
     public String fileUpload(@RequestParam(value = "fileupload", required = false) MultipartFile file) throws MalformedURLException {
         galleryService.fileUpload(file);
         return "redirect:/galleryController/toGallery";
@@ -90,7 +90,7 @@ public class GalleryController {
      */
     @RequestMapping("/uploadImages")
     @ResponseBody
-    @OperationEmailDetail(content = "新添加了一条【小记忆】啦，快打开小程序查看吧", operationClass = OperationModule.GALLERY)
+    @OperationNotice(content = "新添加了一条【小记忆】啦，快打开小程序查看吧", operationClass = OperationModule.GALLERY)
     public BaseResult uploadImages(@RequestParam(value = "fileupload", required = false) MultipartFile[] file) throws MalformedURLException {
         List<String> urlList = galleryService.fileUpload(file, String.valueOf(GalleryFlagEnum.GALLERY.getType()));
         return BaseResult.success(MsgCommon.SUCCESS.getMessage(), urlList);

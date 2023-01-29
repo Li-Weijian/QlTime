@@ -4,13 +4,13 @@ package com.qltime.service.components;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
-import com.alibaba.fastjson.JSON;
 import com.qltime.config.ApplicationConfiguration;
 import com.qltime.config.WxConfig;
+import com.qltime.constant.WechatTemplateType;
 import com.qltime.feign.TianDataRemoteClient;
-import com.qltime.model.dto.tianxin.TianRainbow;
 import com.qltime.model.dto.baidu.Forecasts;
 import com.qltime.model.dto.tianxin.TianEnsentence;
+import com.qltime.model.dto.tianxin.TianRainbow;
 import com.qltime.model.dto.tianxin.TianStar;
 import com.qltime.model.dto.wxpush.WxPushDaily;
 import com.qltime.model.entity.TbUser;
@@ -19,22 +19,22 @@ import com.qltime.model.param.TianXinParam;
 import com.qltime.service.PushDailyWechat;
 import com.qltime.service.TbUserService;
 import com.qltime.service.WeatherService;
+import com.qltime.service.WxPushService;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.error.WxErrorException;
-import me.chanjar.weixin.mp.api.WxMpService;
-import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
-import me.chanjar.weixin.mp.config.impl.WxMpDefaultConfigImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 推送微信日常
+ *
  * @author liweijian
  */
 @Slf4j
@@ -53,13 +53,16 @@ public class PushDailyWechatImpl implements PushDailyWechat {
 
     private final ApplicationConfiguration applicationConfiguration;
 
+    private final WxPushService wxPushService;
 
-    public PushDailyWechatImpl(TbUserService userService, TianDataRemoteClient tianDataRemoteClient, WeatherService weatherService, WxConfig wxConfig, ApplicationConfiguration applicationConfiguration) {
+
+    public PushDailyWechatImpl(TbUserService userService, TianDataRemoteClient tianDataRemoteClient, WeatherService weatherService, WxConfig wxConfig, ApplicationConfiguration applicationConfiguration, WxPushService wxPushService) {
         this.userService = userService;
         this.tianDataRemoteClient = tianDataRemoteClient;
         this.weatherService = weatherService;
         this.wxConfig = wxConfig;
         this.applicationConfiguration = applicationConfiguration;
+        this.wxPushService = wxPushService;
     }
 
 
@@ -73,18 +76,20 @@ public class PushDailyWechatImpl implements PushDailyWechat {
         if (!CollectionUtils.isEmpty(userInfoList)) {
             // 根据用户的type类型和模板type进行匹配
             for (TbUser userInfo : userInfoList) {
-                if (StringUtils.isEmpty(userInfo.getWechatId())){
+                if (StringUtils.isEmpty(userInfo.getWechatId())) {
                     continue;
                 }
-                for (WxConfig.WechatTemplate template : wxConfig.getTemplateList()) {
-                    if (Optional.of(userInfo).map(TbUser::getGender).orElse(0).equals(template.getType())) {
-                        this.wechatData(userInfo.getWechatId(), template.getTemplateId(), userInfo);
-                    }
-                }
+
+                this.wechatData(userInfo.getWechatId(),
+                    wxConfig.getWechatTemplateByType(Optional.of(userInfo.getGender())
+                        .filter(gender -> !gender.equals(0))
+                        .map(gender -> WechatTemplateType.DAILY_BOY)
+                        .orElse(WechatTemplateType.DAILY_GIRL)),
+                    userInfo
+                );
             }
         }
     }
-
 
 
     /**
@@ -158,17 +163,10 @@ public class PushDailyWechatImpl implements PushDailyWechat {
 
     /**
      * 每日推送
+     *
      * @param wxPushDaily
      */
-    private void pushDaily(WxPushDaily wxPushDaily){
-
-        // 创建配置信息
-        WxMpDefaultConfigImpl wxStorage = new WxMpDefaultConfigImpl();
-
-        wxStorage.setAppId(wxConfig.getWxPush().getAppid());
-        wxStorage.setSecret(wxConfig.getWxPush().getAppSecret());
-        WxMpService wxMpService = new WxMpServiceImpl();
-        wxMpService.setWxMpConfigStorage(wxStorage);
+    private void pushDaily(WxPushDaily wxPushDaily) {
 
         // 创建模板信息
         WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
@@ -189,17 +187,12 @@ public class PushDailyWechatImpl implements PushDailyWechat {
 
         // 运势
         buildStarData(templateMessage, wxPushDaily.getStar(), wxPushDaily.getHoroscope());
-
-        log.info("发送的消息为：{}", JSON.toJSONString(templateMessage));
-        try {
-            wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
-        } catch (WxErrorException e) {
-            log.error("[微信每日推送]. wechatId: {}, templateId: {}", wxPushDaily.getWechatId(), wxPushDaily.getTemplateId(), e);
-        }
+        wxPushService.push(templateMessage);
     }
 
     /**
      * 构建星座运势模板
+     *
      * @param templateMessage
      * @param star
      * @param horoscope

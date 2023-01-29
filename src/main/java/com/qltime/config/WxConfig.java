@@ -4,12 +4,14 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
 import cn.binarywang.wx.miniapp.config.WxMaConfig;
 import cn.binarywang.wx.miniapp.config.impl.WxMaDefaultConfigImpl;
+import com.qltime.constant.WechatTemplateType;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @ConfigurationProperties(prefix = "wx")
@@ -47,7 +49,7 @@ public class WxConfig {
         /**
          * 模板类型
          */
-        private Integer type;
+        private WechatTemplateType type;
 
         /**
          * 模板ID
@@ -55,6 +57,17 @@ public class WxConfig {
         private String templateId;
     }
 
+    /**
+     * 根据类型获取微信模板
+     * @param type
+     * @return
+     */
+    public String getWechatTemplateByType(WechatTemplateType type){
+        return getTemplateList().stream()
+            .filter(template -> type.equals(template.getType()))
+            .findFirst()
+            .map(WechatTemplate::getTemplateId).orElse(null);
+    }
 
 
     @Bean

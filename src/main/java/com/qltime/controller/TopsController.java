@@ -1,6 +1,6 @@
 package com.qltime.controller;
 
-import com.qltime.annotation.OperationEmailDetail;
+import com.qltime.annotation.OperationNotice;
 import com.qltime.constant.MsgCommon;
 import com.qltime.constant.OperationModule;
 import com.qltime.model.dto.BaseResult;
@@ -68,7 +68,7 @@ public class TopsController {
 
     @RequestMapping("/publishTops")
     @ResponseBody
-    @OperationEmailDetail(content = "新添加了一条【小日常】啦，快打开小程序查看吧", operationClass = OperationModule.TOPS)
+    @OperationNotice(content = "新添加了一条【小日常】啦，快打开小程序查看吧", operationClass = OperationModule.TOPS)
     public Map<String,Object> publishTops(@RequestParam("file") MultipartFile[] file, @RequestParam("topText") String topText) throws Exception{
         Map<String, Object> resultMap = new HashMap<>();
 
@@ -104,7 +104,7 @@ public class TopsController {
      */
     @RequestMapping("/doCommont")
     @ResponseBody
-    @OperationEmailDetail(content = "【小日常】收到一条新评论啦，快打开App查看吧",operationClass = OperationModule.TOPS)
+    @OperationNotice(content = "【小日常】收到一条新评论啦，快打开App查看吧",operationClass = OperationModule.TOPS)
     public BaseResult doCommont(String topId, String content, String flag){
 
         return topsService.doCommont(topId,content,flag);
@@ -158,7 +158,7 @@ public class TopsController {
      */
     @PostMapping("/publishTopsByWx")
     @ResponseBody
-    @OperationEmailDetail(content = "新添加了一条【小日常】啦，快打开小程序查看吧", operationClass = OperationModule.TOPS)
+    @OperationNotice(content = "新添加了一条【小日常】啦，快打开小程序查看吧", operationClass = OperationModule.TOPS)
     public BaseResult publishTopsByWx(@RequestBody GalleryVo galleryVo){
         try {
             boolean isSucc = topsService.publishTops(galleryVo.getImageUrl() ,galleryVo.getTopText());
