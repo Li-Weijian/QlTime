@@ -1,9 +1,11 @@
 package com.qltime.service;
 
+import com.qltime.constant.GalleryFlagEnum;
 import com.qltime.model.dto.BaseResult;
 import com.qltime.model.dto.GalleryVo;
 import com.qltime.model.entity.TbGallery;
 import com.baomidou.mybatisplus.service.IService;
+import com.qltime.model.param.SaveGalleryParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.MalformedURLException;
@@ -31,7 +33,7 @@ public interface TbGalleryService extends IService<TbGallery> {
      * 构建图库对象
      * @return
      */
-    TbGallery makeGallery(String url, String topsId, String flag, String fileName);
+    TbGallery makeGallery(String url, String topsId, GalleryFlagEnum flag, String fileName);
 
     /**
      * 保存回忆图片
@@ -39,4 +41,10 @@ public interface TbGalleryService extends IService<TbGallery> {
      * @return
      */
     BaseResult saveMemory(List<String> imageUrl);
+
+    /**
+     * 保存图库
+     * @param param
+     */
+    void saveGallery(SaveGalleryParam param);
 }

@@ -1,16 +1,18 @@
 package com.qltime.constant;
 
 /**
- * @auther: liweijian
+ * 图库用途类型
+ * @author liweijian
  * @Date: 2020/9/29 09:46
  * @Description:
  */
 public enum GalleryFlagEnum {
 
-    //TODO -1 临时 0- 图库  1-留言板
+    // -1 临时 0- 图库  1-留言板
     TEMP(-1, "临时"),
     GALLERY(0, "图库"),
-    TOPS(1, "留言板");
+    TOPS(1, "留言板")
+    ;
 
     /**
      * 编号

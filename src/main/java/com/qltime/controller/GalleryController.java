@@ -8,6 +8,7 @@ import com.qltime.constant.OperationModule;
 import com.qltime.model.dto.BaseResult;
 import com.qltime.model.entity.TbGallery;
 import com.qltime.exception.CommonException;
+import com.qltime.model.param.SaveGalleryParam;
 import com.qltime.service.TbGalleryService;
 import com.qltime.service.TbUserService;
 import com.qltime.utils.RequestUtils;
@@ -40,6 +41,7 @@ public class GalleryController {
     private TbUserService userService;
 
     @RequestMapping("/toGallery")
+    @Deprecated
     public ModelAndView toGallery(ModelAndView modelAndView,Integer action,@RequestParam(defaultValue = "1") Integer page){
         if (page < 1){
             page = 1;
@@ -60,6 +62,7 @@ public class GalleryController {
      */
     @RequestMapping("/postImages")
     @OperationNotice(content = "新添加了一条【小记忆】啦，快打开小程序查看吧", operationClass = OperationModule.GALLERY)
+    @Deprecated
     public String fileUpload(@RequestParam(value = "fileupload", required = false) MultipartFile file) throws MalformedURLException {
         galleryService.fileUpload(file);
         return "redirect:/galleryController/toGallery";
@@ -96,11 +99,28 @@ public class GalleryController {
         return BaseResult.success(MsgCommon.SUCCESS.getMessage(), urlList);
     }
 
+    /**
+     * 保存小记忆
+     * @param imageListStr
+     * @return
+     */
     @PostMapping("/saveMemory")
     @ResponseBody
     public BaseResult saveMemory(@RequestBody String imageListStr) {
         List<String> imageUrl = JSONObject.parseArray(imageListStr, String.class);
         return galleryService.saveMemory(imageUrl);
+    }
+
+    /**
+     * 保存图片记录（通用方法）
+     * @param param
+     * @return
+     */
+    @PostMapping("/saveGallery")
+    public BaseResult saveGallery(@RequestBody SaveGalleryParam param){
+        galleryService.saveGallery(param);
+        return BaseResult.success();
+
     }
 
 

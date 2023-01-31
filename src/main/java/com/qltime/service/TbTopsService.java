@@ -60,7 +60,7 @@ public interface TbTopsService extends IService<TbTops> {
      * @auther: liweijian
      * @date: 2020/1/1 17:58
      */
-    BaseResult doCommont(String topId, String content, String flag);
+    BaseResult doComment(String topId, String content, String flag);
 
     /***
      * 上传 小日常 图片

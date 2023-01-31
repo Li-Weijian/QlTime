@@ -1,6 +1,7 @@
 package com.qltime.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.io.FileUtil;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.qltime.constant.GalleryFlagEnum;
@@ -9,8 +10,10 @@ import com.qltime.model.dto.GalleryVo;
 import com.qltime.model.dto.ImageInfoDTO;
 import com.qltime.model.entity.TbGallery;
 import com.qltime.mapper.TbGalleryMapper;
+import com.qltime.model.param.SaveGalleryParam;
 import com.qltime.service.TbGalleryService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.qltime.utils.FileUtils;
 import com.qltime.utils.OssUtil;
 import com.qltime.utils.RequestUtils;
 import com.qltime.utils.URLUtils;
@@ -88,11 +91,11 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
 
     @Override
     public List<TbGallery> selectGalleryList(Integer action, Integer page) {
-        Integer limit = 20;
+        int limit = 20;
         if (page < 1){
             page = 1;
         }
-        return galleryMapper.selectPage(new RowBounds((page-1)*20,limit),new EntityWrapper<TbGallery>().eq("flag","0").orderBy("uploadDate",false));
+        return galleryMapper.selectPage(new RowBounds((page-1)*20,limit),new EntityWrapper<TbGallery>().eq("flag", GalleryFlagEnum.GALLERY.getType().toString()).orderBy("uploadDate",false));
     }
 
     @Override
@@ -105,7 +108,7 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
         List<TbGallery> galleryList = galleryMapper.selectList(wrapper);
         if (CollectionUtil.isNotEmpty(galleryList)){
             galleryVo = new GalleryVo();
-            galleryVo.setImageUrl(galleryList.stream().map(item -> {return item.getUrl();}).collect(Collectors.toList()));
+            galleryVo.setImageUrl(galleryList.stream().map(TbGallery::getUrl).collect(Collectors.toList()));
             galleryVo.setCount(galleryList.size());
             galleryVo.setGalleryList(galleryList);
         }
@@ -113,7 +116,7 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
     }
 
     @Override
-    public TbGallery makeGallery(String url, String topsId, String flag, String fileName) {
+    public TbGallery makeGallery(String url, String topsId, GalleryFlagEnum flag, String fileName) {
         TbGallery gallery = new TbGallery();
         gallery.setId(UUID.randomUUID().toString());
         gallery.setUrl(url);
@@ -127,7 +130,7 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
         gallery.setFileName(fileName);
         gallery.setUserId(new RequestUtils().getLoginUserId());
         gallery.setTopId(topsId);
-        gallery.setFlag(flag);
+        gallery.setFlag(flag.getType().toString());
 
         galleryMapper.insert(gallery);
 
@@ -137,9 +140,21 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
     @Override
     public BaseResult saveMemory(List<String> imageUrl) {
         for (String url : imageUrl) {
-            this.makeGallery(url, null, String.valueOf(GalleryFlagEnum.GALLERY.getType()), "memoryImage");
+            this.makeGallery(url, null, GalleryFlagEnum.GALLERY, FileUtil.getName(url));
         }
         return BaseResult.success();
+    }
+
+    /**
+     * 保存图库
+     *
+     * @param param
+     */
+    @Override
+    public void saveGallery(SaveGalleryParam param) {
+        param.getUrls().forEach(url -> {
+            this.makeGallery(url, param.getTopsId(), param.getFlag(), FileUtil.getName(url));
+        });
     }
 
 }

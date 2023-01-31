@@ -56,13 +56,13 @@ public class OssUtil {
 
 
     /**
-     *
      * 上传图片
+     *
      * @param file
      * @return
      */
-    public String uploadImg2Oss(MultipartFile file,String fileDir) {
-        if (file.getSize() > 1024 * 1024 *20) {
+    public String uploadImg2Oss(MultipartFile file, String fileDir) {
+        if (file.getSize() > 1024 * 1024 * 20) {
             return "图片太大";//RestResultGenerator.createErrorResult(ResponseEnum.PHOTO_TOO_MAX);
         }
         String originalFilename = file.getOriginalFilename();
@@ -71,7 +71,7 @@ public class OssUtil {
         String name = random.nextInt(10000) + System.currentTimeMillis() + substring;
         try {
             InputStream inputStream = file.getInputStream();
-            this.uploadFile2OSS(inputStream, name,fileDir);
+            this.uploadFile2OSS(inputStream, name, fileDir);
             return name;//RestResultGenerator.createSuccessResult(name);
         } catch (Exception e) {
             return "上传失败";//RestResultGenerator.createErrorResult(ResponseEnum.PHOTO_UPLOAD);
@@ -80,6 +80,7 @@ public class OssUtil {
 
     /**
      * 上传图片获取fileUrl
+     *
      * @param instream
      * @param fileName
      * @param fileDir
@@ -123,8 +124,8 @@ public class OssUtil {
             return "image/gif";
         }
         if (FilenameExtension.equalsIgnoreCase(".jpeg") ||
-                FilenameExtension.equalsIgnoreCase(".jpg") ||
-                FilenameExtension.equalsIgnoreCase(".png")) {
+            FilenameExtension.equalsIgnoreCase(".jpg") ||
+            FilenameExtension.equalsIgnoreCase(".png")) {
             return "image/jpeg";
         }
         if (FilenameExtension.equalsIgnoreCase(".html")) {
@@ -137,11 +138,11 @@ public class OssUtil {
             return "application/vnd.visio";
         }
         if (FilenameExtension.equalsIgnoreCase(".pptx") ||
-                FilenameExtension.equalsIgnoreCase(".ppt")) {
+            FilenameExtension.equalsIgnoreCase(".ppt")) {
             return "application/vnd.ms-powerpoint";
         }
         if (FilenameExtension.equalsIgnoreCase(".docx") ||
-                FilenameExtension.equalsIgnoreCase(".doc")) {
+            FilenameExtension.equalsIgnoreCase(".doc")) {
             return "application/msword";
         }
         if (FilenameExtension.equalsIgnoreCase(".xml")) {
@@ -152,17 +153,18 @@ public class OssUtil {
 
     /**
      * 获取图片路径
+     *
      * @param fileUrl
      * @return
      */
     public String getImgUrl(String fileUrl) {
-      return getImgUrl(fileUrl,this.fileDir);
+        return getImgUrl(fileUrl, this.fileDir);
     }
 
-    public String getImgUrl(String fileUrl,String fileDir) {
+    public String getImgUrl(String fileUrl, String fileDir) {
         if (!StringUtils.isEmpty(fileUrl)) {
             String[] split = fileUrl.split("/");
-            String url =  this.getUrl(fileDir + split[split.length - 1]);
+            String url = this.getUrl(fileDir + split[split.length - 1]);
             return url;
         }
         return null;
@@ -190,24 +192,25 @@ public class OssUtil {
 
     /**
      * 多图片上传
+     *
      * @param fileList
      * @return
      */
     public String checkList(List<MultipartFile> fileList) {
-        return checkList(fileList,this.fileDir);
+        return checkList(fileList, this.fileDir);
 
     }
 
-    public String checkList(List<MultipartFile> fileList,String fileDir) {
-        String  fileUrl = "";
-        String  str = "";
-        String  photoUrl = "";
-        for(int i = 0;i< fileList.size();i++){
-            fileUrl = uploadImg2Oss(fileList.get(i),fileDir);
+    public String checkList(List<MultipartFile> fileList, String fileDir) {
+        String fileUrl = "";
+        String str = "";
+        String photoUrl = "";
+        for (int i = 0; i < fileList.size(); i++) {
+            fileUrl = uploadImg2Oss(fileList.get(i), fileDir);
             str = getImgUrl(fileUrl);
-            if(i == 0){
+            if (i == 0) {
                 photoUrl = str;
-            }else {
+            } else {
                 photoUrl += "," + str;
             }
         }
@@ -216,16 +219,17 @@ public class OssUtil {
 
     /**
      * 单个图片上传
+     *
      * @param file
      * @return
      */
-    public String checkImage(MultipartFile file){
-        return checkImage(file,this.fileDir);
+    public String checkImage(MultipartFile file) {
+        return checkImage(file, this.fileDir);
     }
 
-    public String checkImage(MultipartFile file, String fileDir){
-        String fileUrl = uploadImg2Oss(file,fileDir);
-        String str = getImgUrl(fileUrl,fileDir);
+    public String checkImage(MultipartFile file, String fileDir) {
+        String fileUrl = uploadImg2Oss(file, fileDir);
+        String str = getImgUrl(fileUrl, fileDir);
         return str.trim();
     }
 
@@ -237,33 +241,33 @@ public class OssUtil {
      * @auther: liweijian
      * @date: 2019/10/13 10:13
      */
-    public ImageInfoDTO getImageInfo(String url){
-       String style = "image/info";
-       url = url + "?x-oss-process=image/info";
+    public ImageInfoDTO getImageInfo(String url) {
+        String style = "image/info";
+        url = url + "?x-oss-process=image/info";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         HttpEntity<String> entity = new HttpEntity<String>(headers);
-        String strBody=restTemplate.exchange(url, HttpMethod.GET, entity,String.class).getBody();
-        ImageInfoDTO infoDTO = JSONObject.parseObject(strBody, ImageInfoDTO.class);
+        String strBody = restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
+        return JSONObject.parseObject(strBody, ImageInfoDTO.class);
 
-        return infoDTO;
     }
 
-/**
- * 批量删除文件
- * key等同于ObjectName，表示删除OSS文件时需要指定包含文件后缀在内的完整路径，例如abc/efg/123.jpg。
- * @param: keyList  key等同于ObjectName，表示删除OSS文件时需要指定包含文件后缀在内的完整路径，例如abc/efg/123.jpg。
- * @return: 删除的文件对象
- * @auther: liweijian
- * @date: 2019/11/6 20:50
- */
-    public List<String> deleteBatchFile(List<String> keyList){
+    /**
+     * 批量删除文件
+     * key等同于ObjectName，表示删除OSS文件时需要指定包含文件后缀在内的完整路径，例如abc/efg/123.jpg。
+     *
+     * @param: keyList  key等同于ObjectName，表示删除OSS文件时需要指定包含文件后缀在内的完整路径，例如abc/efg/123.jpg。
+     * @return: 删除的文件对象
+     * @auther: liweijian
+     * @date: 2019/11/6 20:50
+     */
+    public List<String> deleteBatchFile(List<String> keyList) {
         List<String> deletedObjects = null;
 
         // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
-        if (keyList != null && keyList.size() > 0){
+        if (keyList != null && keyList.size() > 0) {
             DeleteObjectsResult deleteObjectsResult = ossClient.deleteObjects(new DeleteObjectsRequest(bucketName).withKeys(keyList));
             deletedObjects = deleteObjectsResult.getDeletedObjects();
         }
@@ -274,16 +278,17 @@ public class OssUtil {
 
     /**
      * 获取Url路径
+     *
      * @param: url ps: http://lovezz-app.oss-cn-shenzhen.aliyuncs.com/userImg/1570960002838.jpg
      * @return: url路径 ps：/userImg/1570960002838.jpg
      * @auther: liweijian
      * @date: 2019/11/6 20:55
      */
-    public String getUrlPath(String url){
+    public String getUrlPath(String url) {
         String path = null;
         try {
             URL u = new URL(url);
-            path = u.getPath().substring(1,u.getPath().length());
+            path = u.getPath().substring(1, u.getPath().length());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

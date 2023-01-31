@@ -76,7 +76,7 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
                 //无参数的连接 http://image-demo.oss-cn-hangzhou.aliyuncs.com/example.jpg
                 host = URLUtils.getPath(url);
 
-                galleryService.makeGallery(host, tops.getId(),String.valueOf(GalleryFlagEnum.TOPS.getType()), "Topsfile");
+                galleryService.makeGallery(host, tops.getId(), GalleryFlagEnum.TOPS, "Topsfile");
             }
 
         } catch (Exception e) {
@@ -91,12 +91,12 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
     public boolean publishTops(List<String> fileList, String topText) throws MalformedURLException {
         TbTops tops = makeTops(topText);
         for (String fileUrl : fileList) {
-            galleryService.makeGallery(fileUrl, tops.getId(),String.valueOf(GalleryFlagEnum.TOPS.getType()), "Topsfile");
+            galleryService.makeGallery(fileUrl, tops.getId(), GalleryFlagEnum.TOPS, "Topsfile");
         }
         return true;
     }
 
-    private TbTops makeTops(String topText){
+    private TbTops makeTops(String topText) {
         TbTops tops = new TbTops();
         String id = UUID.randomUUID().toString().replace("-", "");
         tops.setId(id);
@@ -126,17 +126,17 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
 
             //查询图片
             galleryList = galleryMapper.selectList(new EntityWrapper<TbGallery>().eq("topId", tops.getId()).eq("flag", "1"));
-            if (galleryList != null && galleryList.size() > 0){
+            if (galleryList != null && galleryList.size() > 0) {
                 topsDTO.setGalleryList(galleryList);
             }
 
             //查询评论
             List<TbComments> comments = this.commentsMapper.selectList(new EntityWrapper<TbComments>().eq("topId", tops.getId()).eq("isDelete", "0")
-                    .orderBy("created", true));
+                .orderBy("created", true));
             for (TbComments comm : comments) {
                 List<TbComments> replayList = new ArrayList<>();
                 String userName = userService.selectUserName(comm.getUserId());
-                comm.setContent(userName+" 回复："+comm.getContent());
+                comm.setContent(userName + " 回复：" + comm.getContent());
                 replayList.add(comm);
                 replayList.addAll(selectCommentsByTopId(comm.getId()));
                 commentsList.add(replayList);
@@ -153,35 +153,34 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
 
 
     // 根据说说id构建属于该说说的评论列表
-    private List<TbComments> selectCommentsByTopId(String topsId){
+    private List<TbComments> selectCommentsByTopId(String topsId) {
         List<TbComments> replayList = this.commentsMapper.selectList(new EntityWrapper<TbComments>().eq("lastId", topsId).eq("isDelete", "0")
-                .orderBy("created", true));
+            .orderBy("created", true));
 
         String userName;
         String replayUserName;
 
-        if (replayList != null &&  replayList.size() > 0){
+        if (replayList != null && replayList.size() > 0) {
             for (TbComments comments : replayList) {
                 userName = userService.selectUserName(comments.getUserId());
                 replayUserName = userService.selectUserName(comments.getReplayUserId());
-                comments.setContent(userName+" 回复 "+replayUserName + ":"+ comments.getContent());
+                comments.setContent(userName + " 回复 " + replayUserName + ":" + comments.getContent());
                 resultList.add(comments);
                 this.selectCommentsByTopId(comments.getId());
             }
         }
 
-         return resultList;
+        return resultList;
     }
-
 
 
     @Override
     public BaseResult deleteTops(String topsId) {
 
         TbTops tops = topsMapper.selectById(topsId);
-        if (tops == null){
+        if (tops == null) {
             return BaseResult.fail("删除的话题不存在哦");
-        }else {
+        } else {
             //设置标记
             tops.setIsDelete("1");
             topsMapper.updateById(tops);
@@ -208,7 +207,7 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
     }
 
     @Override
-    public BaseResult doCommont(String topId, String content, String flag) {
+    public BaseResult doComment(String topId, String content, String flag) {
         TbComments comments = new TbComments();
         comments.setIsDelete("0");
         comments.setFlag(flag);
@@ -217,13 +216,13 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
         comments.setContent(content);
 
         //回复说说
-        if (StringUtils.isNotBlank(flag) && "0".equals(flag)){
+        if (StringUtils.isNotBlank(flag) && "0".equals(flag)) {
             comments.setTopId(topId);
             comments.setLastId("");
             TbTops tops = this.selectById(topId);
             comments.setReplayUserId(tops.getUserId());
 
-        }else if (StringUtils.isNotBlank(flag) && "1".equals(flag)){
+        } else if (StringUtils.isNotBlank(flag) && "1".equals(flag)) {
             //回复评论
             comments.setTopId("");
             comments.setLastId(topId);
