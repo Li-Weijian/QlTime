@@ -29,7 +29,7 @@ public class MybatisPlusGenerator {
 
     public void autoGeneration() {
         GlobalConfig config = new GlobalConfig();
-        String dbUrl = "jdbc:mysql://39.106.156.28:3306/qltime?serverTimezone=GMT%2B8";
+        String dbUrl = "jdbc:mysql://xxxx/qltime?serverTimezone=GMT%2B8&useSSL=false";
         DataSourceConfig dataSourceConfig = new DataSourceConfig();
         dataSourceConfig.setDbType(DbType.MYSQL)
                 .setUrl(dbUrl)
@@ -42,12 +42,12 @@ public class MybatisPlusGenerator {
                 .setEntityLombokModel(false)
                 .setDbColumnUnderline(true)
                 .setNaming(NamingStrategy.underline_to_camel)
-                .setInclude("tb_weight");
+                .setInclude("visit_record", "visit_record_comment");
         config.setActiveRecord(false)
                 .setEnableCache(false)
                 .setAuthor("liweijian")
                 //指定输出文件夹位置
-                .setOutputDir("F:\\Code\\generator")
+                .setOutputDir("/Users/liweijian")
                 .setFileOverride(true)
                 .setServiceName("%sService");
         new AutoGenerator().setGlobalConfig(config)
