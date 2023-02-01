@@ -11,7 +11,8 @@ public enum GalleryFlagEnum {
     // -1 临时 0- 图库  1-留言板
     TEMP(-1, "临时"),
     GALLERY(0, "图库"),
-    TOPS(1, "留言板")
+    TOPS(1, "留言板"),
+    VISIT_RECORD(2, "探店记录"),
     ;
 
     /**

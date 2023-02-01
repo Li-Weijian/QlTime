@@ -1,12 +1,16 @@
-package com.qltime.entity;
+package com.qltime.model.entity;
 
 import java.util.Date;
-import com.baomidou.mybatisplus.annotations.TableField;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.io.Serializable;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author liweijian123
@@ -16,6 +20,7 @@ public class VisitRecordComment implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @TableId(type = IdType.ASSIGN_UUID)
     private String id;
     /**
      * 内容

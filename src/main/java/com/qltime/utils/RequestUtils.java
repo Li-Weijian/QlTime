@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class RequestUtils {
 
-    private ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-    private HttpServletRequest request = attributes.getRequest();
+    private static ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+    private static HttpServletRequest request = attributes.getRequest();
 
 
     /**
@@ -34,7 +34,7 @@ public class RequestUtils {
     /**
      * 通过token获取用户id - 适配前后端分离架构
      */
-    public Integer getLoginUserId(){
+    public static Integer getLoginUserId(){
         Cookie[] cookies = request.getCookies();
         if (cookies != null){
             for (Cookie cookie : cookies) {

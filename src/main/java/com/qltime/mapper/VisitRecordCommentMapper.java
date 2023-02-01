@@ -1,7 +1,7 @@
 package com.qltime.mapper;
 
-import com.qltime.entity.VisitRecordComment;
-import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.qltime.model.entity.VisitRecordComment;
 
 /**
  * <p>

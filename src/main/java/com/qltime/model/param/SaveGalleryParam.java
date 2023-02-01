@@ -1,6 +1,7 @@
 package com.qltime.model.param;
 
 import com.qltime.constant.GalleryFlagEnum;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
  * @date 2023/1/31 12:59
  */
 @Data
+@Builder
 public class SaveGalleryParam {
 
     /**

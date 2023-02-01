@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.MalformedURLException;
@@ -19,7 +20,7 @@ import java.util.List;
  * @Date: 2019/10/12 20:56
  * @Description:
  */
-@Controller
+@RestController
 @RequestMapping("/ossController")
 public class OssController {
 
@@ -34,7 +35,7 @@ public class OssController {
      * @Function: 图片上传
      */
     @PostMapping("/postImages")
-    public BaseResult uploadImages(@RequestParam(value = "fileupload", required = false) MultipartFile[] file) {
+    public BaseResult uploadImages(@RequestParam(value = "file", required = false) MultipartFile[] file) {
         return BaseResult.success(MsgCommon.SUCCESS.getMessage(), ossService.upload(file));
     }
 
