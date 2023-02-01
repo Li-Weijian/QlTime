@@ -2,13 +2,13 @@ package com.qltime.service.impl;
 
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.qltime.model.dto.CharNode;
 import com.qltime.model.entity.TbWeight;
 import com.qltime.mapper.TbWeightMapper;
 import com.qltime.service.TbUserService;
 import com.qltime.service.TbWeightService;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qltime.utils.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,9 +41,7 @@ public class TbWeightServiceImpl extends ServiceImpl<TbWeightMapper, TbWeight> i
         List<TbWeight> weightList = this.getWeightList(day);
         Date date = DateUtil.offsetDay(new Date(), -Integer.parseInt(day));
         weightList = completionNode(weightList, date, new Date());
-        List<CharNode> charNodeList = tranCharNode(weightList);
-
-        return charNodeList;
+        return tranCharNode(weightList);
     }
 
     @Override
@@ -61,7 +59,7 @@ public class TbWeightServiceImpl extends ServiceImpl<TbWeightMapper, TbWeight> i
     }
     @Override
     public void addWeight(Double weight, Integer loginUserId) {
-        List<TbWeight> existList = weightMapper.selectList(new EntityWrapper<TbWeight>().eq("created", DateUtil.today())
+        List<TbWeight> existList = weightMapper.selectList(new QueryWrapper<TbWeight>().eq("created", DateUtil.today())
                 .eq("userId",new RequestUtils().getLoginUserId()).eq("isDelete","0"));
 
         //删除已存在的
@@ -83,9 +81,8 @@ public class TbWeightServiceImpl extends ServiceImpl<TbWeightMapper, TbWeight> i
     @Override
     public List<TbWeight> getWeightList(String day) {
         Date date = DateUtil.offsetDay(new Date(), -Integer.parseInt(day));
-        List<TbWeight> weightList = weightMapper.selectList(new EntityWrapper<TbWeight>().eq("isDelete", "0")
-                .between("created", date, new Date()).orderBy("created", false));
-        return weightList;
+        return list(new QueryWrapper<TbWeight>().eq("isDelete", "0")
+                .between("created", date, new Date()).orderBy(false, false, "created"));
     }
 
 
@@ -106,7 +103,7 @@ public class TbWeightServiceImpl extends ServiceImpl<TbWeightMapper, TbWeight> i
                 int finalJ = j;
                 //对比用户和当前遍历的时间是否存在数据，不存在则添加一条
                 if (nodeList.stream().filter(d -> (DateUtil.format(currDate, "yyyy-MM-dd").equals(DateUtil.format(d.getCreated(), "yyyy-MM-dd"))
-                        && d.getUserId().equals(finalJ))).collect(Collectors.toList()).size() == 0){
+                    && d.getUserId().equals(finalJ))).count() == 0){
                     TbWeight weight = new TbWeight();
                     weight.setCreated(currDate);
                     weight.setId(null);

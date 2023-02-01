@@ -3,7 +3,7 @@ package com.qltime.service.impl;
 import com.qltime.model.entity.Test;
 import com.qltime.mapper.TestMapper;
 import com.qltime.service.TestService;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

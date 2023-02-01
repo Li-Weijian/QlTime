@@ -4,7 +4,7 @@ import com.qltime.constant.GalleryFlagEnum;
 import com.qltime.model.dto.BaseResult;
 import com.qltime.model.dto.GalleryVo;
 import com.qltime.model.entity.TbGallery;
-import com.baomidou.mybatisplus.service.IService;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.qltime.model.param.SaveGalleryParam;
 import org.springframework.web.multipart.MultipartFile;
 

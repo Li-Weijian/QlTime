@@ -1,6 +1,6 @@
 package com.qltime.service.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.qltime.constant.GalleryFlagEnum;
 import com.qltime.constant.MsgCommon;
 import com.qltime.model.dto.BaseResult;
@@ -38,10 +38,10 @@ public class StatisticsServiceImpl implements StatisticsService {
     @Override
     public BaseResult selectAllCount(List<Integer> ids) {
         StatisticsDto statisticsDto = new StatisticsDto();
-        statisticsDto.setNoteCount(noteService.selectCount(new EntityWrapper<TbNote>().eq("isDelete", 0).in("userId", ids)));
-        statisticsDto.setTopsCount(topsService.selectCount(new EntityWrapper<TbTops>().eq("isDelete", 0).in("userId", ids)));
-        statisticsDto.setMemoryCount(galleryService.selectCount(new EntityWrapper<TbGallery>()
-                .eq("flag", GalleryFlagEnum.GALLERY.getType()).in("userId", ids)));
+        statisticsDto.setNoteCount(Math.toIntExact(noteService.count(new QueryWrapper<TbNote>().eq("isDelete", 0).in("userId", ids))));
+        statisticsDto.setTopsCount(Math.toIntExact(topsService.count(new QueryWrapper<TbTops>().eq("isDelete", 0).in("userId", ids))));
+        statisticsDto.setMemoryCount(Math.toIntExact(galleryService.count(new QueryWrapper<TbGallery>()
+            .eq("flag", GalleryFlagEnum.GALLERY.getType()).in("userId", ids))));
 
         return BaseResult.success(MsgCommon.SUCCESS.getMessage(), statisticsDto);
     }

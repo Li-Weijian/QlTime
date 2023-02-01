@@ -1,7 +1,7 @@
 package com.qltime.service;
 
-import com.qltime.entity.VisitRecordComment;
-import com.baomidou.mybatisplus.service.IService;
+import com.qltime.model.entity.VisitRecordComment;
+import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * <p>

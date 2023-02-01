@@ -1,7 +1,7 @@
 package com.qltime.service;
 
 import com.qltime.model.entity.TbNote;
-import com.baomidou.mybatisplus.service.IService;
+import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 

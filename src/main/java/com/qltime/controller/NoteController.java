@@ -73,16 +73,16 @@ public class NoteController {
             return noteService.updateById(note);
 
         }else{
-            note.setUserId(new RequestUtils().getLoginUserId());
+            note.setUserId(RequestUtils.getLoginUserId());
             note.setDate(new Date());
-            return noteService.insert(note);
+            return noteService.save(note);
         }
     }
 
     @GetMapping("/selectNote/{id}")
     @ResponseBody
     public BaseResult selectNote(@PathVariable("id") Integer id){
-        return BaseResult.success(MsgCommon.SUCCESS.getMessage(), noteService.selectById(id));
+        return BaseResult.success(MsgCommon.SUCCESS.getMessage(), noteService.getById(id));
     }
 
 }

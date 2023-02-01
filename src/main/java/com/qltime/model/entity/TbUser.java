@@ -1,14 +1,9 @@
 package com.qltime.model.entity;
 
-import com.baomidou.mybatisplus.annotations.TableName;
-import com.baomidou.mybatisplus.enums.FieldFill;
-import com.baomidou.mybatisplus.enums.FieldStrategy;
-import com.baomidou.mybatisplus.enums.IdType;
+import com.baomidou.mybatisplus.annotation.*;
 
 import java.util.Date;
 
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -58,12 +53,12 @@ public class TbUser implements Serializable {
     /**
      * 创建时间
      */
-    @TableField(fill = FieldFill.INSERT, strategy = FieldStrategy.IGNORED)
+    @TableField(fill = FieldFill.INSERT)
     private Date created;
     /**
      * 更新时间
      */
-    @TableField(fill = FieldFill.UPDATE, strategy = FieldStrategy.IGNORED)
+    @TableField(fill = FieldFill.UPDATE)
     private Date updated;
     /**
      * 上线时间

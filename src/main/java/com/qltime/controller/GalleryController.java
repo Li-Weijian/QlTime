@@ -47,7 +47,7 @@ public class GalleryController {
             page = 1;
         }
         List<TbGallery> galleryList = galleryService.selectGalleryList(action,page);
-        int count = galleryService.selectCount(null);
+        long count = galleryService.count();
         modelAndView.addObject("galleryList",galleryList);
         modelAndView.addObject("action",action);
         modelAndView.addObject("page",page);

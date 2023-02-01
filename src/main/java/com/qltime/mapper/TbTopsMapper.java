@@ -1,7 +1,7 @@
 package com.qltime.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.qltime.model.entity.TbTops;
-import com.baomidou.mybatisplus.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

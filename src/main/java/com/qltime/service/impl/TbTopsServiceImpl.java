@@ -1,6 +1,7 @@
 package com.qltime.service.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import cn.hutool.core.io.FileUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.qltime.constant.GalleryFlagEnum;
 import com.qltime.constant.SystemConstants;
 import com.qltime.model.dto.BaseResult;
@@ -14,7 +15,7 @@ import com.qltime.mapper.TbGalleryMapper;
 import com.qltime.mapper.TbTopsMapper;
 import com.qltime.service.TbGalleryService;
 import com.qltime.service.TbTopsService;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qltime.service.TbUserService;
 import com.qltime.utils.OssUtil;
 import com.qltime.utils.RequestUtils;
@@ -91,7 +92,7 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
     public boolean publishTops(List<String> fileList, String topText) throws MalformedURLException {
         TbTops tops = makeTops(topText);
         for (String fileUrl : fileList) {
-            galleryService.makeGallery(fileUrl, tops.getId(), GalleryFlagEnum.TOPS, "Topsfile");
+            galleryService.makeGallery(fileUrl, tops.getId(), GalleryFlagEnum.TOPS, FileUtil.getName(fileUrl));
         }
         return true;
     }
@@ -101,7 +102,7 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
         String id = UUID.randomUUID().toString().replace("-", "");
         tops.setId(id);
         tops.setContent(topText);
-        tops.setUserId(new RequestUtils().getLoginUserId());
+        tops.setUserId(RequestUtils.getLoginUserId());
         topsMapper.insert(tops);
         return tops;
     }
@@ -125,14 +126,14 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
             List<List<TbComments>> commentsList = new ArrayList<>();
 
             //查询图片
-            galleryList = galleryMapper.selectList(new EntityWrapper<TbGallery>().eq("topId", tops.getId()).eq("flag", "1"));
+            galleryList = galleryMapper.selectList(new QueryWrapper<TbGallery>().eq("topId", tops.getId()).eq("flag", "1"));
             if (galleryList != null && galleryList.size() > 0) {
                 topsDTO.setGalleryList(galleryList);
             }
 
             //查询评论
-            List<TbComments> comments = this.commentsMapper.selectList(new EntityWrapper<TbComments>().eq("topId", tops.getId()).eq("isDelete", "0")
-                .orderBy("created", true));
+            List<TbComments> comments = this.commentsMapper.selectList(new QueryWrapper<TbComments>().eq("topId", tops.getId()).eq("isDelete", "0")
+                .orderBy(false, true, "created"));
             for (TbComments comm : comments) {
                 List<TbComments> replayList = new ArrayList<>();
                 String userName = userService.selectUserName(comm.getUserId());
@@ -154,8 +155,8 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
 
     // 根据说说id构建属于该说说的评论列表
     private List<TbComments> selectCommentsByTopId(String topsId) {
-        List<TbComments> replayList = this.commentsMapper.selectList(new EntityWrapper<TbComments>().eq("lastId", topsId).eq("isDelete", "0")
-            .orderBy("created", true));
+        List<TbComments> replayList = this.commentsMapper.selectList(new QueryWrapper<TbComments>().eq("lastId", topsId).eq("isDelete", "0")
+            .orderBy(false, true, "created"));
 
         String userName;
         String replayUserName;
@@ -186,17 +187,17 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
             topsMapper.updateById(tops);
 
             //删除图库记录
-            List<TbGallery> galleryList = galleryMapper.selectList(new EntityWrapper<TbGallery>().eq("topId", topsId));
+            List<TbGallery> galleryList = galleryMapper.selectList(new QueryWrapper<TbGallery>().eq("topId", topsId));
             List<String> keyList = new ArrayList<>();
             for (TbGallery gallery : galleryList) {
                 keyList.add(ossUtil.getUrlPath(gallery.getUrl()));
             }
-            galleryMapper.delete(new EntityWrapper<TbGallery>().eq("topId", topsId));
+            galleryMapper.delete(new QueryWrapper<TbGallery>().eq("topId", topsId));
             ossUtil.deleteBatchFile(keyList);
 
 
             //删除评论
-            List<TbComments> commentsList = commentsMapper.selectList(new EntityWrapper<TbComments>().eq("topId", topsId));
+            List<TbComments> commentsList = commentsMapper.selectList(new QueryWrapper<TbComments>().eq("topId", topsId));
             for (TbComments comments : commentsList) {
                 comments.setIsDelete("1");
                 commentsMapper.updateById(comments);
@@ -219,7 +220,7 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
         if (StringUtils.isNotBlank(flag) && "0".equals(flag)) {
             comments.setTopId(topId);
             comments.setLastId("");
-            TbTops tops = this.selectById(topId);
+            TbTops tops = this.getById(topId);
             comments.setReplayUserId(tops.getUserId());
 
         } else if (StringUtils.isNotBlank(flag) && "1".equals(flag)) {

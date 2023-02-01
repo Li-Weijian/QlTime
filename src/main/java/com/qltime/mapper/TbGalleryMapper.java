@@ -1,7 +1,7 @@
 package com.qltime.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.qltime.model.entity.TbGallery;
-import com.baomidou.mybatisplus.mapper.BaseMapper;
 
 import java.util.List;
 

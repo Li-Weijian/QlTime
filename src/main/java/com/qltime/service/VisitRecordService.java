@@ -1,7 +1,8 @@
 package com.qltime.service;
 
-import com.qltime.entity.VisitRecord;
-import com.baomidou.mybatisplus.service.IService;
+import com.qltime.model.entity.VisitRecord;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.qltime.model.param.SaveVisitRecordParam;
 
 /**
  * <p>
@@ -13,4 +14,9 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface VisitRecordService extends IService<VisitRecord> {
 
+    /**
+     * 保存
+     * @param saveVisitRecordParam
+     */
+    void save(SaveVisitRecordParam saveVisitRecordParam);
 }

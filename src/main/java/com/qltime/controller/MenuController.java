@@ -1,6 +1,6 @@
 package com.qltime.controller;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.qltime.model.dto.BaseResult;
 import com.qltime.model.entity.TbMenu;
 import com.qltime.service.TbMenuService;
@@ -28,7 +28,7 @@ public class MenuController {
 
     @RequestMapping("/toMenu")
     public ModelAndView toMenu(ModelAndView modelAndViewd){
-        List<TbMenu> menuList = menuService.selectList(new EntityWrapper<TbMenu>().eq("isDelete", "0"));
+        List<TbMenu> menuList = menuService.list(new QueryWrapper<TbMenu>().eq("isDelete", "0"));
 
         modelAndViewd.addObject("menuList",menuList);
         modelAndViewd.setViewName("menu/index");
@@ -45,7 +45,7 @@ public class MenuController {
     @ResponseBody
     public BaseResult getMenuList(@RequestParam(value = "type", defaultValue = "0", required = false) String type){
         log.info("进入 getMenuList");
-        List<TbMenu> menuList = menuService.selectList(new EntityWrapper<TbMenu>().eq("type",type).eq("isDelete","0"));
+        List<TbMenu> menuList = menuService.list(new QueryWrapper<TbMenu>().eq("type",type).eq("isDelete","0"));
         return BaseResult.success("成功",menuList);
     }
 

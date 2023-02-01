@@ -2,28 +2,29 @@ package com.qltime.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qltime.constant.GalleryFlagEnum;
+import com.qltime.mapper.TbGalleryMapper;
 import com.qltime.model.dto.BaseResult;
 import com.qltime.model.dto.GalleryVo;
 import com.qltime.model.dto.ImageInfoDTO;
 import com.qltime.model.entity.TbGallery;
-import com.qltime.mapper.TbGalleryMapper;
 import com.qltime.model.param.SaveGalleryParam;
 import com.qltime.service.TbGalleryService;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.qltime.utils.FileUtils;
 import com.qltime.utils.OssUtil;
 import com.qltime.utils.RequestUtils;
 import com.qltime.utils.URLUtils;
-import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.MalformedURLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -39,9 +40,6 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
 
     @Autowired
     private OssUtil ossUtil;
-
-    @Autowired
-    private TbGalleryMapper galleryMapper;
 
     @Autowired
     private TbGalleryService galleryService;
@@ -69,7 +67,7 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
         gallery.setFileName(file.getOriginalFilename());
         gallery.setUserId(new RequestUtils().getLoginUserId());
 
-        galleryMapper.insert(gallery);
+        save(gallery);
         return host;
     }
 
@@ -95,17 +93,20 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
         if (page < 1){
             page = 1;
         }
-        return galleryMapper.selectPage(new RowBounds((page-1)*20,limit),new EntityWrapper<TbGallery>().eq("flag", GalleryFlagEnum.GALLERY.getType().toString()).orderBy("uploadDate",false));
+        return page(new Page<TbGallery>((page-1)* 20L, limit),
+            new QueryWrapper<TbGallery>().eq("flag", GalleryFlagEnum.GALLERY.getType().toString())
+                .orderBy(false, false, "uploadDate")
+        ).getRecords();
     }
 
     @Override
     public GalleryVo selectGalleryWrapper(List<Integer> ids) {
         GalleryVo galleryVo = null;
-        Wrapper<TbGallery> wrapper = new EntityWrapper<TbGallery>().eq("flag", 0);
+        QueryWrapper<TbGallery> wrapper = new QueryWrapper<TbGallery>().eq("flag", 0);
         wrapper.in("userId", ids);
-        wrapper.orderBy("uploadDate", false);
+        wrapper.orderBy(false, false, "uploadDate");
 
-        List<TbGallery> galleryList = galleryMapper.selectList(wrapper);
+        List<TbGallery> galleryList = list(wrapper);
         if (CollectionUtil.isNotEmpty(galleryList)){
             galleryVo = new GalleryVo();
             galleryVo.setImageUrl(galleryList.stream().map(TbGallery::getUrl).collect(Collectors.toList()));
@@ -128,11 +129,11 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
         gallery.setImageWidth(imageInfo.getImageWidth().getValue());
         gallery.setFilesize(imageInfo.getFileSize().getValue());
         gallery.setFileName(fileName);
-        gallery.setUserId(new RequestUtils().getLoginUserId());
+        gallery.setUserId(RequestUtils.getLoginUserId());
         gallery.setTopId(topsId);
         gallery.setFlag(flag.getType().toString());
 
-        galleryMapper.insert(gallery);
+        save(gallery);
 
         return gallery;
     }

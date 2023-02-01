@@ -3,7 +3,7 @@ package com.qltime.service.impl;
 import com.qltime.model.entity.TbMenu;
 import com.qltime.mapper.TbMenuMapper;
 import com.qltime.service.TbMenuService;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**

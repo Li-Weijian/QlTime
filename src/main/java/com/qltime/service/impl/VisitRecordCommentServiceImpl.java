@@ -1,9 +1,9 @@
 package com.qltime.service.impl;
 
-import com.qltime.entity.VisitRecordComment;
+import com.qltime.model.entity.VisitRecordComment;
 import com.qltime.mapper.VisitRecordCommentMapper;
 import com.qltime.service.VisitRecordCommentService;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**

@@ -1,7 +1,7 @@
 package com.qltime.controller;
 
 import cn.hutool.core.date.DateUtil;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.qltime.model.dto.BaseResult;
 import com.qltime.model.dto.HealthDTO;
 import com.qltime.model.entity.TbWeight;
@@ -39,8 +39,9 @@ public class TbWeightController {
     public BaseResult getMenuList() throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        TbWeight weight = weightService.selectOne(new EntityWrapper<TbWeight>().eq("isDelete", "0").eq("userId", new RequestUtils().getLoginUserId())
-                .orderBy("created", false));
+        TbWeight weight = weightService.getOne(new QueryWrapper<TbWeight>()
+            .eq("isDelete", "0").eq("userId", RequestUtils.getLoginUserId())
+                .orderBy(false, false, "created"));
         HealthDTO healthDTO = new HealthDTO();
         healthDTO.setData(String.valueOf(weight.getWeight()));
         healthDTO.setDate(simpleDateFormat.format(weight.getCreated()));
@@ -62,7 +63,7 @@ public class TbWeightController {
     @GetMapping("/addWeight")
     @ResponseBody
     public BaseResult addWeight(@RequestParam(value = "weight") Double weight){
-        weightService.addWeight(weight,new RequestUtils().getLoginUserId());
+        weightService.addWeight(weight, RequestUtils.getLoginUserId());
 
         return BaseResult.success("操作成功");
     }
@@ -70,8 +71,8 @@ public class TbWeightController {
     @GetMapping("/isExist")
     @ResponseBody
     public BaseResult isExist(){
-        List<TbWeight> existList = weightService.selectList(new EntityWrapper<TbWeight>().eq("created", DateUtil.today())
-                .eq("userId",new RequestUtils().getLoginUserId()).eq("isDelete","0"));
+        List<TbWeight> existList = weightService.list(new QueryWrapper<TbWeight>().eq("created", DateUtil.today())
+                .eq("userId", RequestUtils.getLoginUserId()).eq("isDelete","0"));
         if (existList.size()>0){
             //已存在
             return BaseResult.success("操作成功",1);

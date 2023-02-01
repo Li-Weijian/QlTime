@@ -3,7 +3,7 @@ package com.qltime.service.impl;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.qltime.constant.MsgCommon;
 import com.qltime.model.dto.BaseResult;
 import com.qltime.model.dto.LoversDto;
@@ -13,7 +13,7 @@ import com.qltime.model.entity.TbUser;
 import com.qltime.exception.CommonException;
 import com.qltime.mapper.TbUserMapper;
 import com.qltime.service.TbUserService;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,9 +52,12 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
         }
 
         String pwMd5 = DigestUtils.md5DigestAsHex(password.getBytes());
-        List<TbUser> userList = userMapper.selectList(new EntityWrapper<TbUser>().eq("password", pwMd5).eq("isDelete", 0)
-                .andNew().eq("phone",username).or().eq("email",username).or().eq("username", username));
-
+        List<TbUser> userList = userMapper.selectList(
+            new QueryWrapper<TbUser>().eq("password", pwMd5).eq("isDelete", 0)
+                .and(andWrapper -> {
+                    andWrapper.eq("phone",username).or().eq("email",username).or().eq("username", username);
+                })
+        );
 
         if (userList != null && userList.size() > 0){
             TbUser user = userList.get(0);
@@ -85,7 +88,7 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
 
     @Override
     public TbUser addOrUpdateUser(WxLoginInfoDto wxLoginInfo) {
-        TbUser user = selectOne(new EntityWrapper<TbUser>().eq("openId", wxLoginInfo.getOpenId()));
+        TbUser user = getOne(new QueryWrapper<TbUser>().eq("openId", wxLoginInfo.getOpenId()));
         if (null == user){
             // 新增
             user = makeUserInfo(wxLoginInfo);
@@ -109,7 +112,7 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
 
     @Override
     public LoversDto selectLover(Integer id) throws Exception {
-        TbUser user = selectById(id);
+        TbUser user = getById(id);
         if (null == user){
             throw new Exception(MsgCommon.USER_NULL.getMessage());
         }
@@ -117,7 +120,7 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
         user = setSensitiveInfoToNull(user);
         loversDto.setMyself(user);
 
-        TbUser half = selectById(user.getHelfId());
+        TbUser half = getById(user.getHelfId());
         if (half != null){
             half = setSensitiveInfoToNull(half);
             loversDto.setHelf(half);
@@ -131,20 +134,20 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
     @Override
     public void setTogetherTime(TbUser user) {
         // 更新自己
-        TbUser myself = selectById(user.getId());
+        TbUser myself = getById(user.getId());
         myself.setTogetheTime(user.getTogetheTime());
         updateById(myself);
 
         //更新另一半
-        TbUser helf = selectById(myself.getHelfId());
+        TbUser helf = getById(myself.getHelfId());
         helf.setTogetheTime(user.getTogetheTime());
         updateById(helf);
     }
 
     @Override
     public BaseResult setHalf(TbUser user) {
-        TbUser myself = selectById(user.getId());
-        TbUser helf = selectById(user.getHelfId());
+        TbUser myself = getById(user.getId());
+        TbUser helf = getById(user.getHelfId());
         if (null == myself || null == helf){
             return BaseResult.fail(MsgCommon.USER_NULL.getStatus(), MsgCommon.USER_NULL.getMessage());
         }
@@ -158,7 +161,7 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
 
     @Override
     public List<Integer> selectAllIds(Integer userId) throws CommonException {
-        TbUser user = selectById(userId);
+        TbUser user = getById(userId);
         if (null == user){
             throw new CommonException(MsgCommon.USER_NULL);
         }
@@ -168,7 +171,7 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
 
     @Override
     public TbUser getHalf(Integer myId) {
-        return Optional.ofNullable(selectById(myId)).map(TbUser::getHelfId).map(this::selectById).orElse(null);
+        return Optional.ofNullable(getById(myId)).map(TbUser::getHelfId).map(this::getById).orElse(null);
     }
 
     @Override
@@ -191,7 +194,7 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
         user.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
         user.setRealname(user.getNickName());
         user.setCreated(new Date());
-        insert(user);
+        save(user);
         return user;
     }
 
