@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import com.qltime.annotation.OperationNotice;
+import com.qltime.config.ApplicationConfiguration;
 import com.qltime.config.WxConfig;
 import com.qltime.constant.NoticeType;
 import com.qltime.constant.WechatTemplateType;
@@ -21,9 +22,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -42,12 +41,14 @@ public class NoticeAspect {
     private final TbUserService userService;
     private final WxPushService wxPushService;
     private final WxConfig wxConfig;
+    private final ApplicationConfiguration applicationConfiguration;
 
-    public NoticeAspect(MailService mailService, TbUserService userService, WxPushService wxPushService, WxConfig wxConfig) {
+    public NoticeAspect(MailService mailService, TbUserService userService, WxPushService wxPushService, WxConfig wxConfig, ApplicationConfiguration applicationConfiguration) {
         this.mailService = mailService;
         this.userService = userService;
         this.wxPushService = wxPushService;
         this.wxConfig = wxConfig;
+        this.applicationConfiguration = applicationConfiguration;
     }
 
     /**
@@ -61,6 +62,11 @@ public class NoticeAspect {
 
     @After("operationNotice()")
     public void interceptor(JoinPoint joinPoint) throws Throwable {
+
+        if (!applicationConfiguration.getNotice()){
+            log.info("[新消息推送] 已关闭..");
+            return;
+        }
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         OperationNotice annotation = signature.getMethod().getAnnotation(OperationNotice.class);
 

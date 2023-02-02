@@ -23,6 +23,10 @@ public class ApplicationConfiguration {
      */
     private TianXin tianXin;
 
+    /**
+     * 新内容是否发送通知
+     */
+    private Boolean notice;
 
     @Data
     public static class Baidu {

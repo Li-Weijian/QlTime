@@ -1,6 +1,7 @@
 package com.qltime.service.impl;
 
 import com.qltime.constant.GalleryFlagEnum;
+import com.qltime.constant.TagType;
 import com.qltime.model.entity.VisitRecord;
 import com.qltime.mapper.VisitRecordMapper;
 import com.qltime.model.param.SaveGalleryParam;
@@ -41,7 +42,8 @@ public class VisitRecordServiceImpl extends ServiceImpl<VisitRecordMapper, Visit
         save(visitRecord);
 
         // 处理标签中间表
-        tagBusinessService.save(saveVisitRecordParam.getTagList());
+        tagBusinessService.save(saveVisitRecordParam.getTagList(), visitRecord.getId(), TagType.VISIT_RECORD);
+
         // 添加图片列表
         galleryService.saveGallery(SaveGalleryParam.builder()
             .flag(GalleryFlagEnum.VISIT_RECORD)

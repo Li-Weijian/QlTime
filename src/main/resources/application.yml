@@ -1,3 +1,10 @@
 spring:
   profiles:
     active: dev
+
+logging:
+  level:
+    ROOT: INFO
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

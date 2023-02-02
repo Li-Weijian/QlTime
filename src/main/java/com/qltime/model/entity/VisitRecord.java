@@ -49,7 +49,7 @@ public class VisitRecord implements Serializable {
     /**
      * 赞
      */
-    private Integer like;
+    private Integer likeNum;
     /**
      * 评论数
      */

@@ -1,12 +1,14 @@
 package com.qltime.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qltime.model.dto.BaseResult;
+import com.qltime.model.entity.VisitRecord;
 import com.qltime.model.param.SaveVisitRecordParam;
 import com.qltime.service.VisitRecordService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.qltime.utils.DataScopeHelper;
+import com.qltime.utils.RequestUtils;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 
@@ -18,7 +20,7 @@ import org.springframework.stereotype.Controller;
  * @author liweijian123
  * @since 2023-01-31
  */
-@Controller
+@RestController
 @RequestMapping("/visitRecord")
 public class VisitRecordController {
 
@@ -39,6 +41,17 @@ public class VisitRecordController {
         return BaseResult.success();
     }
 
+    /**
+     * 获取列表
+     * @return
+     */
+    @GetMapping("/list")
+    public BaseResult list(){
+        DataScopeHelper.startDataScope();
+        return BaseResult.success(
+            "success", visitRecordService.list(new LambdaQueryWrapper<VisitRecord>().eq(VisitRecord::getUserId, RequestUtils.getLoginUserId()))
+        );
+    }
 
 
 }

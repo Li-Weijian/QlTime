@@ -3,7 +3,9 @@ package com.qltime.service.impl;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qltime.constant.MsgCommon;
 import com.qltime.model.dto.BaseResult;
 import com.qltime.model.dto.LoversDto;
@@ -14,6 +16,7 @@ import com.qltime.exception.CommonException;
 import com.qltime.mapper.TbUserMapper;
 import com.qltime.service.TbUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qltime.service.components.CacheUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,12 +25,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
 import java.util.*;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author liweijian123
@@ -47,22 +51,23 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
     @Override
     public TbUser login(String username, String password) {
 
-        if (StringUtils.isBlank(username) || StringUtils.isBlank(password)){
+        if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
             return null;
         }
 
         String pwMd5 = DigestUtils.md5DigestAsHex(password.getBytes());
         List<TbUser> userList = userMapper.selectList(
-            new QueryWrapper<TbUser>().eq("password", pwMd5).eq("isDelete", 0)
-                .and(andWrapper -> {
-                    andWrapper.eq("phone",username).or().eq("email",username).or().eq("username", username);
+            new LambdaQueryWrapper<TbUser>().eq(TbUser::getPassword, pwMd5).eq(TbUser::getIsDelete, 0)
+                .nested(wrapper -> {
+                    wrapper.eq(TbUser::getPhone, username).or().eq(TbUser::getEmail, username).or().eq(TbUser::getUsername, username);
                 })
+
         );
 
-        if (userList != null && userList.size() > 0){
+        if (userList != null && userList.size() > 0) {
             TbUser user = userList.get(0);
             this.setUserOnline(user.getId());
-            logger.info("用户:"+user.getUsername() + " 登录成功，登录时间:"+ new Date());
+            logger.info("用户:" + user.getUsername() + " 登录成功，登录时间:" + new Date());
             return user;
         }
 
@@ -89,10 +94,10 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
     @Override
     public TbUser addOrUpdateUser(WxLoginInfoDto wxLoginInfo) {
         TbUser user = getOne(new QueryWrapper<TbUser>().eq("openId", wxLoginInfo.getOpenId()));
-        if (null == user){
+        if (null == user) {
             // 新增
             user = makeUserInfo(wxLoginInfo);
-        }else {
+        } else {
             // 更新
             user.setOnlieTime(new Date());
             user.setUpdated(new Date());
@@ -113,7 +118,7 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
     @Override
     public LoversDto selectLover(Integer id) throws Exception {
         TbUser user = getById(id);
-        if (null == user){
+        if (null == user) {
             throw new Exception(MsgCommon.USER_NULL.getMessage());
         }
         LoversDto loversDto = new LoversDto();
@@ -121,10 +126,10 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
         loversDto.setMyself(user);
 
         TbUser half = getById(user.getHelfId());
-        if (half != null){
+        if (half != null) {
             half = setSensitiveInfoToNull(half);
             loversDto.setHelf(half);
-            if (user.getTogetheTime() != null){
+            if (user.getTogetheTime() != null) {
                 loversDto.setDay(DateUtil.between(user.getTogetheTime(), new Date(), DateUnit.DAY));
             }
         }
@@ -148,7 +153,7 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
     public BaseResult setHalf(TbUser user) {
         TbUser myself = getById(user.getId());
         TbUser helf = getById(user.getHelfId());
-        if (null == myself || null == helf){
+        if (null == myself || null == helf) {
             return BaseResult.fail(MsgCommon.USER_NULL.getStatus(), MsgCommon.USER_NULL.getMessage());
         }
 
@@ -162,7 +167,7 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
     @Override
     public List<Integer> selectAllIds(Integer userId) throws CommonException {
         TbUser user = getById(userId);
-        if (null == user){
+        if (null == user) {
             throw new CommonException(MsgCommon.USER_NULL);
         }
 
@@ -181,6 +186,7 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
 
     /**
      * 构造用户数据
+     *
      * @param wxLoginInfo
      * @return
      */
@@ -200,6 +206,7 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
 
     /**
      * 将敏感信息置空
+     *
      * @param user
      * @return
      */

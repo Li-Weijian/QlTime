@@ -1,13 +1,20 @@
 package com.qltime.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qltime.constant.TagType;
 import com.qltime.mapper.TagBusinessMapper;
+import com.qltime.model.entity.Tag;
 import com.qltime.model.entity.TagBusiness;
 import com.qltime.service.TagBusinessService;
 import com.qltime.service.TagService;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -27,8 +34,17 @@ public class TagBusinessServiceImpl extends ServiceImpl<TagBusinessMapper, TagBu
     }
 
     @Override
-    public void save(List<String> tagList) {
-        tagList.parallelStream().forEach(tagName -> {
-        });
+    public void save(List<String> tagList, String businessId, TagType type) {
+        // 获取标签并构建中间表
+        List<TagBusiness> tagBusinessList = tagService.saveAndGet(tagList).stream().map(tag -> {
+            TagBusiness tagBusiness = new TagBusiness();
+            tagBusiness.setTagId(tag.getId());
+            tagBusiness.setBusinessId(businessId);
+            tagBusiness.setType(type);
+            return tagBusiness;
+        }).collect(Collectors.toList());
+
+        // 获取最终的集合，写入中间表
+        saveBatch(tagBusinessList);
     }
 }
