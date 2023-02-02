@@ -2,10 +2,7 @@ package com.qltime.model.entity;
 
 import java.util.Date;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -45,6 +42,7 @@ public class Tag implements Serializable {
     private String color;
 
     @TableField("isDelete")
+    @TableLogic
     private Integer isDelete;
 
     public Tag(String tagName) {

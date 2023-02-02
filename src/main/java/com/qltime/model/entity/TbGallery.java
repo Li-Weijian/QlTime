@@ -1,6 +1,7 @@
 package com.qltime.model.entity;
 
 import java.util.Date;
+
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -37,10 +38,14 @@ public class TbGallery implements Serializable {
     @TableField("userId")
     private Integer userId;
 
-    //用途：0 - 图库 ， 1- 留言板, 2- 临时
+    /**
+     * 用途：0 - 图库 ， 1- 留言板, 2- 临时
+     */
     private String flag;
 
-    //留言板id
+    /**
+     * 业务id
+     */
     private String topId;
 
     public String getFlag() {
@@ -134,13 +139,13 @@ public class TbGallery implements Serializable {
     @Override
     public String toString() {
         return "TbGallery{" +
-        ", id=" + id +
-        ", filesize=" + filesize +
-        ", format=" + format +
-        ", imageHeight=" + imageHeight +
-        ", imageWidth=" + imageWidth +
-        ", url=" + url +
-        ", uploadDate=" + uploadDate +
-        "}";
+            ", id=" + id +
+            ", filesize=" + filesize +
+            ", format=" + format +
+            ", imageHeight=" + imageHeight +
+            ", imageWidth=" + imageWidth +
+            ", url=" + url +
+            ", uploadDate=" + uploadDate +
+            "}";
     }
 }

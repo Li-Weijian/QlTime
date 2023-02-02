@@ -49,6 +49,9 @@ public enum GalleryFlagEnum {
         return type;
     }
 
+    public String getTypeStr(){
+        return String.valueOf(getType());
+    }
     public String getDesc() {
         return desc;
     }

@@ -3,6 +3,7 @@ package com.qltime.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qltime.model.dto.BaseResult;
 import com.qltime.model.dto.LoversDto;
+import com.qltime.model.dto.UserDTO;
 import com.qltime.model.dto.WxLoginInfoDto;
 import com.qltime.model.entity.TbUser;
 import com.qltime.exception.CommonException;
@@ -98,5 +99,12 @@ public interface TbUserService extends IService<TbUser> {
      * @return
      */
     List<TbUser> listUserInfo();
+
+    /**
+     * 获取用户信息
+     * @param userId
+     * @return
+     */
+    UserDTO getUserById(Integer userId);
 
 }

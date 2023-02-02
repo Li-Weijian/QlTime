@@ -5,6 +5,7 @@ import java.util.Date;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -45,6 +46,7 @@ public class VisitRecord implements Serializable {
      * 是否删除
      */
     @TableField("isDelete")
+    @TableLogic
     private Integer isDelete;
     /**
      * 赞

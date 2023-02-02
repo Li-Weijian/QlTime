@@ -122,7 +122,7 @@ public class TopsController {
 
         try {
 
-            Integer userId = new RequestUtils().getLoginUserId();
+            Integer userId = RequestUtils.getLoginUserId();
             List<TopsDTO> topsList = null;
             topsList = topsService.getTopsList(offset, limit, userService.selectAllIds(userId));
             log.info("进入 TopsList :{}", userId);

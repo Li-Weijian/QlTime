@@ -7,10 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qltime.constant.MsgCommon;
-import com.qltime.model.dto.BaseResult;
-import com.qltime.model.dto.LoversDto;
-import com.qltime.model.dto.RawDataDto;
-import com.qltime.model.dto.WxLoginInfoDto;
+import com.qltime.model.dto.*;
 import com.qltime.model.entity.TbUser;
 import com.qltime.exception.CommonException;
 import com.qltime.mapper.TbUserMapper;
@@ -182,6 +179,11 @@ public class TbUserServiceImpl extends ServiceImpl<TbUserMapper, TbUser> impleme
     @Override
     public List<TbUser> listUserInfo() {
         return userMapper.selectList(null);
+    }
+
+    @Override
+    public UserDTO getUserById(Integer userId) {
+        return UserDTO.of(getById(userId));
     }
 
     /**

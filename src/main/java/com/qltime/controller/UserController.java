@@ -68,6 +68,7 @@ public class UserController {
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
+    @Deprecated
     public BaseResult login(@RequestBody TbUser user, HttpServletRequest request){
 
         TbUser result  = userService.login(user.getUsername(), user.getPassword());
@@ -88,6 +89,7 @@ public class UserController {
      */
     @RequestMapping(value = "/login2", method = RequestMethod.POST)
     @ResponseBody
+    @Deprecated
     public BaseResult login2(@RequestBody TbUser user, HttpServletRequest request, HttpServletResponse response){
 
         TbUser result  = userService.login(user.getUsername(), user.getPassword());
@@ -118,11 +120,7 @@ public class UserController {
             wxLoginInfo.setSessionKey(result.getSessionKey());
             wxLoginInfo.setOpenId(result.getOpenid());
             TbUser user = userService.addOrUpdateUser(wxLoginInfo);
-
-            // 生成cookie
-            String token = new RequestUtils().generateToken(user);
-            response.addCookie(userService.makeCookieByToken(token));
-            user.setToken(token);
+            user.setToken(new RequestUtils().generateToken(user));
             return BaseResult.success(MsgCommon.SUCCESS.getMessage(), user);
         } catch (WxErrorException e) {
             log.error("【微信授权】: {}", e.getMessage());

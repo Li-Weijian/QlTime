@@ -1,5 +1,7 @@
 package com.qltime.model.dto;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -7,66 +9,48 @@ import java.io.Serializable;
  * <p>Title: BaseResult</p>
  * <p>Description: </p>
  *
+ * @author liweijian
  */
-public class BaseResult implements Serializable {
+@Data
+public class BaseResult<T> implements Serializable {
     public static final int STATUS_SUCCESS = 200;
     public static final int STATUS_FAIL = 500;
 
     private int status;
     private String message;
-    private Object data;
+    private T data;
 
-    public static BaseResult success() {
+    public static <T> BaseResult<T> success() {
         return BaseResult.createResult(STATUS_SUCCESS, "成功", null);
     }
 
-    public static BaseResult success(String message) {
+    public static <T> BaseResult<T> success(String message) {
         return BaseResult.createResult(STATUS_SUCCESS, message, null);
     }
 
-    public static BaseResult success(String message, Object data) {
+    public static <T> BaseResult<T> success(T data) {
+        return BaseResult.createResult(STATUS_SUCCESS, "成功", data);
+    }
+
+    public static <T> BaseResult<T> success(String message, T data) {
         return BaseResult.createResult(STATUS_SUCCESS, message, data);
     }
 
-    public static BaseResult fail() {
+    public static <T> BaseResult<T> fail() {
         return BaseResult.createResult(STATUS_FAIL, "失败", null);
     }
 
-    public static BaseResult fail(String message) {
+    public static <T> BaseResult<T> fail(String message) {
         return BaseResult.createResult(STATUS_FAIL, message, null);
     }
 
-    public static BaseResult fail(int status, String message) {
+    public static <T> BaseResult<T> fail(int status, String message) {
         return BaseResult.createResult(status, message, null);
     }
 
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
-    }
-
-    private static BaseResult createResult(int status, String message, Object data) {
-        BaseResult baseResult = new BaseResult();
+    private static <T> BaseResult<T> createResult(int status, String message, T data) {
+        BaseResult<T> baseResult = new BaseResult<T>();
         baseResult.setStatus(status);
         baseResult.setMessage(message);
         baseResult.setData(data);

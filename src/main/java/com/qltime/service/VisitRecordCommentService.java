@@ -1,7 +1,11 @@
 package com.qltime.service;
 
+import com.qltime.constant.CommentType;
+import com.qltime.model.dto.VisitRecordCommentDTO;
 import com.qltime.model.entity.VisitRecordComment;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,16 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface VisitRecordCommentService extends IService<VisitRecordComment> {
 
+    /**
+     * 评论
+     * @param comment
+     */
+    void doComment(VisitRecordComment comment);
+
+    /**
+     * 获取评论详情
+     * @param recordId
+     * @return
+     */
+    List<VisitRecordCommentDTO> commentDetail(String recordId, CommentType commentType);
 }

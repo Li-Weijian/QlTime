@@ -77,7 +77,7 @@ public class GalleryController {
     @RequestMapping("/getGallery")
     @ResponseBody
     public BaseResult getGallery(){
-        Integer userId = new RequestUtils().getLoginUserId();
+        Integer userId = RequestUtils.getLoginUserId();
         try {
             log.info("进入 图片列表:{}", userId);
             return BaseResult.success(MsgCommon.SUCCESS.getMessage(),

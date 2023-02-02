@@ -25,6 +25,7 @@ public interface TbGalleryService extends IService<TbGallery> {
     String fileUpload(MultipartFile file, String flag) throws MalformedURLException;
     List<String> fileUpload(MultipartFile[] file, String flag) throws MalformedURLException;
 
+    @Deprecated
     List<TbGallery> selectGalleryList(Integer action, Integer page);
 
     GalleryVo selectGalleryWrapper(List<Integer> ids);
@@ -47,4 +48,18 @@ public interface TbGalleryService extends IService<TbGallery> {
      * @param param
      */
     void saveGallery(SaveGalleryParam param);
+
+    /**
+     * 根据业务ID和类型获取图片集合
+     * @param topsId
+     * @param flag
+     * @return
+     */
+    List<TbGallery> listByTopsIdAndFlag(String topsId, GalleryFlagEnum flag);
+
+    /**
+     * 删除
+     * @param topsId
+     */
+    void remove(String topsId);
 }

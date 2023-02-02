@@ -1,4 +1,4 @@
-package com.qltime;
+package com.qltime.config;
 
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.qltime.utils.DataScopeHelper;
@@ -118,7 +118,12 @@ public class HalfIdSqlInjector implements Interceptor {
             return;
         }
 
-        plainSelect.setWhere(CCJSqlParserUtil.parseCondExpression(plainSelect.getWhere() + "OR userId = " + half));
+        Expression where = plainSelect.getWhere();
+        if (where.toString().contains("userId = ?")){
+            String replaceSql = where.toString().replaceAll("userId = [?]", "(userId = ? OR userId = " + half + ")");
+            plainSelect.setWhere(CCJSqlParserUtil.parseCondExpression(replaceSql));
+        }
+
     }
 
 }

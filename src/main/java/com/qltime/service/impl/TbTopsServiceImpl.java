@@ -212,7 +212,7 @@ public class TbTopsServiceImpl extends ServiceImpl<TbTopsMapper, TbTops> impleme
         TbComments comments = new TbComments();
         comments.setIsDelete("0");
         comments.setFlag(flag);
-        comments.setUserId(new RequestUtils().getLoginUserId());
+        comments.setUserId(RequestUtils.getLoginUserId());
         comments.setFlag(flag);
         comments.setContent(content);
 

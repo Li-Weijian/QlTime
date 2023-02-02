@@ -2,6 +2,7 @@ package com.qltime.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author liweijian123
@@ -38,11 +39,11 @@ import java.util.stream.Collectors;
 @Service
 public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery> implements TbGalleryService {
 
-    @Autowired
-    private OssUtil ossUtil;
+    private final OssUtil ossUtil;
 
-    @Autowired
-    private TbGalleryService galleryService;
+    public TbGalleryServiceImpl(OssUtil ossUtil) {
+        this.ossUtil = ossUtil;
+    }
 
 
     @Override
@@ -65,7 +66,7 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
         gallery.setImageWidth(imageInfo.getImageWidth().getValue());
         gallery.setFilesize(imageInfo.getFileSize().getValue());
         gallery.setFileName(file.getOriginalFilename());
-        gallery.setUserId(new RequestUtils().getLoginUserId());
+        gallery.setUserId(RequestUtils.getLoginUserId());
 
         save(gallery);
         return host;
@@ -75,7 +76,7 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
     public List<String> fileUpload(MultipartFile[] fileList, String flag) throws MalformedURLException {
         List<String> urlList = new ArrayList<>();
         for (MultipartFile file : fileList) {
-            urlList.add(galleryService.fileUpload(file, flag));
+            urlList.add(this.fileUpload(file, flag));
         }
 
         return urlList;
@@ -84,30 +85,33 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
 
     @Override
     public String fileUpload(MultipartFile file) throws MalformedURLException {
-        return galleryService.fileUpload(file, String.valueOf(GalleryFlagEnum.GALLERY.getType()));
+        return this.fileUpload(file, String.valueOf(GalleryFlagEnum.GALLERY.getType()));
     }
 
     @Override
+    @Deprecated
     public List<TbGallery> selectGalleryList(Integer action, Integer page) {
         int limit = 20;
-        if (page < 1){
+        if (page < 1) {
             page = 1;
         }
-        return page(new Page<TbGallery>((page-1)* 20L, limit),
-            new QueryWrapper<TbGallery>().eq("flag", GalleryFlagEnum.GALLERY.getType().toString())
-                .orderBy(false, false, "uploadDate")
+        return page(new Page<TbGallery>((page - 1) * 20L, limit),
+            new LambdaQueryWrapper<TbGallery>().eq(TbGallery::getFlag, GalleryFlagEnum.GALLERY.getType().toString())
+                .orderBy(false, false, TbGallery::getUploadDate)
         ).getRecords();
     }
 
     @Override
     public GalleryVo selectGalleryWrapper(List<Integer> ids) {
         GalleryVo galleryVo = null;
-        QueryWrapper<TbGallery> wrapper = new QueryWrapper<TbGallery>().eq("flag", 0);
-        wrapper.in("userId", ids);
-        wrapper.orderBy(false, false, "uploadDate");
 
-        List<TbGallery> galleryList = list(wrapper);
-        if (CollectionUtil.isNotEmpty(galleryList)){
+        List<TbGallery> galleryList = list(
+            new LambdaQueryWrapper<TbGallery>()
+                .eq(TbGallery::getFlag, GalleryFlagEnum.GALLERY.getTypeStr())
+                .in(TbGallery::getUserId, ids)
+                .orderBy(false, false, TbGallery::getUploadDate)
+        );
+        if (CollectionUtil.isNotEmpty(galleryList)) {
             galleryVo = new GalleryVo();
             galleryVo.setImageUrl(galleryList.stream().map(TbGallery::getUrl).collect(Collectors.toList()));
             galleryVo.setCount(galleryList.size());
@@ -156,6 +160,22 @@ public class TbGalleryServiceImpl extends ServiceImpl<TbGalleryMapper, TbGallery
         param.getUrls().forEach(url -> {
             this.makeGallery(url, param.getTopsId(), param.getFlag(), FileUtil.getName(url));
         });
+    }
+
+    @Override
+    public List<TbGallery> listByTopsIdAndFlag(String topsId, GalleryFlagEnum flag) {
+        return list(new LambdaQueryWrapper<TbGallery>()
+            .eq(TbGallery::getTopId, topsId)
+            .eq(TbGallery::getFlag, flag.getTypeStr())
+        );
+    }
+
+    @Override
+    public void remove(String topsId) {
+        remove(new LambdaQueryWrapper<TbGallery>()
+            .eq(TbGallery::getTopId, topsId)
+            .eq(TbGallery::getFlag, GalleryFlagEnum.VISIT_RECORD.getTypeStr())
+        );
     }
 
 }
