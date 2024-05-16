@@ -24,7 +24,7 @@
         <knife4j.version>3.0.3</knife4j.version>
         <fastjson.version>2.0.15</fastjson.version>
         <openfeign.version>2.1.5.RELEASE</openfeign.version>
-        <hutools.version>5.8.11</hutools.version>
+        <hutools.version>5.8.21</hutools.version>
         <weixin-mp.version>3.3.0</weixin-mp.version>
     </properties>
 
